@@ -92,6 +92,7 @@ GITHUB_MAX_BYTES = 2 * 1024 * 1024
 
 
 DEV_STEWARD_KEY = "dev-steward"  # public, documented default: local development only
+DEFAULT_IP_SALT = "agentdao-ip-v1"  # public default: set AGENTDAO_IP_SALT to a secret in production
 MIN_STEWARD_KEY_CHARS = 24
 LOOPBACK_HOSTS = ("127.0.0.1", "localhost", "::1")
 
@@ -114,7 +115,7 @@ class Settings:
     # Also implied by allow_local_sources. Never set in production.
     dev_allow_same_ip: bool = field(default_factory=lambda: os.environ.get("AGENTDAO_DEV_ALLOW_SAME_IP", "") == "1")
     # Salt for contributors.registered_ip_hash (keep it stable; changing it breaks same-IP matching for old accounts).
-    ip_salt: str = field(default_factory=lambda: os.environ.get("AGENTDAO_IP_SALT", "agentdao-ip-v1"))
+    ip_salt: str = field(default_factory=lambda: os.environ.get("AGENTDAO_IP_SALT", DEFAULT_IP_SALT))
     # Minimum GitHub account age for linking (verify.* tasks need a linked account).
     github_min_age_days: int = field(default_factory=lambda: int(os.environ.get("AGENTDAO_GITHUB_MIN_AGE_DAYS")
                                                                  or GITHUB_MIN_AGE_DAYS))

@@ -102,3 +102,16 @@ def test_static_refuses_dotfiles_and_traversal(client, app):
     (web / "ok.html").write_text("ok")
     assert client.get("/.env").status_code == 404 and client.get("/ok").text == "ok"
     assert client.get("/%2e%2e/pyproject.toml").status_code == 404
+
+
+def test_warns_on_default_ip_salt(tmp_path, caplog):
+    from agentdao.app import create_app
+    s = config.Settings(db_path=str(tmp_path / "x.db"), steward_key="x" * 40, ip_salt=config.DEFAULT_IP_SALT)
+    with caplog.at_level("WARNING", logger="agentdao"):
+        create_app(s)
+    assert any("AGENTDAO_IP_SALT" in r.getMessage() for r in caplog.records)
+    caplog.clear()
+    s = config.Settings(db_path=str(tmp_path / "y.db"), steward_key="x" * 40, ip_salt="s3cret-" * 4)
+    with caplog.at_level("WARNING", logger="agentdao"):
+        create_app(s)
+    assert not any("AGENTDAO_IP_SALT" in r.getMessage() for r in caplog.records)
