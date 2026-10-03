@@ -19,6 +19,8 @@ import ipaddress
 import re
 import socket
 import threading
+from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import wait as wait_futures
 import time
 import unicodedata
 from dataclasses import dataclass
@@ -316,12 +318,16 @@ def quote_ambiguity(quote: str, value) -> bool:
 
 
 class QuoteChecker:
-    """Runs the mechanical check with a 1 h per-URL page cache."""
+    """Runs the mechanical check with a 1 h per-URL page cache.
+
+    Thread-safe: the cache is lock-protected and concurrent requests for the same URL share one
+    in-flight fetch (the first caller fetches, the others wait on its Future)."""
 
     def __init__(self, fetcher: Fetcher | None = None, cache_ttl_s: float = config.FETCH_CACHE_TTL_S):
         self.fetcher: Fetcher = fetcher or SafeFetcher()
         self.cache_ttl_s = cache_ttl_s
         self._cache: dict[str, tuple[float, dict]] = {}
+        self._inflight: dict[str, Future] = {}
         self._lock = threading.Lock()
 
     def _get_page(self, url: str) -> dict:
@@ -330,21 +336,62 @@ class QuoteChecker:
             hit = self._cache.get(url)
             if hit and time.monotonic() - hit[0] < self.cache_ttl_s:
                 return hit[1]
+            fut = self._inflight.get(url)
+            owner = fut is None
+            if owner:
+                fut = self._inflight[url] = Future()
+        if not owner:
+            return fut.result()  # bounded by the owner's fetch (SafeFetcher has its own timeout)
+        try:
+            page = self._fetch_page(url)
+        except BaseException as e:  # never strand waiters on an unexpected error
+            with self._lock:
+                self._inflight.pop(url, None)
+            fut.set_exception(e)
+            raise
+        with self._lock:
+            self._cache[url] = (time.monotonic(), page)
+            self._inflight.pop(url, None)
+        fut.set_result(page)
+        return page
+
+    def _fetch_page(self, url: str) -> dict:
         try:
             res = self.fetcher(url)
             if res.status >= 400:
                 soft = res.status in (401, 403, 429) or res.status >= 500
-                page = {"ok": False, "reason": "fetch_error" if soft else "http_error", "url": res.url, "status": res.status}
-            elif res.content_type == "application/pdf" or not _content_type_ok(res.content_type):
-                page = {"ok": False, "reason": "unverifiable_format", "url": res.url, "status": res.status}
-            else:
-                page = {"ok": True, "reason": "ok", "url": res.url, "status": res.status,
-                        "texts": page_texts(res), "sha": hashlib.sha256(res.body).hexdigest()}
+                return {"ok": False, "reason": "fetch_error" if soft else "http_error", "url": res.url, "status": res.status}
+            if res.content_type == "application/pdf" or not _content_type_ok(res.content_type):
+                return {"ok": False, "reason": "unverifiable_format", "url": res.url, "status": res.status}
+            return {"ok": True, "reason": "ok", "url": res.url, "status": res.status,
+                    "texts": page_texts(res), "sha": hashlib.sha256(res.body).hexdigest()}
         except FetchError as e:
-            page = {"ok": False, "reason": e.reason, "url": url, "status": e.status, "message": str(e)}
-        with self._lock:
-            self._cache[url] = (time.monotonic(), page)
-        return page
+            return {"ok": False, "reason": e.reason, "url": url, "status": e.status, "message": str(e)}
+
+    def check_many(self, items: list[tuple], workers: int | None = None, deadline_s: float | None = None) -> list[dict]:
+        """Run `check(*item)` for each (url, quote, value) concurrently; results keep input order.
+
+        Checks not finished within `deadline_s` (default config.PRECHECK_DEADLINE_S) get a soft-fail
+        "timeout" result. Their threads are not waited on; each is bounded by the fetcher's own timeout."""
+        if not items:
+            return []
+        workers = workers or config.PRECHECK_WORKERS
+        deadline_s = config.PRECHECK_DEADLINE_S if deadline_s is None else deadline_s
+        pool = ThreadPoolExecutor(max_workers=min(workers, len(items)), thread_name_prefix="quotecheck")
+        try:
+            futs = [pool.submit(self.check, *item) for item in items]
+            wait_futures(futs, timeout=deadline_s)
+            out = []
+            for fut in futs:
+                if fut.done():
+                    out.append(fut.result())  # unexpected exceptions propagate, as with a sequential check
+                else:
+                    out.append({"passed": False, "reason": "timeout", "fetched_url": None, "http_status": None,
+                                "fetched_at": db.now_ts(), "content_sha256": None,
+                                "detail": f"check did not finish within the {deadline_s:g} s submission deadline"})
+            return out
+        finally:
+            pool.shutdown(wait=False, cancel_futures=True)  # drop queued checks; running ones end on fetch timeout
 
     def check(self, source_url: str, quote: str, value=None) -> dict:
         """Mechanical check. `value` may be a number (format-tolerant) or a string, or None to skip."""

@@ -366,8 +366,8 @@ def validate_payload(task_type: str, p: Any) -> list[dict]:
         return [{"field": "payload", "message": "must be an object"}]
     if task_type == "map.extract":
         claims = p.get("claims", [])
-        if not isinstance(claims, list) or len(claims) > 50:
-            err("claims", "must be a list of at most 50 ClaimDrafts")
+        if not isinstance(claims, list) or len(claims) > config.MAX_EXTRACT_CLAIMS:
+            err("claims", f"must be a list of at most {config.MAX_EXTRACT_CLAIMS} ClaimDrafts")
             claims = []
         if not isinstance(p.get("no_results_found", False), bool):
             err("no_results_found", "must be a boolean")
@@ -452,22 +452,26 @@ def _slug(s: str) -> str:
 
 
 def _precheck(task: dict, payload: dict, checker: QuoteChecker) -> dict:
-    """All network-bound checks for a submission, run outside any transaction."""
+    """All network-bound checks for a submission, run outside any transaction.
+
+    Checks run concurrently (config.PRECHECK_WORKERS) under one overall deadline (config.PRECHECK_DEADLINE_S);
+    unfinished ones soft-fail with reason "timeout". Results keep payload order."""
     t = task["type"]
     if t == "map.extract":
-        return {"claims": [checker.check(c["source_url"], c["quote"], c["value"]) for c in payload.get("claims", [])]}
+        return {"claims": checker.check_many([(c["source_url"], c["quote"], c["value"])
+                                              for c in payload.get("claims", [])])}
     if t == "map.profile":
         fields = payload.get("fields") or {}
-        out = []
+        items = []
         for s in payload.get("sources", []):
             val = fields.get(s["field"])
             # value-in-quote only for short factual fields; descriptions are paraphrased
             must = val if s["field"] in ("license", "latest_version") and val else None
-            out.append(checker.check(s["url"], s["quote"], must))
-        return {"sources": out}
+            items.append((s["url"], s["quote"], must))
+        return {"sources": checker.check_many(items)}
     if t == "verify.blind_extract" and payload.get("found"):
         src = (jload(task["inputs"], {}) or {}).get("source_url", "")
-        return {"blind": checker.check(src, payload["quote"], payload["value"])}
+        return {"blind": checker.check_many([(src, payload["quote"], payload["value"])])[0]}
     return {}
 
 

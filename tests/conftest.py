@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import threading
+import time
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -20,14 +23,19 @@ QUOTE = "On SWE-bench Verified, Foo-Agent resolves 72.4% of tasks"
 
 
 class FakeFetcher:
-    """url → FetchResult (or FetchError). Records calls."""
+    """url → FetchResult (or FetchError). Records calls (thread-safe); `delays[url]` sleeps before answering."""
 
     def __init__(self):
         self.pages = {SOURCE: FetchResult(SOURCE, 200, "text/html", PAGE.encode())}
+        self.delays: dict[str, float] = {}
         self.calls: list[str] = []
+        self._lock = threading.Lock()
 
     def __call__(self, url):
-        self.calls.append(url)
+        with self._lock:
+            self.calls.append(url)
+        if url in self.delays:
+            time.sleep(self.delays[url])
         page = self.pages.get(url)
         if page is None:
             raise FetchError("http_error", "not found", 404)

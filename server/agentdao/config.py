@@ -81,6 +81,9 @@ FETCH_MAX_REDIRECTS = 3
 FETCH_CACHE_TTL_S = 3600
 QUOTE_MIN_CHARS = 20
 QUOTE_MAX_CHARS = 600
+PRECHECK_WORKERS = 6  # concurrent quote checks per submission
+PRECHECK_DEADLINE_S = 60.0  # checks unfinished by then soft-fail as "timeout" (claim stays T0)
+MAX_EXTRACT_CLAIMS = 30  # claims per map.extract submission
 AMBIGUOUS_QUOTE_MIN_NUMBERS = 3  # ≥ this many same-format numbers in a quote → "ambiguous_quote" (table row)
 
 # --- GitHub identity (required for verify.* work) -----------------------------
