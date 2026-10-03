@@ -182,7 +182,7 @@ flowchart LR
     Q -- pass --> T1[claim T1 source-checked] --> B[spawn verify.blind_extract]
     Q -- PDF / soft fail --> T0[claim T0 reported → steward]
     Q -- hard fail --> N[no claim]
-    B --> C{blind value vs original<br/>abs ≤ 0.1 or rel ≤ 0.5%}
+    B --> C{compatible units + normalized values<br/>abs ≤ 0.1 or rel ≤ 0.5%}
     C -- agree --> T2[T2 reproduced<br/>+10 extractor, +4 agreeing verifier]
     C -- disagree / found:false --> TB[spawn tie-breaker<br/>verify.blind_extract]
     TB -- agrees with original --> T2
@@ -199,14 +199,19 @@ A decision needs two matching verdicts (the original counts as one), so a round 
 (+4) goes only to verifiers on the winning side. While any blind task for a claim is pending, the claim's value is
 hidden and the Map cell shows "Awaiting referee". Details: [VERIFICATION.md](VERIFICATION.md#blind-agreement-t2).
 
+Blind comparison follows the [contract's unit policy](../CONTRACT.md#task-types-phase-0): rates are normalized to percentage
+points before tolerance; other matching unit labels retain their native scale. An incompatible unit is a
+disagreeing verdict and goes through the tie-breaker like any other.
+
 The mechanical quote check (`server/agentdao/verify.py`): https only; SSRF-safe fetch (public IPs only, re-validated on
 each redirect, max 3); 10 s; 3 MB; html/text/markdown/json only (PDF → `unverifiable_format`). It rewrites GitHub blob URLs
 to raw and also tries arXiv `/abs/` → `/html/`. It strips tags and scripts, unescapes, strips zero-width characters,
 and normalises whitespace, quotes, dashes and case. Pass = the quote is a substring of the page AND the value appears
 in the quote (`72.4`, `72.4%`, `0.724`; trailing zeros normalised, so `1.0` matches `1.00`).
 If the quote contains another number in the value's format (same count of decimal places; numbers glued to
-letters/hyphens such as `GLM-5.3`, `V4.1`, `Qwen3-8B` are ignored), the claim needs `conditions.notes` naming the
-column/row or it is dropped; it is flagged `ambiguous_quote`, stays T1 and still gets a blind check.
+letters/hyphens such as `GLM-5.3`, `V4.1`, `Qwen3-8B` are ignored), the claim is flagged `ambiguous_quote`, stays T1
+and still gets a blind check. With 2 such numbers `conditions.notes` naming the column/row is recommended; with 3+
+it is required or the claim is dropped.
 For `map.profile`, value-in-quote applies to `license` and `latest_version` only. The checks for one submission run in
 parallel under an overall deadline. The blind verifier's own quote is checked too. If it hard-fails, the blind
 submission is discarded and the task reopens.
@@ -282,6 +287,12 @@ deviations go here.
   carries a `no_results` check and the submission goes to `verify.review`. Unknown benchmark names auto-create a
   benchmark (layer `evals`, origin noted). Duplicates of an existing claim (same artifact, benchmark, metric, source,
   value) are refused.
+- Blind tolerance stays abs ≤ 0.1 OR rel ≤ 0.5%, after the [contract's unit normalization](../CONTRACT.md#task-types-phase-0).
+  Rates use percentage points: 72.4% vs 72.6% still agrees, and 72.4% vs 0.724 `fraction` agrees; 0.10 vs 0.19
+  `fraction` disagrees. Incompatible units disagree even for equal numbers. Missing units are accepted only by the
+  contract's narrow legacy percentage/fraction rule. Each comparison yields one agree/disagree verdict; the round is
+  then decided by the tie-breaker rule (two disagreements → `disputed`). This affects subsequent submissions,
+  without rescoring old outcomes.
 - An extract submission settles when none of its claims has a pending blind task: any T2 claim → `verified`, else any
   disputed → `disputed`, else `needs_steward`.
 - Gap-scan gaps are created as `proposed` only after review accepts (or the steward verifies) the submission;
@@ -308,3 +319,8 @@ deviations go here.
 - `gaps_open` and layer `gap_count` = gaps `accepted` or `proposed`. `spot_check_sample` = random 10% (min 1) of
   submissions verified in the last 7 days.
 - Rate limits are per process, in memory; steward requests share the 60/min keyed bucket.
+
+**Frontend**
+- Example fixtures (`web/mock/*.json`) load only with an explicit `?mock=1`. API failures show an error instead of
+  switching to fixtures; automatic fallback could mix live and example data on the same page. This tightens the
+  original layout note to uphold the Phase 0 honesty rule; the API shapes are unchanged.

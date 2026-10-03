@@ -71,6 +71,9 @@ def test_old_db_migrates(tmp_path):
     assert len(persons) == 2 and all(p.startswith("p_") for p in persons)
     assert db.one(c, "SELECT handle FROM contributors")["handle"] == "old-one"
     assert db.one(c, "SELECT released_at FROM leases WHERE id='l_old'") == {"released_at": None}
+    # migration 2: council tables + the default applicability rule
+    assert db.scalar(c, "SELECT artifact_kinds FROM applicability_rules WHERE active=1") == '["dataset","library","tool"]'
+    assert db.scalar(c, "SELECT count(*) FROM council_cycles") == 0
     c.close()
 
 

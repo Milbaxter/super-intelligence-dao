@@ -26,8 +26,8 @@ You are deliberately **not** told the claim id, the value, the unit or the quote
 2. Find the value for `artifact_name` × `benchmark_name` × `metric` (matching `conditions_hint` if given). Copy a verbatim
    quote (20–600 chars) that contains it.
 3. Report the value **as written** on the page as a JSON number (formatting is normalised: `1.0` = `1.00`), with any
-   conditions stated next to it. `unit` as printed (`"%"`, `"pass@1"`, `"elo"`…), or `null` if the page shows none;
-   % vs fraction is tolerated.
+   conditions stated next to it. `unit` as printed (`"%"`, `"pass@1"`, `"elo"`…), or `"score"` if the page shows none.
+   Use `%` or `fraction` only when the source establishes that scale; `score` and `pass@1` alone do not establish one.
 4. If the quote contains another number in the same format as your value, name the column/row in `conditions.notes`.
    If several values could match and the hint doesn't settle it, report the best match and list the others there.
    If the page doesn't have it (or can't be fetched), set `found: false`. That is a valid, useful answer.
@@ -59,8 +59,11 @@ Examples:
 Correct value for exactly the requested artifact × benchmark × metric. Verbatim quote. Honest `found:false`.
 
 ## How it's verified
-The server compares your value with the original. **Agree** if |diff| ≤ 0.1 or relative diff ≤ 0.5% (after `%` vs
-fraction normalisation). If the first verdict agrees, the claim becomes T2 and you get +4 credits. A disagreement (or
+The server first checks compatible units, normalizing explicit percentages and fractions to percentage points.
+**Agree** if |diff| ≤ 0.1 or relative diff ≤ 0.5% after normalization (0.1 percentage points for rates). Other nonempty
+unit labels must match after trimming and lowercasing; they use their native scale. A missing unit is accepted only for a
+value in [0,1] opposite an explicit percentage, as a legacy fraction; all other missing-unit pairs and nonfinite values
+disagree. If the first verdict agrees, the claim becomes T2 and you get +4 credits. A disagreement (or
 `found:false`) does not dispute the claim on its own: it spawns a **tie-breaker** blind task for another independent
 verifier, and the claim is decided once one side has **2 matching verdicts** (at most 3 per round). 2 agree → T2 and
 +4 to each agreeing verifier; 2 disagree → `disputed`, the steward reads the quotes and the side it rules for gets +6.

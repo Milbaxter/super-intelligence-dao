@@ -5,121 +5,128 @@ initPage({ page: 'council', title: 'The Council' });
 
 /* ==================================================================== */
 /* Adapter — the ONLY place that knows API field names.                  */
-/* Built against docs/design/COUNCIL_SPEC.md §6, §10, §11; adjust here    */
-/* when docs/design/COUNCIL_API.md publishes the exact shapes.            */
+/* Shapes: docs/design/COUNCIL_API.md. Hidden-until-tally fields arrive  */
+/* as null; every reader below tolerates that.                           */
 /* ==================================================================== */
 const num = (x) => (x === null || x === undefined || x === '' || Number.isNaN(+x) ? null : +x);
 const arr = (x) => (Array.isArray(x) ? x : []);
+const names = { track: {}, layer: {} }; // filled from /tracks and /layers when available
+const trackName = (id) => names.track[id] || id;
 const A = {
-  /** GET /council → { cycle, items } (cycle null when none has been opened). */
+  /** GET /council → {cycle, rule, veto_rate, defaults}. */
   council(raw) {
-    if (!raw) return { cycle: null, items: [] };
-    const c = raw.cycle !== undefined ? raw.cycle : raw;
-    if (!c || !c.id) return { cycle: null, items: [] };
-    const items = arr(raw.items ?? raw.proposals ?? c.items ?? c.proposals).map(A.item);
-    return { cycle: A.cycle(c), items };
+    const c = raw?.cycle ?? null;
+    return { cycle: c && c.id ? A.cycle(c) : null, items: A.items(c), rule: raw?.rule || null,
+      vetoRate: raw?.veto_rate || null, defaults: raw?.defaults || {} };
   },
+  /** Items of a cycle object (also /council/cycles/{id}; in ?mock=1 mode its `items` arrive as {items, total}). */
+  items(c) { return arr(c?.items).map(A.item); },
   cycle(c) {
-    const t = c.tally || {};
-    const cnt = c.counts || {};
-    const voters = num(t.voters ?? cnt.ballots ?? c.voters);
-    const budget = num(c.budget_slots ?? c.budget);
+    const d = c.deadlines || {};
+    const n = c.counts || {};
+    const r = c.results || null;
+    const voters = num(r?.voters ?? n.ballots);
+    const budget = num(c.budget_slots);
+    const byFam = {};
+    arr(c.ballots).forEach(b => { if (b.model_family) byFam[b.model_family] = (byFam[b.model_family] || 0) + 1; });
     return {
-      id: c.id, number: c.number ?? null, status: c.status, note: c.note || '',
-      budget, opened_at: c.opened_at, propose_until: c.propose_until, critique_until: c.critique_until,
-      vote_until: c.vote_until, tallied_at: c.tallied_at, closed_at: c.closed_at,
+      id: c.id, number: null, status: c.status, note: c.note || '', budget,
+      opened_at: c.opened_at, propose_until: d.propose_until, critique_until: d.critique_until, vote_until: d.vote_until,
+      tallied_at: c.tallied_at, closed_at: c.closed_at,
       counts: {
-        proposals: num(cnt.proposals ?? cnt.items ?? cnt.sealed), balloted: num(cnt.balloted), withdrawn: num(cnt.withdrawn),
-        overflow: num(cnt.overflow), critiques: num(cnt.critiques), ballots: num(cnt.ballots ?? t.voters),
-        funded: num(cnt.funded), applied: num(cnt.applied), vetoed: num(cnt.vetoed),
-        awaiting: num(cnt.awaiting_ratification), met: num(cnt.met), missed: num(cnt.missed),
+        proposals: num(n.proposals), sealed: num(n.sealed), balloted: num(n.on_ballot), withdrawn: num(n.withdrawn), overflow: num(n.overflow),
+        critiques: num(n.critiques), ballots: num(n.ballots), funded: num(n.funded), applied: num(n.applied), vetoed: num(n.vetoed),
+        awaiting: num(n.awaiting_ratification), met: num(n.met), missed: num(n.missed),
       },
-      voters, share: num(t.share_per_voter) ?? (budget && voters ? budget / voters : null),
-      spent: num(t.budget_spent), left: num(t.budget_left),
-      votersByFamily: t.voters_by_family || null,
-      vetoRate: c.steward_veto_rate || null,
+      voters, share: budget != null && voters ? budget / voters : null,
+      spent: num(r?.spent_slots), left: r && budget != null ? budget - (num(r.spent_slots) ?? 0) : null,
+      votersByFamily: Object.keys(byFam).length ? byFam : null,
     };
   },
   item(r) {
-    const p = r.payload || {};
-    const s = p.success || r.success || {};
+    const p = r.proposal || {};
+    const s = p.success || {};
     const t = r.tally || null;
-    const rat = r.ratification || (r.ratify_decision || r.ratify_reason ? { decision: r.ratify_decision || (r.status === 'vetoed' ? 'veto' : 'approve'), reason: r.ratify_reason, by: r.ratified_by } : null);
+    const st = r.steward || null;
     return {
-      id: r.id, kind: r.kind, title: r.title || '(untitled)', cost: num(r.cost), status: r.status,
-      author: r.author_handle ?? r.author?.handle ?? null, authorFamily: r.author_family ?? r.author?.model_family ?? null,
-      problem: p.problem ?? r.problem ?? '', evidence: p.evidence ?? r.evidence ?? '', evidenceUrls: arr(p.evidence_urls ?? r.evidence_urls),
-      nonGoals: p.non_goals ?? r.non_goals ?? '', risks: p.risks ?? r.risks ?? '',
-      successText: p.success_text ?? r.success_text ?? '',
+      id: r.id, kind: r.kind ?? p.kind, title: r.title || p.title || '(untitled)', cost: num(r.cost ?? p.cost), status: r.status,
+      author: r.author || null,
+      problem: p.problem || '', evidence: p.evidence || '', evidenceUrls: arr(p.evidence_urls), nonGoals: p.non_goals || '', risks: p.risks || '',
+      successText: p.success_text || '',
       success: { metric: s.metric, target: num(s.target), days: num(s.deadline_days), track: s.track_id, type: s.task_type, layer: s.layer },
-      forecast: num(r.forecast ?? p.forecast), agg: num(r.agg_forecast),
-      effect: A.effect(r.kind, p),
+      forecast: num(r.proposer_forecast ?? t?.proposer_forecast), agg: num(r.agg_forecast ?? t?.agg_forecast),
+      effect: A.effect(r.kind ?? p.kind, p.effect || {}, t?.applied_effect || null),
+      critiqueCount: num(r.critique_count) ?? arr(r.critiques).length,
       critiques: arr(r.critiques).map(A.critique),
       tally: t && {
-        approvals: num(t.approvals), voters: num(t.voters), pct: num(t.approval_pct) ?? (t.voters ? Math.round(100 * t.approvals / t.voters) : null),
-        byFamily: Object.entries(t.by_family || t.approvals_by_family || {}).map(([fam, v]) => ({
-          fam, approve: num(typeof v === 'object' ? v.approve ?? v.approvals : v), voters: num(typeof v === 'object' ? v.voters : null) })),
-        split: !!(t.families_disagree ?? t.family_split), funded: t.funded ?? ['funded', 'awaiting_ratification', 'applied', 'vetoed', 'met', 'missed'].includes(r.status),
-        why: t.why || '', paid: num(t.paid_per_approver),
+        approvals: num(t.approvals), voters: num(t.voters), pct: num(t.approval_pct),
+        byFamily: Object.entries(t.by_family || {}).map(([fam, v]) => ({ fam, approve: num(v?.approvals), voters: num(v?.voters), pct: num(v?.approval_pct) })),
+        split: !!t.families_disagree, funded: !!t.funded, step: t.step || null, why: t.why || '',
       },
-      ratification: rat && { decision: rat.decision, reason: rat.reason || '', by: rat.by || rat.ratified_by || 'steward', at: rat.at || rat.ratified_at || null },
-      withdrawReason: r.withdraw_reason || r.withdrawn_reason || '',
+      // steward.decision: approve | veto | withdraw
+      ratification: st && st.decision !== 'withdraw' ? { decision: st.decision, reason: st.reason || '', by: st.by || 'steward' } : null,
+      withdrawReason: st?.decision === 'withdraw' ? st.reason || '' : '',
       appliedAt: r.applied_at, reviewDue: r.review_due_at, reviewedAt: r.reviewed_at, measured: num(r.measured_value),
     };
   },
-  effect(kind, p) {
-    const tasks = arr(p.tasks_summary).length ? arr(p.tasks_summary)
-      : Object.values(arr(p.tasks).reduce((m, t) => { (m[t.type] ||= { type: t.type, count: 0, example_title: t.title }).count++; return m; }, {}));
-    const nt = p.new_track || (kind === 'new_track' ? p : null);
+  effect(kind, e, applied) {
+    const tasks = Object.values(arr(e.tasks).reduce((m, t) => {
+      const k = t?.type || '?'; (m[k] ||= { type: k, count: 0, example_title: t?.title || '' }).count++; return m;
+    }, {}));
     return {
-      tasks, trackId: p.track_id, trackName: p.track_name || p.track_id, weight: num(p.weight), currentWeight: num(p.current_weight),
-      newTrack: nt && { id: nt.id, name: nt.name, workstream: nt.workstream, weight: num(nt.weight), summary: nt.summary || '' },
-      taskType: p.task_type, include: arr(p.include_artifact_kinds), exclude: arr(p.exclude_artifact_kinds),
+      tasks, trackId: e.track_id, weight: num(applied?.new_weight ?? e.weight), currentWeight: num(applied?.old_weight),
+      newTrack: kind === 'new_track' ? { id: e.id, name: e.name, workstream: e.workstream, weight: num(e.weight), summary: e.summary || '' } : null,
+      taskType: e.task_type, include: arr(e.include_artifact_kinds), exclude: arr(e.exclude_artifact_kinds),
     };
   },
   critique(c) {
-    const p = c.payload || c;
-    return { family: c.model_family || null, recommend: p.recommend, objection: p.strongest_objection || '', missing: p.missing_evidence || '',
-      gaming: p.gaming_risk || '', amendment: p.amendment || '', forecast: num(p.forecast) };
+    return { critic: c.critic || null, family: c.model_family || null, recommend: c.recommend, objection: c.strongest_objection || '',
+      missing: c.missing_evidence || '', gaming: c.gaming_risk || '', amendment: c.amendment || '', forecast: num(c.forecast) };
   },
   /** GET /council/evidence */
   evidence(raw) {
-    const rowOf = (w) => w && ({
-      verified: num(w.verified_outputs ?? w.verified), acceptance: num(w.acceptance_rate), noResults: num(w.no_results_rate),
-      notUseful: num(w.releases?.not_useful ?? w.not_useful_releases), per100k: num(w.verified_per_100k_tokens),
-      tokens: num(w.reported_tokens), open: num(w.open), created: num(w.created),
-    });
+    const rowOf = (w) => {
+      if (!w) return {};
+      const res = (num(w.verified) ?? 0) + (num(w.rejected) ?? 0) + (num(w.disputed) ?? 0);
+      return { verified: num(w.verified_outputs ?? w.verified), acceptance: res ? num(w.verified) / res : null,
+        noResults: num(w.no_results_rate), notUseful: num(w.releases?.not_useful), per100k: num(w.verified_per_100k_tokens) };
+    };
     return {
       at: raw?.generated_at, days: num(raw?.window_days) ?? 30,
-      tracks: arr(raw?.tracks).map(t => ({ id: t.track_id ?? t.id, name: t.name || t.track_id || t.id, weight: num(t.weight), win: rowOf(t.window ?? t.last_30d), all: rowOf(t.all_time) })),
-      types: arr(raw?.task_types).map(t => ({ id: t.type ?? t.task_type, win: rowOf(t.window ?? t.last_30d), all: rowOf(t.all_time) })),
-      coverage: arr(raw?.coverage ?? raw?.map_coverage).map(l => ({ id: l.layer, name: l.name || l.layer, total: num(l.artifacts ?? l.total),
+      tracks: arr(raw?.by_track).map(t => ({ id: t.track_id, name: t.name || t.track_id || '(no track)', weight: num(t.weight), paused: !!t.paused,
+        win: rowOf(t['30d']), all: rowOf(t.all) })),
+      types: arr(raw?.by_task_type).map(t => ({ id: t.task_type, win: rowOf(t['30d']), all: rowOf(t.all) })),
+      coverage: arr(raw?.coverage).map(l => ({ id: l.layer, name: names.layer[l.layer] || l.layer, total: num(l.artifacts),
         claim: num(l.with_claim), reproduced: num(l.with_reproduced) })),
     };
   },
   /** GET /council/track-record */
   trackRecord(raw) {
-    return arr(Array.isArray(raw) ? raw : raw?.people ?? raw?.items).map(p => ({
-      person: p.person ?? p.handles?.[0] ?? '?', handles: arr(p.handles), families: arr(p.model_families),
-      made: num(p.proposals_made) ?? 0, funded: num(p.proposals_funded) ?? 0, met: num(p.proposals_met) ?? 0, missed: num(p.proposals_missed),
-      brierP: num(p.brier_proposer), nP: num(p.n_proposer), brierF: num(p.brier_forecaster), nF: num(p.n_forecaster ?? p.n),
+    return arr(raw?.people).map(p => ({
+      handles: arr(p.handles), made: num(p.proposals) ?? 0, funded: num(p.funded) ?? 0, applied: num(p.applied), met: num(p.met) ?? 0,
+      missed: num(p.missed), brierP: num(p.brier_proposer), nP: num(p.n_proposer), brierF: num(p.brier_forecaster), nF: num(p.n_forecasts),
     }));
   },
-  /** GET /council/rules */
+  /** GET /council/rules → {active, inactive} */
   rules(raw) {
-    return arr(Array.isArray(raw) ? raw : raw?.rules ?? raw?.items).map(r => ({
-      id: r.id, type: r.task_type, mode: r.mode, kinds: arr(r.artifact_kinds), by: r.created_by || '', reason: r.reason || '',
-      at: r.created_at, active: r.active !== false && r.active !== 0,
-    }));
+    const one = (r, active) => ({ id: r.id, type: r.task_type, mode: r.mode, kinds: arr(r.artifact_kinds), by: r.created_by || '',
+      reason: r.reason || '', at: r.created_at, active });
+    return [...arr(raw?.active).map(r => one(r, true)), ...arr(raw?.inactive).map(r => one(r, false))];
   },
-  /** GET /council/cycles */
+  /** GET /council/cycles (newest first). Cycles have no number in the API: number them oldest = 1. */
   cycles(raw) {
-    return arr(Array.isArray(raw) ? raw : raw?.cycles ?? raw?.items).map(c => ({
-      id: c.id, number: c.number ?? null, status: c.status, budget: num(c.budget_slots), opened_at: c.opened_at, closed_at: c.closed_at,
-      tallied_at: c.tallied_at, voters: num(c.voters ?? c.tally?.voters ?? c.counts?.ballots), spent: num(c.budget_spent ?? c.tally?.budget_spent),
-      proposals: num(c.proposals ?? c.counts?.proposals), funded: num(c.funded ?? c.counts?.funded), applied: num(c.applied ?? c.counts?.applied),
-      vetoed: num(c.vetoed ?? c.counts?.vetoed), met: num(c.met ?? c.counts?.met), missed: num(c.missed ?? c.counts?.missed),
-    }));
+    const list = arr(raw);
+    return list.map((c, i) => {
+      const n = c.counts || {};
+      return { id: c.id, number: list.length - i, status: c.status, budget: num(c.budget_slots), opened_at: c.opened_at,
+        closed_at: c.closed_at, tallied_at: c.tallied_at, voters: num(n.ballots), proposals: num(n.proposals), funded: num(n.funded),
+        applied: num(n.applied), vetoed: num(n.vetoed), met: num(n.met), missed: num(n.missed) };
+    });
+  },
+  /** /tracks and /layers: only id → name. */
+  names(tracks, layers) {
+    arr(tracks).forEach(t => { if (t?.id) names.track[t.id] = t.name || t.id; });
+    arr(layers).forEach(l => { if (l?.id) names.layer[l.id] = l.name || l.id; });
   },
 };
 
@@ -158,6 +165,7 @@ const plural = (n, one, many = one + 's') => `${n} ${n === 1 ? one : many}`;
 /** Which of the 8 display stages the cycle is in. */
 function stageOf(c, items) {
   if (['open', 'propose', 'critique', 'vote'].includes(c.status)) return c.status;
+  if (c.status === 'closed' && !c.tallied_at) return 'propose'; // closed at the end of PROPOSE with no proposals
   if (c.status === 'tally' || (c.status === 'ratify' && !c.tallied_at)) return 'tally';
   if (c.status === 'ratify') return 'ratify';
   const applied = items.filter(i => ['applied', 'met', 'missed'].includes(i.status));
@@ -168,7 +176,7 @@ function stageOf(c, items) {
 /* ==================================================================== */
 /* §01 Current cycle                                                     */
 /* ==================================================================== */
-function renderCycle(el, c, items) {
+function renderCycle(el, c, items, vetoRate) {
   const cur = stageOf(c, items);
   const ci = STAGES.findIndex(s => s.id === cur);
   const n = c.counts;
@@ -178,7 +186,7 @@ function renderCycle(el, c, items) {
   const fundedN = n.funded ?? items.filter(i => i.tally?.funded).length;
   const stat = {
     open: c.budget != null ? `${c.budget} slots` : null,
-    propose: n.proposals != null ? plural(n.proposals, 'proposal') : null,
+    propose: (n.proposals ?? n.sealed) != null ? plural(n.proposals ?? n.sealed, 'proposal') : null,
     critique: n.critiques != null ? plural(n.critiques, 'critique') : null,
     vote: n.ballots != null ? plural(n.ballots, 'ballot') : null,
     tally: c.tallied_at ? `${fundedN} funded` : null,
@@ -210,7 +218,7 @@ function renderCycle(el, c, items) {
     c.voters ? [h('dt', {}, 'Voters'), h('dd', {}, `${c.voters} people`, c.share != null ? h('span', { class: 'small muted' }, ` · each held ${slots(c.share)} slots`) : null,
       c.votersByFamily ? h('span', { class: 'fam-row' }, Object.entries(c.votersByFamily).map(([f, k]) => h('span', {}, famChip(f), ` ${k}`))) : null)] : null,
     c.spent != null ? [h('dt', {}, 'Spent'), h('dd', {}, `${slots(c.spent)} of ${c.budget} slots`, c.left ? h('span', { class: 'small muted' }, ` · ${slots(c.left)} left unspent (no remaining item had enough support)`) : null)] : null,
-    c.vetoRate && c.vetoRate.decided ? [h('dt', {}, 'Steward vetoes'), h('dd', {}, `${c.vetoRate.vetoed} of ${c.vetoRate.decided} decisions so far`, h('span', { class: 'small muted' }, ' (all cycles)'))] : null,
+    vetoRate && (vetoRate.approved || vetoRate.vetoed) ? [h('dt', {}, 'Steward vetoes'), h('dd', {}, `${vetoRate.vetoed ?? 0} of ${(vetoRate.approved ?? 0) + (vetoRate.vetoed ?? 0)} ratification decisions`, h('span', { class: 'small muted' }, ' (all cycles)'))] : null,
     c.note ? [h('dt', {}, 'Note'), h('dd', {}, c.note)] : null);
   mount(el, timeline, sealed, h('div', { class: 'cycle-grid' }, facts));
 }
@@ -218,9 +226,10 @@ function renderCycle(el, c, items) {
 function sealedNote(c, items) {
   const n = c.counts;
   const line = (txt) => h('p', { class: 'sealed', role: 'status' }, h('span', { class: 'seal', 'aria-hidden': 'true' }), txt);
-  if (c.status === 'propose') return line(`${plural(n.proposals ?? 0, 'proposal')} sealed until ${fmtDate(c.propose_until)}. Nobody, including other agents, can read them before then.`);
+  if (c.status === 'closed' && !c.tallied_at) return line('This cycle closed with no proposals.');
+  if (c.status === 'propose') return line(`${plural(n.sealed ?? n.proposals ?? 0, 'proposal')} sealed until ${fmtDate(c.propose_until)}. Nobody, including other agents, can read them before then.`);
   if (c.status === 'critique') return line(`${plural(n.critiques ?? 0, 'critique')} sealed until voting opens on ${fmtDate(c.critique_until)}. Critics see only the proposal they were given.`);
-  if (c.status === 'vote') return line(`${plural(n.ballots ?? 0, 'ballot')} sealed until ${fmtDate(c.vote_until)}, when code counts them.`);
+  if (c.status === 'vote') return line(`${plural(n.ballots ?? 0, 'ballot')} cast so far, sealed until ${fmtDate(c.vote_until)}, when code counts them.`);
   return null;
 }
 
@@ -240,7 +249,7 @@ function renderMesLive(c, items) {
 /* ==================================================================== */
 /* §03 Proposals and results                                             */
 /* ==================================================================== */
-function renderItems(el, c, items) {
+function renderItems(el, c, items, defaults = {}) {
   const visible = items.filter(i => i.status !== 'sealed');
   if (!visible.length) {
     mount(el, h('div', { class: 'empty' }, c.status === 'propose' || c.status === 'open'
@@ -251,7 +260,11 @@ function renderItems(el, c, items) {
   const showCrit = !['open', 'propose', 'critique'].includes(c.status);
   const rank = (i) => (['withdrawn', 'overflow'].includes(i.status) ? 2 : i.tally?.funded ? 0 : 1);
   const sorted = [...visible].sort((a, b) => rank(a) - rank(b) || (b.tally?.approvals ?? 0) - (a.tally?.approvals ?? 0));
-  mount(el, h('div', { class: 'props' }, sorted.map(i => itemCard(i, { showCrit }))));
+  mount(el,
+    !c.tallied_at ? h('p', { class: 'note', style: { marginBottom: '16px' } }, h('strong', {}, 'Revealed after the count'),
+      'Who proposed each item, every forecast and the critics’ names stay hidden until the votes are counted, so nobody votes for a name.') : null,
+    c.status === 'critique' ? h('p', { class: 'small muted', style: { marginBottom: '12px' } }, `Critiques are sealed until voting opens on ${fmtDate(c.critique_until)}.`) : null,
+    h('div', { class: 'props' }, sorted.map(i => itemCard(i, { showCrit, maxBallot: defaults.max_ballot }))));
 }
 
 function statusTag(s) {
@@ -263,13 +276,17 @@ function effectLine(i) {
   const e = i.effect;
   if (i.kind === 'tasks' || i.kind === 'new_track') {
     const parts = [];
-    if (e.newTrack) parts.push(h('span', {}, 'Creates track ', h('b', {}, e.newTrack.name || e.newTrack.id), e.newTrack.workstream ? ` (${e.newTrack.workstream}` : ' (', e.newTrack.weight ? `, weight ${e.newTrack.weight})` : ')', e.newTrack.summary ? ` — ${e.newTrack.summary.replace(/[.\s]+$/, '')}` : '', '. '));
-    e.tasks.forEach(t => parts.push(h('span', {}, `${t.count} × `, h('code', {}, t.type), ' tasks', e.trackName && !e.newTrack ? [' in ', h('b', {}, e.trackName)] : null,
+    if (e.newTrack) {
+      const meta = [e.newTrack.workstream, e.newTrack.weight ? `weight ${e.newTrack.weight}` : null].filter(Boolean).join(', ');
+      parts.push(h('span', {}, 'Creates track ', h('b', {}, e.newTrack.name || e.newTrack.id || '?'), meta ? ` (${meta})` : '',
+        e.newTrack.summary ? ` — ${e.newTrack.summary.replace(/[.\s]+$/, '')}` : '', '. '));
+    }
+    e.tasks.forEach(t => parts.push(h('span', {}, `${t.count} × `, h('code', {}, t.type), ' tasks', e.trackId && !e.newTrack ? [' in ', h('b', {}, trackName(e.trackId))] : null,
       t.example_title ? h('span', { class: 'muted' }, ` — e.g. “${t.example_title}”`) : null, '. ')));
     return parts;
   }
-  if (i.kind === 'reweight') return [h('b', {}, e.trackName || e.trackId), `: weight ${e.currentWeight != null ? `${e.currentWeight} → ` : '→ '}${e.weight ?? '?'} (of 5).`];
-  if (i.kind === 'retire') return ['Pause ', h('b', {}, e.trackName || e.trackId), ' (weight → 0); its open, unclaimed tasks are closed.'];
+  if (i.kind === 'reweight') return [h('b', {}, trackName(e.trackId)), `: weight ${e.currentWeight != null ? `${e.currentWeight} → ` : '→ '}${e.weight ?? '?'} (of 5).`];
+  if (i.kind === 'retire') return ['Pause ', h('b', {}, trackName(e.trackId)), ' (weight → 0); its open, unclaimed tasks are closed.'];
   if (i.kind === 'applicability') {
     const kinds = e.exclude.length ? e.exclude : e.include;
     return [h('code', {}, e.taskType || '?'), e.exclude.length ? ' skips artifacts of kind ' : ' only for artifacts of kind ',
@@ -305,7 +322,7 @@ function approvalsBlock(i) {
   if (!t) return null;
   return h('div', { class: 'appr' },
     h('span', { class: 'label' }, 'Approvals'),
-    h('div', { class: 'appr-main' }, h('b', {}, `${t.approvals ?? '—'} of ${t.voters ?? '—'}`), h('span', { class: 'muted' }, ` voters (${t.pct ?? '—'}%)`),
+    h('div', { class: 'appr-main' }, h('b', {}, `${t.approvals ?? '—'} of ${t.voters ?? '—'}`), h('span', { class: 'muted' }, ` voters (${t.pct == null ? '—' : Math.round(t.pct)}%)`),
       h('div', { class: 'meter', 'aria-hidden': 'true' }, h('i', { style: { width: `${t.pct ?? 0}%` } }))),
     t.byFamily.length ? h('ul', { class: 'fambars', 'aria-label': 'Approvals by model family' }, t.byFamily.map(f => {
       const p = f.voters ? Math.round(100 * f.approve / f.voters) : 0;
@@ -315,20 +332,25 @@ function approvalsBlock(i) {
     t.split ? h('p', { class: 'split small' }, h('b', {}, 'Model families disagree.'), ' Approval differs by more than 50 points between families; the steward sees this flag when ratifying.') : null);
 }
 
-function decisionBlock(i) {
+function decisionBlock(i, maxBallot) {
   const out = [];
-  if (i.tally) out.push(h('p', { class: 'why', 'data-funded': String(!!i.tally.funded) }, h('b', {}, i.tally.funded ? 'Vote: funded. ' : 'Vote: not funded. '), i.tally.why.replace(/^(Not funded|Funded):\s*/, '')));
+  if (i.tally) {
+    const m = /^(Not funded|Funded)\b(.*)$/s.exec(i.tally.why || '');
+    out.push(h('p', { class: 'why', 'data-funded': String(!!i.tally.funded) },
+      m ? [h('b', {}, m[1]), m[2]] : [h('b', {}, i.tally.funded ? 'Funded. ' : 'Not funded. '), i.tally.why || '']));
+  }
   if (i.status === 'withdrawn') out.push(h('p', { class: 'why' }, h('b', {}, 'Withdrawn by the steward. '), i.withdrawReason || 'No reason recorded.'));
-  if (i.status === 'overflow') out.push(h('p', { class: 'why' }, h('b', {}, 'Overflow. '), 'The ballot was full (12 items); this proposal can be resubmitted next cycle.'));
+  if (i.status === 'overflow') out.push(h('p', { class: 'why' }, h('b', {}, 'Overflow. '), `The ballot was full (${maxBallot ?? 12} items); this proposal can be resubmitted next cycle.`));
   const r = i.ratification;
   if (r) out.push(h('p', { class: 'ratify', 'data-decision': r.decision },
-    h('b', {}, r.decision === 'veto' ? 'Steward: vetoed. ' : 'Steward: approved. '), r.reason || '', r.at ? h('span', { class: 'muted small' }, ` (${fmtDate(r.at)})`) : null));
+    h('b', {}, r.decision === 'veto' ? 'Steward: vetoed. ' : 'Steward: approved. '), r.reason || ''));
   else if (i.status === 'awaiting_ratification') out.push(h('p', { class: 'ratify', 'data-decision': 'pending' }, h('b', {}, 'Steward: '), 'decision pending. A veto needs a public written reason.'));
   const m = METRIC[i.success.metric];
   if (i.status === 'met' || i.status === 'missed') {
     out.push(h('p', { class: 'review', 'data-outcome': i.status },
       h('b', {}, i.status === 'met' ? 'Checked: met. ' : 'Checked: missed. '),
-      `Measured ${m ? m.fmt(i.measured) : i.measured ?? '—'} against a target of ${m ? m.op : ''} ${m ? m.fmt(i.success.target) : i.success.target}`,
+      i.measured == null ? `Too little resolved work to measure (fewer than 5 resolved submissions); target was ${m ? m.op : ''} ${m ? m.fmt(i.success.target) : i.success.target}`
+        : `Measured ${m ? m.fmt(i.measured) : i.measured} against a target of ${m ? m.op : ''} ${m ? m.fmt(i.success.target) : i.success.target}`,
       i.reviewedAt ? ` on ${fmtDate(i.reviewedAt)}.` : '.'));
   } else if (i.status === 'applied') {
     out.push(h('p', { class: 'review', 'data-outcome': 'pending' }, h('b', {}, 'Applied '), i.appliedAt ? `${fmtDate(i.appliedAt)}. ` : '. ',
@@ -343,7 +365,7 @@ function critiquesBlock(i) {
     h('summary', {}, `${plural(i.critiques.length, 'critique')}`, h('span', { class: 'recs' }, i.critiques.map(c => h('span', { class: 'rec', 'data-rec': c.recommend }, REC[c.recommend] || c.recommend || '?')))),
     h('p', { class: 'small muted' }, 'Each critic was told to find the strongest reason not to fund this, then the best fix. Critics never saw the author or each other.'),
     i.critiques.map(c => h('article', { class: 'crit' },
-      h('div', { class: 'crit-head' }, c.family ? famChip(c.family) : h('span', { class: 'chip' }, 'critic'),
+      h('div', { class: 'crit-head' }, c.critic ? h('span', { class: 'mono small' }, c.critic) : h('span', { class: 'chip' }, 'anonymous critic'), c.family ? famChip(c.family) : null,
         h('span', { class: 'rec', 'data-rec': c.recommend }, `Recommends: ${REC[c.recommend] || c.recommend || '?'}`),
         c.forecast != null ? h('span', { class: 'small muted mono' }, `forecast ${pct(c.forecast)}`) : null),
       h('dl', { class: 'kv' },
@@ -363,18 +385,18 @@ function detailsBlock(i) {
       i.risks ? [h('dt', {}, 'Risks'), h('dd', {}, i.risks)] : null));
 }
 
-function itemCard(i, { showCrit }) {
+function itemCard(i, { showCrit, maxBallot }) {
   return h('article', { class: 'prop', 'data-status': i.status, id: i.id ? `item-${i.id}` : null },
     h('header', { class: 'prop-head' },
       h('span', { class: 'chip kind', 'data-kind': i.kind }, KIND[i.kind] || i.kind),
       i.cost != null ? h('span', { class: 'chip' }, `cost ${plural(i.cost, 'slot')}`) : null,
       statusTag(i.status)),
     h('h3', {}, i.title),
-    i.author ? h('p', { class: 'small muted by' }, 'Proposed by ', h('span', { class: 'mono' }, i.author), ' ', i.authorFamily ? famChip(i.authorFamily) : null) : null,
+    i.author ? h('p', { class: 'small muted by' }, 'Proposed by ', h('span', { class: 'mono' }, i.author)) : null,
     h('p', { class: 'effect small' }, effectLine(i)),
     i.problem ? h('div', { class: 'problem' }, h('span', { class: 'label' }, 'Problem, and who uses the answer'), h('p', {}, i.problem)) : null,
     h('div', { class: 'prop-grid' }, successBlock(i), forecastBlock(i), approvalsBlock(i)),
-    decisionBlock(i),
+    decisionBlock(i, maxBallot),
     showCrit && i.status !== 'withdrawn' ? critiquesBlock(i) : null,
     detailsBlock(i));
 }
@@ -450,13 +472,12 @@ function renderRecord(el, people) {
   mount(el,
     h('div', { class: 'table-wrap' }, h('table', { class: 'ledger' },
       h('caption', { class: 'visually-hidden' }, 'Council track record per person'),
-      h('thead', {}, h('tr', {}, h('th', { scope: 'col' }, 'person'), h('th', { scope: 'col' }, 'agents'),
+      h('thead', {}, h('tr', {}, h('th', { scope: 'col' }, 'person (their agents)'),
         h('th', { scope: 'col', class: 'num' }, 'proposed'), h('th', { scope: 'col', class: 'num' }, 'funded'), h('th', { scope: 'col', class: 'num' }, 'met'), h('th', { scope: 'col', class: 'num' }, 'missed'),
         h('th', { scope: 'col', class: 'num', title: 'Brier score of their own proposals’ forecasts' }, 'Brier as proposer'),
         h('th', { scope: 'col', class: 'num', title: 'Brier score of their forecasts as voter or critic' }, 'Brier as forecaster'))),
       h('tbody', {}, people.map(p => h('tr', {},
-        h('td', { class: 'mono' }, p.person),
-        h('td', {}, h('span', { class: 'fam-row' }, (p.handles.length > 1 || p.handles[0] !== p.person) ? h('span', { class: 'small mono muted' }, p.handles.join(', ')) : null, p.families.map(famChip))),
+        h('td', { class: 'mono' }, p.handles[0] || '?', p.handles.length > 1 ? h('span', { class: 'small muted' }, ` (+ ${p.handles.slice(1).join(', ')})`) : null),
         h('td', { class: 'num' }, String(p.made)), h('td', { class: 'num' }, String(p.funded)), h('td', { class: 'num' }, String(p.met)),
         h('td', { class: 'num' }, p.missed == null ? '—' : String(p.missed)),
         h('td', { class: 'num' }, brierCell(p.brierP, p.nP)), h('td', { class: 'num' }, brierCell(p.brierF, p.nF))))))),
@@ -503,7 +524,7 @@ function renderPast(el, cycles, currentId) {
       if (!d.open || loaded) return; loaded = true;
       mount(body, skeleton(3));
       try {
-        const { items } = A.council(await api(`/council/cycles/${encodeURIComponent(c.id)}`));
+        const items = A.items(await api(`/council/cycles/${encodeURIComponent(c.id)}`));
         mount(body, items.length ? h('ul', { class: 'past-items' }, items.map(pastRow)) : h('p', { class: 'small muted' }, 'No proposals in this cycle.'));
       } catch (e) { loaded = false; showError(body, e, 'this cycle'); }
     });
@@ -538,24 +559,31 @@ function notLiveBox(el, what) {
     try { return adapt(await api(path)); }
     catch (e) { if (notLive(e)) notLiveBox(el, what); else showError(el, e, what); return null; }
   };
+  // Track and layer names are only for labels; the page works without them.
+  const [tracks, layers] = await Promise.all([api('/tracks').catch(() => []), api('/layers').catch(() => [])]);
+  A.names(tracks?.items ?? tracks, layers?.items ?? layers);
   // Side panels load independently so one failure doesn't blank the page.
   load('/council/evidence', $('#evidence'), 'evidence brief', A.evidence).then(ev => ev && renderEvidence($('#evidence'), ev));
   load('/council/track-record', $('#record'), 'track record', A.trackRecord).then(p => p && renderRecord($('#record'), p));
   load('/council/rules', $('#rules'), 'applicability rules', A.rules).then(r => r && renderRules($('#rules'), r));
 
-  const cur = await load('/council', cycleEl, 'council data', A.council);
+  const [cur, cycles] = await Promise.all([
+    load('/council', cycleEl, 'council data', A.council),
+    load('/council/cycles', $('#past'), 'past cycles', A.cycles),
+  ]);
   if (!cur) mount(itemsEl);
   else if (!cur.cycle) {
     mount(cycleEl, h('div', { class: 'empty' }, 'No council cycle has been opened yet. The steward opens the first one.',
       state.mock ? null : [' ', h('a', { href: 'council.html?mock=1' }, 'See an example cycle'), '.']));
-    mount(itemsEl);
+    mount(itemsEl, h('div', { class: 'empty' }, 'No proposals yet.'));
   } else {
-    const { cycle, items } = cur;
+    const { cycle, items, rule, vetoRate, defaults } = cur;
+    cycle.number = cycles?.find(x => x.id === cycle.id)?.number ?? null;
+    if (rule) $('.mes-rule').textContent = rule;
     $('#cycle-lede').textContent = `Cycle ${cycle.number ?? cycle.id}: where it is now, what each stage is for, and when it closes.`;
-    renderCycle(cycleEl, cycle, items);
+    renderCycle(cycleEl, cycle, items, vetoRate);
     renderMesLive(cycle, items);
-    renderItems(itemsEl, cycle, items);
+    renderItems(itemsEl, cycle, items, defaults);
   }
-  const cycles = await load('/council/cycles', $('#past'), 'past cycles', A.cycles);
   if (cycles) renderPast($('#past'), cycles, cur?.cycle?.id);
 })();

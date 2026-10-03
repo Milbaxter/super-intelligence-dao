@@ -4,8 +4,10 @@ minutes capped at lease age, zero-width normalisation, no-results checks, task t
 
 from datetime import timedelta
 
+import pytest
+
 from agentdao import db
-from agentdao.verify import FetchResult, normalize, quote_ambiguity
+from agentdao.verify import FetchResult, normalize, quote_ambiguity, quote_candidates
 from conftest import STEWARD, claim, create_task, do_extract, extract_payload, register, submit
 
 TABLE_URL = "https://example.org/table"
@@ -71,13 +73,53 @@ def test_quote_ambiguity_two_candidates_and_identifiers():
     assert quote_ambiguity("72.4x and 72.4. and 68.1", 72.4)  # "72.4x" skipped, "72.4." and "68.1" counted
 
 
-def test_two_number_quote_needs_notes(client, fetcher):
+def test_quote_candidates_counts():
+    assert quote_candidates("Llama 3.1 405B scores 88.6 on MMLU", 88.6) == 2  # "405B" is an identifier
+    assert quote_candidates("Foo-Agent resolves 72.4%, up from 65.1%", 72.4) == 2
+    assert quote_candidates(ROW, 72.4) == 3
+    assert quote_candidates("On SWE-bench Verified, Foo-Agent resolves 72.4% of tasks", 72.4) == 1
+    assert quote_candidates("no value here 12.3", 72.4) == 0
+
+
+@pytest.mark.parametrize("quote,value", [
+    ("Foo-Agent reaches 85.9% and 87.7% in Pass@1 on SWE-bench Verified", 85.9),
+    ("On SWE-bench Verified Llama 3.1 405B scores 88.6 with Foo-Agent", 88.6),
+    ("Foo-Agent resolves 72.4%, up from 65.1%, on SWE-bench Verified", 72.4),
+])
+def test_two_number_quote_is_flagged_not_dropped(client, fetcher, quote, value):
     url = "https://example.org/two"
-    quote = "Foo-Agent reaches 85.9% and 87.7% in Pass@1 on SWE-bench Verified"
     fetcher.pages[url] = FetchResult(url, 200, "text/html", f"<p>{quote}</p>".encode())
     h = register(client, "alice")
     create_task(client)
-    p = extract_payload(value=85.9, quote=quote, source=url)
+    p = extract_payload(value=value, quote=quote, source=url)
+    p["claims"][0]["conditions"] = {"model": "claude-x"}
+    res = submit(client, h, claim(client, h).json()["lease"]["id"], p).json()
+    chk = res["checks"][0]
+    assert res["status"] == "verifying" and chk["passed"] and chk["tier"] == "source-checked"
+    assert chk["flag"] == "ambiguous_quote" and chk["detail"] == "ambiguous_quote_notes_recommended"
+    assert "conditions.notes" in chk["message"] and "recommended" in chk["message"]
+    q = client.get("/api/v1/admin/queue", headers=STEWARD).json()
+    assert [c["id"] for c in q["flagged_claims"]] == [chk["claim_id"]]
+
+
+def test_two_number_quote_with_notes_has_plain_detail(client, fetcher):
+    url = "https://example.org/two"
+    quote = "Foo-Agent resolves 72.4%, up from 65.1%, on SWE-bench Verified"
+    fetcher.pages[url] = FetchResult(url, 200, "text/html", f"<p>{quote}</p>".encode())
+    h = register(client, "alice")
+    create_task(client)
+    p = extract_payload(quote=quote, source=url)  # conditions.notes set
+    chk = submit(client, h, claim(client, h).json()["lease"]["id"], p).json()["checks"][0]
+    assert chk["passed"] and chk["flag"] == "ambiguous_quote" and chk["detail"] == "ok" and "message" not in chk
+
+
+def test_three_number_quote_without_notes_is_dropped(client, fetcher):
+    url = "https://example.org/three"
+    quote = "Foo-Agent resolves 72.4%, up from 65.1% and 60.2%, on SWE-bench Verified"
+    fetcher.pages[url] = FetchResult(url, 200, "text/html", f"<p>{quote}</p>".encode())
+    h = register(client, "alice")
+    create_task(client)
+    p = extract_payload(quote=quote, source=url)
     p["claims"][0]["conditions"] = {"model": "claude-x"}
     res = submit(client, h, claim(client, h).json()["lease"]["id"], p).json()
     assert res["checks"][0]["detail"] == "ambiguous_quote_needs_notes" and res["status"] == "rejected"
@@ -150,6 +192,30 @@ def test_minutes_spent_capped_at_lease_age(client, conn):
         sid = client.post(f"/api/v1/leases/{lease['id']}/submit", json=body, headers=h).json()["submission_id"]
         minutes[label] = db.scalar(conn, "SELECT minutes_spent FROM submissions WHERE id=?", (sid,))
     assert minutes == {"over": 1, "over_aged": 11, "under": 4, "omitted": 11}
+
+
+def test_submit_number_fields_empty_string_is_omitted(client, conn):
+    h = register(client, "alice")
+    stored = {}
+    for label, extra in (("empty", {"minutes_spent": "", "tokens_estimate": ""}),
+                         ("null", {"minutes_spent": None, "tokens_estimate": None}),
+                         ("numeric_str", {"minutes_spent": " 4 ", "tokens_estimate": "1500"})):
+        create_task(client, title=label)
+        lease = claim(client, h).json()["lease"]
+        conn.execute("UPDATE leases SET created_at=? WHERE id=?", (db.ts_in(seconds=-630), lease["id"]))
+        r = client.post(f"/api/v1/leases/{lease['id']}/submit", json={"payload": extract_payload(), **extra}, headers=h)
+        assert r.status_code == 200, (label, r.text)
+        stored[label] = db.one(conn, "SELECT minutes_spent, tokens_estimate FROM submissions WHERE id=?",
+                               (r.json()["submission_id"],))
+    assert stored["empty"] == {"minutes_spent": 11, "tokens_estimate": 0}
+    assert stored["null"] == {"minutes_spent": 11, "tokens_estimate": 0}
+    assert stored["numeric_str"] == {"minutes_spent": 4, "tokens_estimate": 1500}
+    create_task(client, title="bad")
+    lease = claim(client, h).json()["lease"]
+    for bad in ({"minutes_spent": "abc"}, {"minutes_spent": "nan"}, {"tokens_estimate": "1e999"},
+                {"minutes_spent": True}, {"tokens_estimate": [1]}):
+        r = client.post(f"/api/v1/leases/{lease['id']}/submit", json={"payload": extract_payload(), **bad}, headers=h)
+        assert r.status_code == 422 and r.json()["error"]["code"] == "invalid_body", (bad, r.text)
 
 
 def test_no_results_needs_searched_url_and_reports_check(client):

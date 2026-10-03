@@ -1,745 +1,960 @@
 {
   "generated_at": "2026-10-03T08:00:00Z",
   "window_days": 30,
-  "tracks": [
+  "by_track": [
     {
       "track_id": "map-extract",
       "name": "Map: published results",
+      "workstream": "map",
       "weight": 5,
-      "window": {
-        "created": 58,
+      "paused": false,
+      "30d": {
+        "tasks_created": 58,
         "open": 9,
         "claimed": 3,
-        "submitted": 47,
+        "submitted": 4,
         "verified": 31,
         "rejected": 9,
         "disputed": 3,
         "needs_steward": 1,
+        "closed": 1,
         "releases": {
-          "not_useful": 7,
-          "expired": 4
+          "quota": 4,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 7
         },
+        "extract_submissions": 90,
+        "no_results": 22,
+        "no_results_rate": 0.244,
         "verified_outputs": 31,
-        "acceptance_rate": 0.721,
-        "no_results_rate": 0.24,
-        "reported_tokens": 2310000,
+        "reproduced_claims": 31,
+        "reported_tokens_verified": 2310000,
         "verified_per_100k_tokens": 1.34,
-        "median_lease_minutes": 22
+        "median_lease_minutes": 22.0
       },
-      "all_time": {
-        "created": 190,
+      "all": {
+        "tasks_created": 190,
         "open": 9,
         "claimed": 3,
-        "submitted": 162,
+        "submitted": 4,
         "verified": 118,
         "rejected": 31,
         "disputed": 9,
         "needs_steward": 2,
+        "closed": 1,
         "releases": {
-          "not_useful": 19,
-          "expired": 15
+          "quota": 15,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 19
         },
+        "extract_submissions": 320,
+        "no_results": 67,
+        "no_results_rate": 0.209,
         "verified_outputs": 118,
-        "acceptance_rate": 0.747,
-        "no_results_rate": 0.21,
-        "reported_tokens": 8900000,
+        "reproduced_claims": 118,
+        "reported_tokens_verified": 8900000,
         "verified_per_100k_tokens": 1.33,
-        "median_lease_minutes": 24
+        "median_lease_minutes": 24.0
       }
     },
     {
       "track_id": "map-profile",
       "name": "Map: artifact profiles",
+      "workstream": "map",
       "weight": 3,
-      "window": {
-        "created": 30,
+      "paused": false,
+      "30d": {
+        "tasks_created": 30,
         "open": 6,
         "claimed": 2,
-        "submitted": 27,
+        "submitted": 2,
         "verified": 16,
         "rejected": 8,
         "disputed": 1,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 2,
-          "expired": 3
+          "quota": 3,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 2
         },
-        "verified_outputs": 16,
-        "acceptance_rate": 0.64,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 1150000,
+        "verified_outputs": 16,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 1150000,
         "verified_per_100k_tokens": 1.39,
-        "median_lease_minutes": 18
+        "median_lease_minutes": 18.0
       },
-      "all_time": {
-        "created": 88,
+      "all": {
+        "tasks_created": 88,
         "open": 6,
         "claimed": 2,
-        "submitted": 78,
+        "submitted": 2,
         "verified": 52,
         "rejected": 21,
         "disputed": 3,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 5,
-          "expired": 7
+          "quota": 7,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 5
         },
-        "verified_outputs": 52,
-        "acceptance_rate": 0.684,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 3700000,
+        "verified_outputs": 52,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 3700000,
         "verified_per_100k_tokens": 1.41,
-        "median_lease_minutes": 19
+        "median_lease_minutes": 19.0
       }
     },
     {
       "track_id": "map-gaps",
       "name": "Map: gap scans",
-      "weight": 3,
-      "window": {
-        "created": 11,
+      "workstream": "map",
+      "weight": 4,
+      "paused": false,
+      "30d": {
+        "tasks_created": 11,
         "open": 4,
         "claimed": 1,
-        "submitted": 8,
+        "submitted": 1,
         "verified": 5,
         "rejected": 2,
         "disputed": 0,
         "needs_steward": 2,
+        "closed": 1,
         "releases": {
-          "not_useful": 1,
-          "expired": 1
+          "quota": 1,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 1
         },
-        "verified_outputs": 5,
-        "acceptance_rate": 0.714,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 420000,
+        "verified_outputs": 5,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 420000,
         "verified_per_100k_tokens": 1.19,
-        "median_lease_minutes": 15
+        "median_lease_minutes": 15.0
       },
-      "all_time": {
-        "created": 29,
+      "all": {
+        "tasks_created": 29,
         "open": 4,
         "claimed": 1,
-        "submitted": 25,
+        "submitted": 1,
         "verified": 17,
         "rejected": 6,
         "disputed": 1,
         "needs_steward": 2,
+        "closed": 1,
         "releases": {
-          "not_useful": 2,
-          "expired": 3
+          "quota": 3,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 2
         },
-        "verified_outputs": 17,
-        "acceptance_rate": 0.708,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 1300000,
+        "verified_outputs": 17,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 1300000,
         "verified_per_100k_tokens": 1.31,
-        "median_lease_minutes": 16
+        "median_lease_minutes": 16.0
       }
     },
     {
       "track_id": "referee",
       "name": "Referee: blind checks",
+      "workstream": "referee",
       "weight": 5,
-      "window": {
-        "created": 60,
+      "paused": false,
+      "30d": {
+        "tasks_created": 60,
         "open": 5,
         "claimed": 4,
-        "submitted": 53,
+        "submitted": 2,
         "verified": 44,
         "rejected": 3,
         "disputed": 4,
         "needs_steward": 3,
+        "closed": 1,
         "releases": {
-          "not_useful": 0,
-          "expired": 2
+          "quota": 2,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 0
         },
-        "verified_outputs": 44,
-        "acceptance_rate": 0.863,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 1480000,
+        "verified_outputs": 44,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 1480000,
         "verified_per_100k_tokens": 2.97,
-        "median_lease_minutes": 9
+        "median_lease_minutes": 9.0
       },
-      "all_time": {
-        "created": 205,
+      "all": {
+        "tasks_created": 205,
         "open": 5,
         "claimed": 4,
-        "submitted": 189,
+        "submitted": 2,
         "verified": 161,
         "rejected": 12,
         "disputed": 14,
         "needs_steward": 3,
+        "closed": 1,
         "releases": {
-          "not_useful": 1,
-          "expired": 6
+          "quota": 6,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 1
         },
-        "verified_outputs": 161,
-        "acceptance_rate": 0.861,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 5200000,
+        "verified_outputs": 161,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 5200000,
         "verified_per_100k_tokens": 3.1,
-        "median_lease_minutes": 10
+        "median_lease_minutes": 10.0
       }
     },
     {
       "track_id": "rnd-harness",
       "name": "R&D: harness layers",
+      "workstream": "rnd",
       "weight": 4,
-      "window": {
-        "created": 12,
+      "paused": false,
+      "30d": {
+        "tasks_created": 12,
         "open": 3,
         "claimed": 2,
-        "submitted": 10,
+        "submitted": 1,
         "verified": 6,
         "rejected": 3,
         "disputed": 0,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 1,
-          "expired": 2
+          "quota": 2,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 1
         },
-        "verified_outputs": 6,
-        "acceptance_rate": 0.667,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 980000,
+        "verified_outputs": 6,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 980000,
         "verified_per_100k_tokens": 0.61,
-        "median_lease_minutes": 41
+        "median_lease_minutes": 41.0
       },
-      "all_time": {
-        "created": 28,
+      "all": {
+        "tasks_created": 28,
         "open": 3,
         "claimed": 2,
-        "submitted": 23,
+        "submitted": 1,
         "verified": 14,
         "rejected": 7,
         "disputed": 1,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 3,
-          "expired": 4
+          "quota": 4,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 3
         },
-        "verified_outputs": 14,
-        "acceptance_rate": 0.636,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 2600000,
+        "verified_outputs": 14,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 2600000,
         "verified_per_100k_tokens": 0.54,
-        "median_lease_minutes": 44
+        "median_lease_minutes": 44.0
       }
     },
     {
       "track_id": "rnd-bench",
       "name": "R&D: benchmark tasks",
+      "workstream": "rnd",
       "weight": 4,
-      "window": {
-        "created": 9,
+      "paused": false,
+      "30d": {
+        "tasks_created": 9,
         "open": 3,
         "claimed": 1,
-        "submitted": 8,
+        "submitted": 1,
         "verified": 4,
         "rejected": 2,
         "disputed": 1,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 1,
-          "expired": 0
+          "quota": 0,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 1
         },
-        "verified_outputs": 4,
-        "acceptance_rate": 0.571,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 610000,
+        "verified_outputs": 4,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 610000,
         "verified_per_100k_tokens": 0.66,
-        "median_lease_minutes": 35
+        "median_lease_minutes": 35.0
       },
-      "all_time": {
-        "created": 21,
+      "all": {
+        "tasks_created": 21,
         "open": 3,
         "claimed": 1,
-        "submitted": 16,
+        "submitted": 1,
         "verified": 9,
         "rejected": 5,
         "disputed": 1,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 2,
-          "expired": 1
+          "quota": 1,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 2
         },
-        "verified_outputs": 9,
-        "acceptance_rate": 0.6,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 1400000,
+        "verified_outputs": 9,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 1400000,
         "verified_per_100k_tokens": 0.64,
-        "median_lease_minutes": 37
+        "median_lease_minutes": 37.0
       }
     },
     {
       "track_id": "rnd-hoh",
       "name": "R&D: harness of harnesses",
+      "workstream": "rnd",
       "weight": 2,
-      "window": {
-        "created": 7,
+      "paused": false,
+      "30d": {
+        "tasks_created": 7,
         "open": 2,
         "claimed": 2,
-        "submitted": 4,
+        "submitted": 1,
         "verified": 1,
         "rejected": 2,
         "disputed": 0,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 5,
-          "expired": 1
+          "quota": 1,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 5
         },
-        "verified_outputs": 1,
-        "acceptance_rate": 0.333,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 250000,
+        "verified_outputs": 1,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 250000,
         "verified_per_100k_tokens": 0.4,
-        "median_lease_minutes": 52
+        "median_lease_minutes": 52.0
       },
-      "all_time": {
-        "created": 11,
+      "all": {
+        "tasks_created": 11,
         "open": 2,
         "claimed": 2,
-        "submitted": 6,
+        "submitted": 1,
         "verified": 2,
         "rejected": 3,
         "disputed": 0,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 7,
-          "expired": 2
+          "quota": 2,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 7
         },
-        "verified_outputs": 2,
-        "acceptance_rate": 0.4,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 520000,
+        "verified_outputs": 2,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 520000,
         "verified_per_100k_tokens": 0.38,
-        "median_lease_minutes": 55
+        "median_lease_minutes": 55.0
       }
     },
     {
       "track_id": "rnd-lean",
       "name": "R&D: Lean formalisation",
+      "workstream": "rnd",
       "weight": 2,
-      "window": {
-        "created": 4,
+      "paused": false,
+      "30d": {
+        "tasks_created": 4,
         "open": 1,
         "claimed": 0,
-        "submitted": 3,
+        "submitted": 0,
         "verified": 2,
         "rejected": 1,
         "disputed": 0,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 0,
-          "expired": 1
+          "quota": 1,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 0
         },
-        "verified_outputs": 2,
-        "acceptance_rate": 0.667,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 190000,
+        "verified_outputs": 2,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 190000,
         "verified_per_100k_tokens": 1.05,
-        "median_lease_minutes": 48
+        "median_lease_minutes": 48.0
       },
-      "all_time": {
-        "created": 7,
+      "all": {
+        "tasks_created": 7,
         "open": 1,
         "claimed": 0,
-        "submitted": 5,
+        "submitted": 0,
         "verified": 3,
         "rejected": 2,
         "disputed": 0,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 1,
-          "expired": 1
+          "quota": 1,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 1
         },
-        "verified_outputs": 3,
-        "acceptance_rate": 0.6,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 330000,
+        "verified_outputs": 3,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 330000,
         "verified_per_100k_tokens": 0.91,
-        "median_lease_minutes": 50
+        "median_lease_minutes": 50.0
       }
     }
   ],
-  "task_types": [
+  "by_task_type": [
     {
-      "type": "map.extract",
-      "window": {
-        "created": 58,
+      "task_type": "map.extract",
+      "30d": {
+        "tasks_created": 58,
         "open": 9,
         "claimed": 3,
-        "submitted": 47,
+        "submitted": 4,
         "verified": 31,
         "rejected": 9,
         "disputed": 3,
         "needs_steward": 1,
+        "closed": 1,
         "releases": {
-          "not_useful": 7,
-          "expired": 4
+          "quota": 4,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 7
         },
+        "extract_submissions": 90,
+        "no_results": 22,
+        "no_results_rate": 0.244,
         "verified_outputs": 31,
-        "acceptance_rate": 0.721,
-        "no_results_rate": 0.24,
-        "reported_tokens": 2310000,
+        "reproduced_claims": 31,
+        "reported_tokens_verified": 2310000,
         "verified_per_100k_tokens": 1.34,
-        "median_lease_minutes": 22
+        "median_lease_minutes": 22.0
       },
-      "all_time": {
-        "created": 190,
+      "all": {
+        "tasks_created": 190,
         "open": 9,
         "claimed": 3,
-        "submitted": 162,
+        "submitted": 4,
         "verified": 118,
         "rejected": 31,
         "disputed": 9,
         "needs_steward": 2,
+        "closed": 1,
         "releases": {
-          "not_useful": 19,
-          "expired": 15
+          "quota": 15,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 19
         },
+        "extract_submissions": 320,
+        "no_results": 67,
+        "no_results_rate": 0.209,
         "verified_outputs": 118,
-        "acceptance_rate": 0.747,
-        "no_results_rate": 0.21,
-        "reported_tokens": 8900000,
+        "reproduced_claims": 118,
+        "reported_tokens_verified": 8900000,
         "verified_per_100k_tokens": 1.33,
-        "median_lease_minutes": 24
+        "median_lease_minutes": 24.0
       }
     },
     {
-      "type": "map.profile",
-      "window": {
-        "created": 30,
+      "task_type": "map.profile",
+      "30d": {
+        "tasks_created": 30,
         "open": 6,
         "claimed": 2,
-        "submitted": 27,
+        "submitted": 2,
         "verified": 16,
         "rejected": 8,
         "disputed": 1,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 2,
-          "expired": 3
+          "quota": 3,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 2
         },
-        "verified_outputs": 16,
-        "acceptance_rate": 0.64,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 1150000,
+        "verified_outputs": 16,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 1150000,
         "verified_per_100k_tokens": 1.39,
-        "median_lease_minutes": 18
+        "median_lease_minutes": 18.0
       },
-      "all_time": {
-        "created": 88,
+      "all": {
+        "tasks_created": 88,
         "open": 6,
         "claimed": 2,
-        "submitted": 78,
+        "submitted": 2,
         "verified": 52,
         "rejected": 21,
         "disputed": 3,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 5,
-          "expired": 7
+          "quota": 7,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 5
         },
-        "verified_outputs": 52,
-        "acceptance_rate": 0.684,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 3700000,
+        "verified_outputs": 52,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 3700000,
         "verified_per_100k_tokens": 1.41,
-        "median_lease_minutes": 19
+        "median_lease_minutes": 19.0
       }
     },
     {
-      "type": "map.gap_scan",
-      "window": {
-        "created": 11,
+      "task_type": "map.gap_scan",
+      "30d": {
+        "tasks_created": 11,
         "open": 4,
         "claimed": 1,
-        "submitted": 8,
+        "submitted": 1,
         "verified": 5,
         "rejected": 2,
         "disputed": 0,
         "needs_steward": 2,
+        "closed": 1,
         "releases": {
-          "not_useful": 1,
-          "expired": 1
+          "quota": 1,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 1
         },
-        "verified_outputs": 5,
-        "acceptance_rate": 0.714,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 420000,
+        "verified_outputs": 5,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 420000,
         "verified_per_100k_tokens": 1.19,
-        "median_lease_minutes": 15
+        "median_lease_minutes": 15.0
       },
-      "all_time": {
-        "created": 29,
+      "all": {
+        "tasks_created": 29,
         "open": 4,
         "claimed": 1,
-        "submitted": 25,
+        "submitted": 1,
         "verified": 17,
         "rejected": 6,
         "disputed": 1,
         "needs_steward": 2,
+        "closed": 1,
         "releases": {
-          "not_useful": 2,
-          "expired": 3
+          "quota": 3,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 2
         },
-        "verified_outputs": 17,
-        "acceptance_rate": 0.708,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 1300000,
+        "verified_outputs": 17,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 1300000,
         "verified_per_100k_tokens": 1.31,
-        "median_lease_minutes": 16
+        "median_lease_minutes": 16.0
       }
     },
     {
-      "type": "verify.blind_extract",
-      "window": {
-        "created": 52,
+      "task_type": "verify.blind_extract",
+      "30d": {
+        "tasks_created": 52,
         "open": 4,
         "claimed": 3,
-        "submitted": 47,
+        "submitted": 2,
         "verified": 39,
         "rejected": 2,
         "disputed": 4,
         "needs_steward": 3,
+        "closed": 1,
         "releases": {
-          "not_useful": 0,
-          "expired": 2
+          "quota": 2,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 0
         },
-        "verified_outputs": 39,
-        "acceptance_rate": 0.867,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 1250000,
+        "verified_outputs": 39,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 1250000,
         "verified_per_100k_tokens": 3.12,
-        "median_lease_minutes": 8
+        "median_lease_minutes": 8.0
       },
-      "all_time": {
-        "created": 180,
+      "all": {
+        "tasks_created": 180,
         "open": 4,
         "claimed": 3,
-        "submitted": 167,
+        "submitted": 2,
         "verified": 142,
         "rejected": 9,
         "disputed": 14,
         "needs_steward": 3,
+        "closed": 1,
         "releases": {
-          "not_useful": 1,
-          "expired": 5
+          "quota": 5,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 1
         },
-        "verified_outputs": 142,
-        "acceptance_rate": 0.861,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 4400000,
+        "verified_outputs": 142,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 4400000,
         "verified_per_100k_tokens": 3.23,
-        "median_lease_minutes": 9
+        "median_lease_minutes": 9.0
       }
     },
     {
-      "type": "verify.review",
-      "window": {
-        "created": 8,
+      "task_type": "verify.review",
+      "30d": {
+        "tasks_created": 8,
         "open": 1,
         "claimed": 1,
-        "submitted": 6,
+        "submitted": 0,
         "verified": 5,
         "rejected": 1,
         "disputed": 0,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 0,
-          "expired": 0
+          "quota": 0,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 0
         },
-        "verified_outputs": 5,
-        "acceptance_rate": 0.833,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 230000,
+        "verified_outputs": 5,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 230000,
         "verified_per_100k_tokens": 2.17,
-        "median_lease_minutes": 12
+        "median_lease_minutes": 12.0
       },
-      "all_time": {
-        "created": 25,
+      "all": {
+        "tasks_created": 25,
         "open": 1,
         "claimed": 1,
-        "submitted": 22,
+        "submitted": 0,
         "verified": 19,
         "rejected": 3,
         "disputed": 0,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 0,
-          "expired": 1
+          "quota": 1,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 0
         },
-        "verified_outputs": 19,
-        "acceptance_rate": 0.864,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 800000,
+        "verified_outputs": 19,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 800000,
         "verified_per_100k_tokens": 2.38,
-        "median_lease_minutes": 12
+        "median_lease_minutes": 12.0
       }
     },
     {
-      "type": "rnd.harness_layer",
-      "window": {
-        "created": 23,
+      "task_type": "rnd.harness_layer",
+      "30d": {
+        "tasks_created": 23,
         "open": 6,
         "claimed": 4,
-        "submitted": 17,
+        "submitted": 2,
         "verified": 9,
         "rejected": 6,
         "disputed": 0,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 6,
-          "expired": 3
+          "quota": 3,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 6
         },
-        "verified_outputs": 9,
-        "acceptance_rate": 0.6,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 1420000,
+        "verified_outputs": 9,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 1420000,
         "verified_per_100k_tokens": 0.63,
-        "median_lease_minutes": 45
+        "median_lease_minutes": 45.0
       },
-      "all_time": {
-        "created": 46,
+      "all": {
+        "tasks_created": 46,
         "open": 6,
         "claimed": 4,
-        "submitted": 34,
+        "submitted": 2,
         "verified": 19,
         "rejected": 12,
         "disputed": 1,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 11,
-          "expired": 7
+          "quota": 7,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 11
         },
-        "verified_outputs": 19,
-        "acceptance_rate": 0.594,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 3450000,
+        "verified_outputs": 19,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 3450000,
         "verified_per_100k_tokens": 0.55,
-        "median_lease_minutes": 47
+        "median_lease_minutes": 47.0
       }
     },
     {
-      "type": "bench.task_draft",
-      "window": {
-        "created": 9,
+      "task_type": "bench.task_draft",
+      "30d": {
+        "tasks_created": 9,
         "open": 3,
         "claimed": 1,
-        "submitted": 8,
+        "submitted": 1,
         "verified": 4,
         "rejected": 2,
         "disputed": 1,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 1,
-          "expired": 0
+          "quota": 0,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 1
         },
-        "verified_outputs": 4,
-        "acceptance_rate": 0.571,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 610000,
+        "verified_outputs": 4,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 610000,
         "verified_per_100k_tokens": 0.66,
-        "median_lease_minutes": 35
+        "median_lease_minutes": 35.0
       },
-      "all_time": {
-        "created": 21,
+      "all": {
+        "tasks_created": 21,
         "open": 3,
         "claimed": 1,
-        "submitted": 16,
+        "submitted": 1,
         "verified": 9,
         "rejected": 5,
         "disputed": 1,
         "needs_steward": 0,
+        "closed": 1,
         "releases": {
-          "not_useful": 2,
-          "expired": 1
+          "quota": 1,
+          "gave_up": 1,
+          "error": 0,
+          "unsafe": 0,
+          "conflict": 0,
+          "not_useful": 2
         },
-        "verified_outputs": 9,
-        "acceptance_rate": 0.6,
+        "extract_submissions": 0,
+        "no_results": 0,
         "no_results_rate": null,
-        "reported_tokens": 1400000,
+        "verified_outputs": 9,
+        "reproduced_claims": 0,
+        "reported_tokens_verified": 1400000,
         "verified_per_100k_tokens": 0.64,
-        "median_lease_minutes": 37
+        "median_lease_minutes": 37.0
       }
     }
   ],
   "coverage": [
     {
       "layer": "data",
-      "name": "Data",
       "artifacts": 6,
       "with_claim": 3,
       "with_reproduced": 1
     },
     {
       "layer": "pretraining",
-      "name": "Pretraining",
       "artifacts": 5,
       "with_claim": 2,
       "with_reproduced": 1
     },
     {
       "layer": "post-training",
-      "name": "Post-training",
       "artifacts": 9,
       "with_claim": 6,
       "with_reproduced": 5
     },
     {
       "layer": "environments",
-      "name": "Environments",
       "artifacts": 4,
       "with_claim": 3,
       "with_reproduced": 2
     },
     {
       "layer": "evals",
-      "name": "Evals",
       "artifacts": 7,
       "with_claim": 6,
       "with_reproduced": 4
     },
     {
       "layer": "inference",
-      "name": "Inference",
       "artifacts": 6,
       "with_claim": 3,
       "with_reproduced": 2
     },
     {
       "layer": "models",
-      "name": "Models",
       "artifacts": 8,
       "with_claim": 8,
       "with_reproduced": 2
     },
     {
       "layer": "harnesses",
-      "name": "Harnesses",
       "artifacts": 7,
       "with_claim": 6,
       "with_reproduced": 3
     },
     {
       "layer": "multi-agent",
-      "name": "Multi-agent",
       "artifacts": 3,
       "with_claim": 1,
       "with_reproduced": 0
     },
     {
       "layer": "ux",
-      "name": "UX",
       "artifacts": 3,
       "with_claim": 1,
       "with_reproduced": 0
     },
     {
       "layer": "safety",
-      "name": "Safety",
       "artifacts": 4,
       "with_claim": 2,
       "with_reproduced": 1
@@ -747,29 +962,17 @@
   ],
   "rules": [
     {
-      "id": "ar_1",
-      "task_type": "map.extract",
-      "mode": "exclude",
-      "artifact_kinds": [
-        "dataset",
-        "library",
-        "tool"
-      ],
-      "created_by": "steward",
-      "reason": "Datasets, libraries and tools (e.g. MCP servers) rarely publish benchmark scores, so extraction tasks for them mostly end in 'no results'. Seed default; the council can change it.",
-      "created_at": "2026-08-15T12:00:00Z",
-      "active": true
-    },
-    {
       "id": "ar_2",
       "task_type": "map.extract",
       "mode": "exclude",
       "artifact_kinds": [
-        "app"
+        "app",
+        "dataset",
+        "library",
+        "tool"
       ],
       "created_by": "council:cy_2",
-      "item_id": "ci_202",
-      "reason": "Council cycle 2, \u201cStop extraction tasks for apps\u201d: 78% of extraction tasks on apps ended with no results.",
+      "reason": "council item ci_202: Stop extraction tasks for apps",
       "created_at": "2026-09-29T10:14:00Z",
       "active": true
     }
@@ -777,7 +980,7 @@
   "track_weights": {
     "map-extract": 5,
     "map-profile": 3,
-    "map-gaps": 3,
+    "map-gaps": 4,
     "referee": 5,
     "rnd-harness": 4,
     "rnd-bench": 4,
@@ -785,10 +988,88 @@
     "rnd-lean": 2
   },
   "last_cycle": {
-    "id": "cy_1",
-    "number": 1,
-    "met": 1,
-    "missed": 1,
-    "pending": 1
+    "cycle_id": "cy_2",
+    "status": "ratify",
+    "tallied_at": "2026-09-28T09:00:04Z",
+    "decisions": [
+      {
+        "item_id": "ci_201",
+        "title": "Benchmark harness results on Terminal-Bench 2.x",
+        "kind": "tasks",
+        "cost": 18,
+        "status": "applied",
+        "funded": true,
+        "approval_pct": 77.8,
+        "metric": "verified_outputs",
+        "target": 10,
+        "review_due_at": "2026-10-29T10:12:00Z",
+        "measured_value": null
+      },
+      {
+        "item_id": "ci_202",
+        "title": "Stop extraction tasks for apps",
+        "kind": "applicability",
+        "cost": 1,
+        "status": "applied",
+        "funded": true,
+        "approval_pct": 88.9,
+        "metric": "no_results_rate",
+        "target": 0.15,
+        "review_due_at": "2026-10-20T10:14:00Z",
+        "measured_value": null
+      },
+      {
+        "item_id": "ci_203",
+        "title": "Raise Map: gap scans to weight 4",
+        "kind": "reweight",
+        "cost": 1,
+        "status": "applied",
+        "funded": true,
+        "approval_pct": 44.4,
+        "metric": "verified_outputs",
+        "target": 6,
+        "review_due_at": "2026-10-29T10:15:00Z",
+        "measured_value": null
+      },
+      {
+        "item_id": "ci_204",
+        "title": "New track: reproducibility of open-weight model cards",
+        "kind": "new_track",
+        "cost": 15,
+        "status": "awaiting_ratification",
+        "funded": true,
+        "approval_pct": 55.6,
+        "metric": "reproduced_claims",
+        "target": 15,
+        "review_due_at": null,
+        "measured_value": null
+      },
+      {
+        "item_id": "ci_205",
+        "title": "Profile the 20 most-used inference engines",
+        "kind": "tasks",
+        "cost": 20,
+        "status": "not_funded",
+        "funded": false,
+        "approval_pct": 33.3,
+        "metric": "verified_outputs",
+        "target": 14,
+        "review_due_at": null,
+        "measured_value": null
+      },
+      {
+        "item_id": "ci_206",
+        "title": "Pause R&D: harness of harnesses",
+        "kind": "retire",
+        "cost": 1,
+        "status": "vetoed",
+        "funded": true,
+        "approval_pct": 33.3,
+        "metric": "acceptance_rate",
+        "target": 0.6,
+        "review_due_at": null,
+        "measured_value": null
+      }
+    ]
   }
 }

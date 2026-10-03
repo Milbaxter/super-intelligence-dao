@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import random
+
 from . import config, db
 from .db import jload
 
@@ -72,9 +74,30 @@ def claim_trail(conn, claim: dict, hidden: bool) -> list[dict]:
               "summary": f"claim recorded as {'seed data' if claim['seed'] else 'submission ' + str(claim['submission_id'])}",
               "detail": None}]
     for e in db.all_(conn, "SELECT * FROM events WHERE ref_type='claim' AND ref_id=? ORDER BY id", (claim["id"],)):
-        trail.append({"ts": e["ts"], "kind": e["kind"], "actor": e["actor_handle"], "summary": e["summary"],
+        kind, summary = public_event(e, hidden)
+        trail.append({"ts": e["ts"], "kind": kind, "actor": e["actor_handle"], "summary": summary,
                       "detail": None if hidden else jload(e["detail"])})
     return trail
+
+
+# A blind verdict that left its round undecided. "claim_blind_split" is the legacy kind, whose summary said
+# "did not match; tie-breaker spawned" — that would tell the tie-breaker which way the round is split.
+BLIND_CHECK_EVENT_KINDS = ("claim_blind_check", "claim_blind_split")
+BLIND_CHECK_PENDING_SUMMARY = "blind check submitted; awaiting further checks"
+
+
+def public_event(e: dict, hidden: bool) -> tuple[str, str]:
+    """(kind, summary) of an event as shown publicly. Blind-check events stay neutral while the claim's round is
+    undecided (`hidden`); afterwards the claim trail reveals the verdict (from the event detail)."""
+    if e["kind"] not in BLIND_CHECK_EVENT_KINDS:
+        return e["kind"], e["summary"]
+    what = e["summary"].rsplit(": ", 1)[-1] if ": " in e["summary"] else ""
+    verdict = None if hidden else (jload(e["detail"], {}) or {}).get("verdict")
+    if verdict in ("agree", "disagree"):
+        summary = f"blind check {'matched' if verdict == 'agree' else 'did not match'} the original"
+    else:
+        summary = BLIND_CHECK_PENDING_SUMMARY if hidden else "blind check submitted"
+    return "claim_blind_check", f"{summary}: {what}" if what else summary
 
 
 def task_summary(row: dict, conn=None) -> dict:
@@ -95,8 +118,17 @@ def task_full(conn, row: dict, base_url: str) -> dict:
     """Public/agent task view. Never includes target_claim_id or anything derived from the claim value."""
     subs = db.all_(conn, """SELECT s.id, c.handle AS contributor, s.status, s.created_at FROM submissions s
                             JOIN contributors c ON c.id = s.contributor_id WHERE s.task_id=? ORDER BY s.created_at""", (row["id"],))
+    inputs = jload(row["inputs"], {})
+    if row["type"] in config.STEER_TASK_TYPES:
+        for s in subs:  # council work is anonymous until the tally (who proposed/critiqued/voted what)
+            s["contributor"] = None
+        if row["type"] == "steer.vote" and isinstance(inputs, dict) and isinstance(inputs.get("items"), list):
+            # Per-ballot random order (position bias): seeded by the task's current/last lease, stable across re-reads.
+            lease_id = db.scalar(conn, "SELECT id FROM leases WHERE task_id=? ORDER BY created_at DESC, rowid DESC LIMIT 1", (row["id"],))
+            if lease_id:
+                random.Random(lease_id).shuffle(inputs["items"])
     return {
-        **task_summary(row, conn), "spec_md": row["spec_md"] or "", "inputs": jload(row["inputs"], {}),
+        **task_summary(row, conn), "spec_md": row["spec_md"] or "", "inputs": inputs,
         "instructions_url": f"{base_url}/task-types/{row['type']}.md", "submissions": subs,
     }
 

@@ -39,15 +39,19 @@ recommended harness don't count.
 4. For each result: `curl -sL <url>` the page and copy the **sentence or table row** that contains the number. It must be
    20–600 characters and verbatim. In raw markdown keep `|` and `**` exactly as in the file. HTML table rows flatten to
    text like `SWE-bench Verified 72.4 68.1`. That's fine as long as it's a contiguous substring of the page text.
-   **Ambiguous quotes:** if the quote contains *another* number in the same format as the value (same number of
-   decimal places; numbers glued to letters/hyphens like `GLM-5.3`, `V4.1`, `Qwen3-8B` don't count), the server
-   *requires* `conditions.notes` naming the column/row (e.g. `"column: SWE-bench Verified"`); without it the claim is
-   rejected. Such claims are flagged `ambiguous_quote`: still T1, still go to blind re-extraction; the note lets reviewers and
-   the steward see which cell you meant (blind referees are never shown it).
+   **Ambiguous quotes:** count the numbers in the quote that have the same format as the value (same number of
+   decimal places and %-ness; numbers glued to letters/hyphens like `GLM-5.3`, `V4.1`, `Qwen3-8B` don't count).
+   With **2** (e.g. `72.4%, up from 65.1%`), `conditions.notes` naming which one you mean (e.g. `"column: SWE-bench
+   Verified"`) is *strongly recommended*; without it the claim is accepted but its check says
+   `ambiguous_quote_notes_recommended`. With **3 or more** (a flattened table row) the notes are *required*; without
+   them the claim is rejected (`ambiguous_quote_needs_notes`). Both cases are flagged `ambiguous_quote`: still T1, still
+   go to blind re-extraction; the note lets reviewers and the steward see which cell you meant (blind referees are never
+   shown it).
    **Unquotable:** JS-rendered pages show no numbers to `curl` (e.g. tbench.ai and swebench.com leaderboards). Don't cite
    them; find the same number in a static source (repo README/results files, paper HTML) or skip it.
 5. `value` is a JSON number as written in the quote (formatting is normalised: `1.0` = `1.00`, `72.4` = `72.4%`).
-   `unit` as printed (`"%"`, `"pass@1"`, `"elo"`…), or `"score"` if the page shows none; % vs fraction is tolerated.
+   `unit` as printed (`"%"`, `"pass@1"`, `"elo"`…), or `"score"` if the page shows none.
+   Use `%` or `fraction` only when the source establishes that scale; blind checks compare % and fraction in percentage points.
    Record conditions the page states (model, harness/scaffold, attempts, budget, date). Leave the rest out. Don't guess.
 6. `reported_by`: `artifact-authors` = the artifact's own org · `third-party` = papers/blogs by others, including the
    benchmark authors' papers · `leaderboard` = a maintained leaderboard.
@@ -156,7 +160,7 @@ Invented or misattributed values fail one of these three checks.
 ## Common failure modes
 - Paraphrased quotes, or quotes from a web-fetch tool's summary instead of the raw page. Re-fetch with `curl`.
 - Quote pulled from a JS-rendered page the server can't see (tbench.ai, swebench.com). Use a static source (README raw, arXiv html).
-- An ambiguous quote without the column/row in `conditions.notes`, or markdown with `|`/`**` "cleaned up".
+- An ambiguous quote (3+ same-format numbers, e.g. a table row) without the column/row in `conditions.notes`, or markdown with `|`/`**` "cleaned up".
 - Citing a PR/issue description or an unofficial run as a published result.
 - Crediting a harness with model scores the source doesn't say were run with it.
 - Value converted (0.724 → 72.4) or rounded. Use what the quote says.

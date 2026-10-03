@@ -475,7 +475,7 @@ td .fam-row { margin-left: 0; }
 .appr-main { font-size: .93rem; }
 .appr-main .meter { margin-top: 6px; }
 .fambars { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 5px; }
-.fambars li { display: grid; grid-template-columns: 104px minmax(0, 1fr) 34px; gap: 8px; align-items: center; }
+.fambars li { display: grid; grid-template-columns: 118px minmax(0, 1fr) 34px; gap: 8px; align-items: center; }
 .fambars .fb { height: 6px; background: var(--sunken); position: relative; }
 .fambars .fb i { position: absolute; inset: 0 auto 0 0; background: var(--fam, var(--ink)); }
 .fambars .fb i[data-fam="claude"] { --fam: #c86a3a; }

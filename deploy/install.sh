@@ -28,7 +28,9 @@ install_file() {
   fi
 }
 
-# 1. Scripts: root-owned so the deploy key (user sidao) cannot rewrite what it runs.
+# 1. Scripts: root-owned for tidiness (they are installed config, not app state). This is not a security boundary:
+#    sidao owns $BASE, so it could replace these files anyway, and deploy.sh's `pip install -e` already runs repo
+#    code as sidao.
 CHANGED=0
 install_file "$SRC/deploy.sh" "$BASE/deploy.sh" 0755 root:root
 install_file "$SRC/backup.sh" "$BASE/backup.sh" 0755 root:root
@@ -50,7 +52,16 @@ else
   note "enabled    sidao-backup.timer (now)"
 fi
 
-# 4. IP salt: generate a secret one if missing. The value is never printed.
+# 4. Journal access: deploy.sh (run as sidao) prints `journalctl -u super-intelligence-dao` when a deploy fails;
+#    without the systemd-journal group that output is empty.
+if id -nG sidao | tr ' ' '\n' | grep -qx systemd-journal; then
+  note "unchanged  sidao already in group systemd-journal"
+else
+  usermod -aG systemd-journal sidao
+  note "added      sidao to group systemd-journal (takes effect on its next login/session)"
+fi
+
+# 5. IP salt: generate a secret one if missing. The value is never printed.
 SALT_ADDED=0
 if [[ ! -f $ENV_FILE ]]; then
   note "WARNING    $ENV_FILE missing; AGENTDAO_IP_SALT not set"
@@ -65,7 +76,7 @@ else
   note "added      AGENTDAO_IP_SALT (random, 64 hex chars) to $ENV_FILE"
 fi
 
-# 5. Sanity checks (report only).
+# 6. Sanity checks (report only).
 [[ -f /etc/sudoers.d/super-intelligence-dao ]] ||
   note "WARNING    /etc/sudoers.d/super-intelligence-dao missing: deploy.sh needs" \
        "'sidao ALL=(root) NOPASSWD: /usr/bin/systemctl restart super-intelligence-dao'"

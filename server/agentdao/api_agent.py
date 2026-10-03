@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import math
 import re
 import secrets
 
@@ -145,13 +146,30 @@ def release(lease_id: str, request: Request, body=Body(...), conn=Depends(get_co
     return {"ok": True}
 
 
+def _opt_number(body: dict, k: str) -> float | int | None:
+    """Optional self-reported number: missing/null/"" → None (omitted); a numeric string is accepted; else 422."""
+    v = body.get(k)
+    if v is None or (isinstance(v, str) and not v.strip()):
+        return None
+    if isinstance(v, str):
+        try:
+            v = float(v.strip())
+        except ValueError:
+            v = None
+        if v is None or not math.isfinite(v):
+            raise ApiError(422, "invalid_body", f"{k} must be a number")
+        return v
+    if isinstance(v, bool) or not isinstance(v, (int, float)):
+        raise ApiError(422, "invalid_body", f"{k} must be a number")
+    return v
+
+
 @router.post("/leases/{lease_id}/submit")
 def submit(lease_id: str, request: Request, body=Body(...), conn=Depends(get_conn)):
     c = require_contributor(request, conn)
     body = _obj(body)
+    body = {**body}
     for k in ("tokens_estimate", "minutes_spent"):
-        v = body.get(k, 0)
-        if v is not None and (isinstance(v, bool) or not isinstance(v, (int, float))):
-            raise ApiError(422, "invalid_body", f"{k} must be a number")
+        body[k] = _opt_number(body, k)
     result = lifecycle.submit(conn, request.app.state.checker, c, lease_id, body)
     return JSONResponse(result)

@@ -17,7 +17,7 @@ function kindStyle(kind = '') {
   return ['·', 'reported', 'other'];
 }
 const GROUPS = [['', 'All'], ['claims', 'Claims & checks'], ['tasks', 'Tasks'], ['steward', 'Steward'], ['people', 'People']];
-let group = '', paused = false, timer = 0, lastOk = 0, seen = new Set(), events = [];
+let group = '', paused = false, timer = 0, lastOk = 0, loadFailed = false, seen = new Set(), events = [];
 
 function refHref(e) {
   if (!e.ref_id) return null;
@@ -59,11 +59,12 @@ async function poll(first = false) {
     const fresh = new Set();
     list.forEach(e => { const k = keyOf(e); if (!seen.has(k)) { if (!first) fresh.add(k); seen.add(k); } });
     events = [...list].sort((a, b) => new Date(b.ts) - new Date(a.ts));
-    render(fresh); lastOk = Date.now();
-  } catch (e) { if (first) showError(feed, e, 'activity'); }
+    render(fresh); lastOk = Date.now(); loadFailed = false;
+  } catch (e) { loadFailed = true; if (!lastOk) showError(feed, e, 'activity'); }
   if (!paused) timer = setTimeout(poll, POLL_MS);
 }
 setInterval(() => {
+  if (loadFailed) { pollState.textContent = `Updates unavailable${lastOk ? ` · showing data from ${fmtAgo(lastOk)}` : ''} · ${paused ? 'paused' : 'retrying'}`; return; }
   if (!lastOk) { pollState.textContent = 'loading…'; return; }
   const ago = Math.round((Date.now() - lastOk) / 1000);
   pollState.textContent = paused ? `paused · updated ${ago}s ago` : `${state.mock ? 'example data · ' : ''}updated ${ago}s ago · next in ${Math.max(0, Math.round(POLL_MS / 1000) - ago)}s`;

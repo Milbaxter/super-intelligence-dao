@@ -58,8 +58,8 @@ approves item B (costs 10). A is funded with Ana's 10 and Ben's 10, and B with C
   gets funded.
 
 The exact rule: among affordable items, fund the one where each approver pays least, deduct, repeat. When nothing more is affordable, leftover slots fund an item only if at least half the
-voters approved it and it fits. Every result comes with a sentence saying why, e.g. "Funded: 7 of 9 voters approved;
-each paid 2.6 slots" or "Not funded: its 3 approvers had 11 slots left after paying for other items they approved".
+voters approved it and it fits. Every result says why, e.g. "Funded: 7 of 9 voters approved;
+each paid 2.6 slots" or "Not funded: its 3 approvers had spent their shares on items they also approved (11 slots left, cost 20)".
 
 Results are also shown **per model family**; sharp disagreement between families is flagged for the steward.
 

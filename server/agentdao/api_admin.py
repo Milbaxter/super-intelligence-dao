@@ -7,7 +7,7 @@ import secrets
 
 from fastapi import APIRouter, Body, Depends, Request
 
-from . import config, db, lifecycle, taskgen, views
+from . import config, council, db, lifecycle, taskgen, views
 from .db import jload, tx
 from .deps import get_conn, require_steward
 from .errors import ApiError, check_json, not_found
@@ -76,6 +76,7 @@ def queue(conn=Depends(get_conn)):
         item = views.claim_json(conn, c, redact=False)
         item["flag"] = (jload(c["check_result"], {}) or {}).get("flag")
         flagged.append(item)
+    undecided = undecided_blind_rounds(conn)
     proposed = [views.gap_json(g) for g in db.all_(conn, "SELECT * FROM gaps WHERE status='proposed' ORDER BY created_at")]
     recent = db.all_(conn, """SELECT s.id AS submission_id, s.task_id, t.type AS task_type, c.handle AS contributor,
                               s.created_at, s.resolved_at FROM submissions s JOIN tasks t ON t.id=s.task_id
@@ -86,8 +87,46 @@ def queue(conn=Depends(get_conn)):
         item["claim_ids"] = [r["id"] for r in db.all_(conn, """SELECT id FROM claims WHERE submission_id=? UNION
                              SELECT target_claim_id FROM tasks WHERE id=? AND target_claim_id IS NOT NULL""",
                                                        (item["submission_id"], item["task_id"]))]
-    return {"needs_steward": needs, "disputed_claims": disputed, "flagged_claims": flagged, "proposed_gaps": proposed,
-            "spot_check_sample": sample}
+    return {"needs_steward": needs, "disputed_claims": disputed, "flagged_claims": flagged,
+            "undecided_blind_rounds": undecided, "proposed_gaps": proposed, "spot_check_sample": sample}
+
+
+def undecided_blind_rounds(conn) -> list[dict]:
+    """Claims whose blind round is undecided with a blind task still on the board, listed when the round already
+    has a verdict (a split waiting for a tie-breaker) or its open task is BLIND_ROUND_STEWARD_AFTER_DAYS old.
+    With few contributors the tie-breaker can be eligible for nobody; the steward then decides via
+    POST /admin/claims/{id}/resolve, which closes the open blind tasks and settles the round's verdicts."""
+    pending = ",".join(f"'{s}'" for s in ("draft", "open", "leased", "submitted"))
+    rows = db.all_(conn, f"""SELECT target_claim_id AS claim_id, MIN(created_at) AS since,
+                             json_group_array(json_object('id', id, 'status', status, 'attempts', attempts,
+                                                          'created_at', created_at)) AS tasks
+                             FROM tasks WHERE type='verify.blind_extract' AND status IN ({pending})
+                             AND target_claim_id IS NOT NULL GROUP BY target_claim_id ORDER BY since""")
+    now = db.utcnow()
+    out = []
+    for r in rows:
+        votes = lifecycle._round_votes(conn, r["claim_id"])
+        age_days = round((now - db.parse_ts(r["since"])).total_seconds() / 86400, 2)
+        overdue = age_days >= config.BLIND_ROUND_STEWARD_AFTER_DAYS
+        if not votes and not overdue:
+            continue  # first blind check still fresh: nothing for the steward yet
+        row = views.get_claim(conn, r["claim_id"])
+        if not row:
+            continue
+        item = views.claim_json(conn, row, redact=False)
+        n_agree = sum(v["verdict"] == "agree" for v in votes)
+        verdicts = {v["sub_id"]: v for v in votes}
+        item["blind_round"] = {
+            "votes": {"agree": n_agree, "disagree": len(votes) - n_agree},
+            "open_tasks": jload(r["tasks"], []), "open_since": r["since"], "age_days": age_days, "overdue": overdue,
+            "verdicts": [{"verdict": verdicts[v["verifier_submission_id"]]["verdict"],
+                          "contributor": lifecycle.handle_of(conn, verdicts[v["verifier_submission_id"]]["contributor_id"]),
+                          "created_at": v["created_at"], "detail": jload(v["detail"], {})}
+                         for v in db.all_(conn, "SELECT * FROM verifications WHERE claim_id=? ORDER BY created_at, rowid",
+                                          (r["claim_id"],)) if v["verifier_submission_id"] in verdicts],
+        }
+        out.append(item)
+    return out
 
 
 @router.post("/tasks", status_code=201)
@@ -95,6 +134,8 @@ def create_task(body=Body(...), conn=Depends(get_conn)):
     b = _obj(body)
     if b.get("type") not in config.TASK_TYPES:
         raise ApiError(422, "invalid_type", f"type must be one of {config.TASK_TYPES}")
+    if b["type"] in config.STEER_TASK_TYPES:
+        raise ApiError(422, "invalid_type", "steer.* tasks are created by the council cycle (POST /admin/council/open)")
     if not isinstance(b.get("title"), str) or not b["title"].strip():
         raise ApiError(422, "invalid_title", "title required")
     allowed = b.get("allowed_model_families") or ["any"]
@@ -151,3 +192,40 @@ def recheck(claim_id: str, request: Request, conn=Depends(get_conn)):
     if not db.scalar(conn, "SELECT 1 FROM claims WHERE id=?", (claim_id,)):
         raise not_found("claim", claim_id)
     return lifecycle.recheck_claim(conn, request.app.state.checker, claim_id)
+
+
+# ------------------------------------------------------------------ the Council
+
+
+@router.post("/council/open", status_code=201)
+def council_open(body=Body(default={}), conn=Depends(get_conn)):
+    b = _obj(body or {})
+    cyc = council.open_cycle(conn, b.get("budget_slots"), b.get("propose_days"), b.get("critique_days"),
+                             b.get("vote_days"), str(b.get("note") or "") or None)
+    return council.cycle_json(conn, cyc)
+
+
+@router.post("/council/advance")
+def council_advance(conn=Depends(get_conn)):
+    return council.cycle_json(conn, council.advance(conn, force=True))
+
+
+@router.post("/council/items/{item_id}/withdraw")
+def council_withdraw(item_id: str, body=Body(...), conn=Depends(get_conn)):
+    item = council.withdraw(conn, item_id, _obj(body).get("reason"))
+    return {"id": item["id"], "status": item["status"], "reason": item["ratify_reason"]}
+
+
+@router.post("/council/items/{item_id}/ratify")
+def council_ratify(item_id: str, body=Body(...), conn=Depends(get_conn)):
+    b = _obj(body)
+    reason = b.get("reason")
+    if reason is not None and not isinstance(reason, str):
+        raise ApiError(422, "invalid_reason", "reason must be a string")
+    item = council.ratify(conn, item_id, b.get("decision"), reason)
+    return council.item_json(conn, item, council.get_cycle(conn, item["cycle_id"]))
+
+
+@router.post("/council/review")
+def council_review(conn=Depends(get_conn)):
+    return {"reviewed": council.review_due(conn)}

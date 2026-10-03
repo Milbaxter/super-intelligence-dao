@@ -20,10 +20,10 @@ import re
 import sqlite3
 from typing import Any
 
-from . import config, db
+from . import config, db, views
 from .db import jdump, jload, tx
 from .errors import ApiError, not_found
-from .verify import SOFT_FAIL_REASONS, QuoteChecker, quote_ambiguity
+from .verify import SOFT_FAIL_REASONS, QuoteChecker, quote_candidates
 
 PENDING_TASK_STATUSES = ("draft", "open", "leased", "submitted", "verifying")
 # Blind tasks get only the coarse identifiers needed to find the right number — never notes/column/attempts/date,
@@ -86,7 +86,9 @@ def track_for(conn, task_type: str, layer: str | None = None) -> str | None:
     for h in hints:
         if db.scalar(conn, "SELECT 1 FROM tracks WHERE id=?", (h,)):
             return h
-    ws = {"map": "map", "verify": "referee", "rnd": "rnd", "bench": "rnd"}[task_type.split(".")[0]]
+    ws = {"map": "map", "verify": "referee", "rnd": "rnd", "bench": "rnd"}.get(task_type.split(".")[0])
+    if not ws:
+        return None  # steer.* (council) tasks belong to no track
     return db.scalar(conn, "SELECT id FROM tracks WHERE workstream=? ORDER BY sort, id LIMIT 1", (ws,))
 
 
@@ -234,7 +236,7 @@ def same_person(conn, contributor: dict, other_id: str) -> bool:
 
 
 def eligible_score(conn, task: dict, contributor: dict, family: str, allow_same_ip: bool = False,
-                   require_github: bool = False) -> float | None:
+                   require_github: bool = False, task_types: list[str] | None = None) -> float | None:
     """None if the contributor may not take this task, else a ranking score."""
     allowed = jload(task["allowed_model_families"], ["any"])
     if "any" not in allowed and family not in allowed:
@@ -243,6 +245,9 @@ def eligible_score(conn, task: dict, contributor: dict, family: str, allow_same_
                  (task["id"], contributor["id"], db.ts_in(seconds=-config.RELEASE_COOLDOWN_S))):
         return None  # you released it recently; don't hand it straight back
     score = float(task["priority"])
+    if task["type"] in config.STEER_TASK_TYPES:  # council work: person limits, author exclusion, one ballot per person
+        from . import council
+        return council.steer_score(conn, task, contributor, family, allow_same_ip, score, task_types)
     if not task["type"].startswith("verify."):
         return score
     if require_github and not contributor.get("github_id"):
@@ -260,6 +265,16 @@ def eligible_score(conn, task: dict, contributor: dict, family: str, allow_same_
             WHERE l.contributor_id=? AND t.target_claim_id=? AND t.id != ?""",
             (contributor["id"], task["target_claim_id"], task["id"])):
         return None  # at most one verify task per claim per contributor
+    if task["type"] == "verify.blind_extract" and task["target_claim_id"]:
+        for other_id in _blind_participants(conn, task["target_claim_id"]):
+            if other_id == contributor["id"]:
+                continue  # own earlier lease on this very task: the release cooldown above applies
+            if same_person(conn, contributor, other_id):
+                return None  # same operator already checked (or holds a check on) this claim: one vote per person
+            if not allow_same_ip and contributor.get("registered_ip_hash") and db.scalar(
+                    conn, "SELECT 1 FROM contributors WHERE id=? AND registered_ip_hash=?",
+                    (other_id, contributor["registered_ip_hash"])):
+                return None  # same registered IP as an earlier/current verifier of this claim (Sybil guard)
     if task["type"] == "verify.review" and task["parent_submission_id"] and db.scalar(conn, """
             SELECT 1 FROM leases l JOIN tasks t ON t.id = l.task_id
             WHERE l.contributor_id=? AND t.type='verify.review' AND t.parent_submission_id=? AND t.id != ?""",
@@ -268,6 +283,15 @@ def eligible_score(conn, task: dict, contributor: dict, family: str, allow_same_
     if orig_family and orig_family != family:
         score += config.FAMILY_DIVERSITY_BONUS
     return score
+
+
+def _blind_participants(conn, claim_id: str) -> list[str]:
+    """Contributors who hold/held a lease (any status) on a blind task for the claim or submitted a verdict on it."""
+    return [r["cid"] for r in db.all_(conn, """
+        SELECT l.contributor_id AS cid FROM leases l JOIN tasks t ON t.id = l.task_id
+        WHERE t.type='verify.blind_extract' AND t.target_claim_id=?
+        UNION SELECT s.contributor_id FROM verifications v JOIN submissions s ON s.id = v.verifier_submission_id
+        WHERE v.claim_id=?""", (claim_id, claim_id))]
 
 
 NO_TASK_REASONS = ("no_open_tasks", "no_tasks_of_requested_types", "all_over_max_minutes", "none_eligible_for_you")
@@ -302,10 +326,13 @@ def claim_task(conn, contributor: dict, model_family: str, model: str | None,
         if max_minutes:
             sql += " AND budget_minutes <= ?"
             params.append(max_minutes)
+        # Paused tracks (weight 0) are skipped; referee work keeps running so pending claims still settle.
+        sql += """ AND (type LIKE 'verify.%' OR track_id IS NULL
+                   OR NOT EXISTS (SELECT 1 FROM tracks tr WHERE tr.id = tasks.track_id AND tr.weight = 0))"""
         sql += " ORDER BY priority DESC, created_at ASC LIMIT 500"
         best, best_score = None, None
         for task in db.all_(conn, sql, params):
-            s = eligible_score(conn, task, contributor, model_family, allow_same_ip, require_github)
+            s = eligible_score(conn, task, contributor, model_family, allow_same_ip, require_github, task_types)
             if s is not None and (best_score is None or s > best_score):
                 best, best_score = task, s
         if not best:
@@ -346,6 +373,8 @@ def heartbeat(conn, contributor: dict, lease_id: str, note: str | None) -> str:
 def release(conn, contributor: dict, lease_id: str, reason: str, note: str | None) -> None:
     if reason not in config.RELEASE_REASONS:
         raise ApiError(422, "invalid_reason", f"reason must be one of {config.RELEASE_REASONS}")
+    if reason in config.NOTE_REQUIRED_RELEASE_REASONS and not (note or "").strip():
+        raise ApiError(422, "note_required", f"reason {reason!r} needs a short note saying why (it feeds the council's evidence brief)")
     with tx(conn):
         lease = own_lease(conn, contributor, lease_id)
         conn.execute("""UPDATE leases SET status='released', released_at=?, release_reason=?,
@@ -385,6 +414,9 @@ def validate_payload(task_type: str, p: Any) -> list[dict]:
 
     if not isinstance(p, dict):
         return [{"field": "payload", "message": "must be an object"}]
+    if task_type in config.STEER_TASK_TYPES:
+        from . import council
+        return council.validate_payload(task_type, p)
     if task_type == "map.extract":
         claims = p.get("claims", [])
         if not isinstance(claims, list) or len(claims) > config.MAX_EXTRACT_CLAIMS:
@@ -505,6 +537,9 @@ def submit(conn, checker: QuoteChecker, contributor: dict, lease_id: str, body: 
     task = db.one(conn, "SELECT * FROM tasks WHERE id=?", (lease["task_id"],))
     payload = body.get("payload")
     errors = validate_payload(task["type"], payload)
+    if not errors and task["type"] in config.STEER_TASK_TYPES:
+        from . import council
+        errors = council.validate_refs(conn, task, payload)
     if errors:
         raise ApiError(422, "invalid_payload", f"payload does not match {task['type']} schema", fields=errors)
     pre = _precheck(task, payload, checker)
@@ -528,9 +563,11 @@ def submit(conn, checker: QuoteChecker, contributor: dict, lease_id: str, body: 
         set_task_status(conn, task["id"], "submitted")
         emit(conn, "submission_received", f"submitted {task['type']}: {task['title'][:120]}", contributor["handle"], "submission", sub["id"])
 
+        from . import council
         handler = {
             "map.extract": _process_extract, "verify.blind_extract": _process_blind,
             "verify.review": _process_review, "map.profile": _process_profile,
+            **council.HANDLERS,  # steer.* → council records (no verify.review)
         }.get(task["type"], _process_needs_review)
         status, checks, spawned = handler(conn, task, sub, payload, pre, contributor)
         conn.execute("UPDATE submissions SET checks=? WHERE id=?", (jdump(checks), sub["id"]))
@@ -556,12 +593,17 @@ def _process_extract(conn, task, sub, payload, pre, contributor):
         soft = not res["passed"] and res["reason"] in SOFT_FAIL_REASONS
         if not res["passed"] and not soft:
             checks.append({"name": name, "passed": False, "detail": res["reason"], "result": res}); continue
-        if res["passed"] and quote_ambiguity(c["quote"], c["value"]):
+        n_cand = quote_candidates(c["quote"], c["value"]) if res["passed"] else 0
+        ambiguity_note = None
+        if n_cand >= config.AMBIGUOUS_QUOTE_MIN_NUMBERS:
             notes = (c.get("conditions") or {}).get("notes")
             if not isinstance(notes, str) or not notes.strip():
-                checks.append({"name": name, "passed": False, "detail": "ambiguous_quote_needs_notes",
-                               "message": "quote has several same-format numbers (table row?): put the column header "
-                                          "in conditions.notes and resubmit"}); continue
+                if n_cand >= config.AMBIGUOUS_QUOTE_REQUIRE_NOTES_AT:
+                    checks.append({"name": name, "passed": False, "detail": "ambiguous_quote_needs_notes",
+                                   "message": "quote has several same-format numbers (table row?): put the column header "
+                                              "in conditions.notes and resubmit"}); continue
+                ambiguity_note = ("quote has another same-format number: the claim was accepted but flagged "
+                                  "ambiguous_quote; naming the column/row in conditions.notes is strongly recommended")
             res = {**res, "flag": "ambiguous_quote"}
         bench_id = _resolve_benchmark(conn, c["benchmark"], sub["id"])
         if db.scalar(conn, "SELECT 1 FROM claims WHERE artifact_id=? AND benchmark_id=? AND metric=? AND source_url=? AND abs(value - ?) < 1e-9",
@@ -569,8 +611,10 @@ def _process_extract(conn, task, sub, payload, pre, contributor):
             checks.append({"name": name, "passed": False, "detail": "duplicate of an existing claim"}); continue
         tier = "source-checked" if res["passed"] else "reported"
         claim = _insert_claim(conn, artifact_id, bench_id, c, tier, res, sub["id"])
-        checks.append({"name": name, "passed": res["passed"], "detail": res["reason"], "claim_id": claim["id"], "tier": tier,
-                       **({"flag": res["flag"]} if res.get("flag") else {})})
+        checks.append({"name": name, "passed": res["passed"], "claim_id": claim["id"], "tier": tier,
+                       "detail": "ambiguous_quote_notes_recommended" if ambiguity_note else res["reason"],
+                       **({"flag": res["flag"]} if res.get("flag") else {}),
+                       **({"message": ambiguity_note} if ambiguity_note else {})})
         emit(conn, "claim_created", f"new {tier} claim: {artifact_id} on {bench_id}", contributor["handle"], "claim", claim["id"],
              {"check_result": res})
         if res["passed"]:
@@ -622,15 +666,32 @@ def _insert_claim(conn, artifact_id, bench_id, c, tier, check_result, sub_id, se
 
 
 def values_agree(a: float, unit_a: str | None, b: float, unit_b: str | None) -> bool:
-    """abs diff ≤ 0.1 or relative ≤ 0.5%; tolerate %-vs-fraction when units differ."""
-    def close(x, y):
-        return abs(x - y) <= config.BLIND_TOLERANCE_ABS or abs(x - y) <= config.BLIND_TOLERANCE_REL * max(abs(x), abs(y))
-    if close(a, b):
-        return True
+    """Compare compatible units, with rate tolerances measured in percentage points."""
+    if not math.isfinite(a) or not math.isfinite(b):
+        return False
     ua, ub = (unit_a or "").strip().lower(), (unit_b or "").strip().lower()
-    if ua != ub and ("%" in (ua, ub)):
-        return close(a, b * 100) or close(a * 100, b)
-    return False
+    percent_units = {"%", "percent", "percentage", "pct"}
+    ua = "%" if ua in percent_units else ua
+    ub = "%" if ub in percent_units else ub
+    if not ua or not ub:
+        # Preserve legacy percent comparisons to an unlabeled fraction only.
+        if ua == "%" and not ub and 0 <= b <= 1:
+            ub = "fraction"
+        elif ub == "%" and not ua and 0 <= a <= 1:
+            ua = "fraction"
+        else:
+            return False
+    if ua in ("%", "fraction") and ub in ("%", "fraction"):
+        a = a * 100 if ua == "fraction" else a
+        b = b * 100 if ub == "fraction" else b
+    elif ua != ub:
+        return False
+    if not math.isfinite(a) or not math.isfinite(b):
+        return False
+    difference = abs(a - b)
+    tolerance = max(config.BLIND_TOLERANCE_ABS, config.BLIND_TOLERANCE_REL * max(abs(a), abs(b)))
+    # Absorb binary rounding at the inclusive boundary, including fraction scaling.
+    return difference <= tolerance or math.isclose(difference, tolerance, rel_tol=1e-12, abs_tol=0.0)
 
 
 def _process_blind(conn, task, sub, payload, pre, contributor):
@@ -687,8 +748,10 @@ def _process_blind(conn, task, sub, payload, pre, contributor):
         if not db.scalar(conn, """SELECT 1 FROM tasks WHERE type='verify.blind_extract' AND target_claim_id=? AND id != ?
                                    AND status IN ('draft','open','leased','submitted')""", (claim["id"], task["id"])):
             spawned.append(spawn_blind_task(conn, claim, task["parent_submission_id"], bonus=1.5))
-        emit(conn, "claim_blind_split", f"blind re-extraction did not match; tie-breaker check spawned: {what}",
-             contributor["handle"], "claim", claim["id"], detail)
+        # Public summary stays neutral (no agree/disagree, no "tie-breaker"): the next blind verifier may read it.
+        # The verdict lives in `detail`, which public views reveal only once the round is decided.
+        emit(conn, "claim_blind_check", f"{views.BLIND_CHECK_PENDING_SUMMARY}: {what}",
+             contributor["handle"], "claim", claim["id"], {**detail, "verdict": "agree" if agree else "disagree"})
         checks.append({"name": "tiebreak", "passed": True,
                        "detail": "verdict recorded; another independent blind check will decide"})
     if claim["submission_id"]:
@@ -883,16 +946,17 @@ def steward_resolve_claim(conn, claim_id: str, tier: str | None, special_status:
 
 
 def _settle_dispute(conn, claim: dict, extractor_wins: bool) -> None:
+    # Only the round that produced the dispute counts: disagreements from earlier (decided) rounds earn nothing here.
+    votes = _round_votes(conn, claim["id"], "disputed")
     if extractor_wins:
         orig = db.scalar(conn, "SELECT contributor_id FROM submissions WHERE id=?", (claim["submission_id"],)) if claim["submission_id"] else None
         credit(conn, orig, "dispute_resolved", "claim", claim["id"])
     else:
-        for v in db.all_(conn, "SELECT verifier_submission_id FROM verifications WHERE claim_id=? AND verdict='disagree'", (claim["id"],)):
-            who = db.scalar(conn, "SELECT contributor_id FROM submissions WHERE id=?", (v["verifier_submission_id"],))
-            credit(conn, who, "dispute_resolved", "claim", claim["id"])
+        for v in votes:
+            if v["verdict"] == "disagree":
+                credit(conn, v["contributor_id"], "dispute_resolved", "claim", claim["id"])
     # Finalize the disputed round's verifier submissions; a vindicated agree-minority earns verify_agreed.
-    _settle_votes(conn, _round_votes(conn, claim["id"], "disputed"), winner="agree" if extractor_wins else "disagree",
-                  credit_winners=extractor_wins)
+    _settle_votes(conn, votes, winner="agree" if extractor_wins else "disagree", credit_winners=extractor_wins)
 
 
 def _settle_open_round(conn, claim: dict, new_special_status: str | None) -> None:

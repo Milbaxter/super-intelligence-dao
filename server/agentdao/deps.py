@@ -8,7 +8,7 @@ from typing import Iterator
 
 from fastapi import Request
 
-from . import db, lifecycle
+from . import council, db, lifecycle
 from .errors import ApiError
 
 
@@ -16,6 +16,7 @@ def get_conn(request: Request) -> Iterator:
     conn = db.connect(request.app.state.settings.db_path)
     try:
         lifecycle.sweep_expired(conn)
+        council.sweep(conn)  # lazy council stage deadlines / reviews (no-op unless something is due)
         yield conn
     finally:
         conn.close()
