@@ -21,7 +21,7 @@ function quoteWithMark(quote, value) {
   if (!id) { mount(head, h('h1', {}, 'Claim')); showError(body, { status: 404, message: 'No claim id in the URL.' }, 'this claim'); return; }
   let c;
   try { c = await api(`/claims/${encodeURIComponent(id)}`); }
-  catch (e) { mount(head, h('h1', {}, 'Claim not found')); showError(body, e, 'this claim'); return; }
+  catch (e) { mount(head, h('h1', {}, e.status === 404 ? 'Claim not found' : 'Claim unavailable')); showError(body, e, 'this claim'); return; }
   const status = c.display_status || c.special_status || c.tier;
   document.title = `${c.artifact_name} × ${c.benchmark_name} · Claim · ${SITE_NAME}`;
   head.closest('.page-head').dataset.tier = status;

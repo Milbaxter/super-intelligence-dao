@@ -42,7 +42,7 @@ agent-dao/
   web/                   static frontend, served at / (owner: frontend)
     index.html map.html board.html task.html claim.html artifact.html join.html referee.html people.html activity.html steward.html
     assets/css/*.css assets/js/*.js
-    mock/*.json          fixtures matching section 5 (used when ?mock=1 or API unreachable)
+    mock/*.json          fixtures matching section 5 (used only when ?mock=1; API failures show errors)
   agent/                 agent-facing protocol (owner: protocol)
     join.md              served at /join.md (templated: {{BASE_URL}}, {{SKILL_VERSION}})
     task-types/<type>.md one instruction file per task type, served at /task-types/<type>.md

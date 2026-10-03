@@ -1,4 +1,4 @@
-// Super Intelligence DAO — shared core: config, API access (+ mock fallback), safe DOM helpers,
+// Super Intelligence DAO — shared core: config, API access (+ explicit mock mode), safe DOM helpers,
 // tier visual language, nav/footer chrome. No framework, no build step.
 //
 // SECURITY: never assign API/agent-provided strings to innerHTML. Use h() / text nodes.
@@ -141,19 +141,12 @@ export const daysUntil = (ts) => Math.round((new Date(ts) - Date.now()) / 864000
 export const timeEl = (ts, text) => h('time', { datetime: ts, title: fmtDateTime(ts) }, text ?? fmtAgo(ts));
 
 /* ------------------------------------------------------------------ */
-/* API with honest mock fallback                                        */
+/* API — fixtures only when explicitly requested with ?mock=1           */
 /* ------------------------------------------------------------------ */
 export class ApiError extends Error {
   constructor(status, code, message) { super(message); this.status = status; this.code = code; }
 }
-export const state = { mock: params.get('mock') === '1', mockReason: params.get('mock') === '1' ? 'requested' : null };
-const listeners = new Set();
-export function onMock(fn) { listeners.add(fn); if (state.mock) fn(state); }
-function enterMock(reason) {
-  if (state.mock) return;
-  state.mock = true; state.mockReason = reason;
-  listeners.forEach(fn => fn(state));
-}
+export const state = { mock: params.get('mock') === '1' };
 
 const LIST_FILTERS = { layer: 'layer', kind: 'kind', status: 'status', track: 'track_id', type: 'type', tier: 'display_status', artifact: 'artifact_id', benchmark: 'benchmark_id' };
 const mockBase = new URL('../../mock/', import.meta.url);
@@ -181,19 +174,19 @@ async function mockGet(path) {
   return data;
 }
 
-/** GET /api/v1{path}. Falls back to example fixtures when the API is unreachable. */
+/** GET /api/v1{path}. Live failures remain errors; they never select fixtures. */
 export async function api(path) {
   if (state.mock) return mockGet(path);
   let res;
   try { res = await fetch(API + path, { headers: { Accept: 'application/json' } }); }
-  catch { enterMock('unreachable'); return mockGet(path); }
+  catch { throw new ApiError(0, 'unreachable', 'The live API is not reachable. Please try again.'); }
   const ct = res.headers.get('content-type') || '';
-  if (!ct.includes('json')) { enterMock('unreachable'); return mockGet(path); }
+  if (!ct.includes('json')) throw new ApiError(res.ok ? 502 : res.status, 'invalid_response', 'The live API returned an invalid response. Please try again.');
   const body = await res.json().catch(() => null);
   if (!res.ok) {
-    if (res.status >= 502 && res.status <= 504) { enterMock('unreachable'); return mockGet(path); }
     throw new ApiError(res.status, body?.error?.code || 'error', body?.error?.message || `HTTP ${res.status}`);
   }
+  if (body === null) throw new ApiError(502, 'invalid_response', 'The live API returned invalid JSON. Please try again.');
   return body;
 }
 
@@ -423,16 +416,13 @@ export function initPage({ page, title }) {
 
   const bannerSlot = h('div', { id: 'mock-banner-slot' });
   header.after(bannerSlot);
-  onMock((st) => {
-    if ($('.mock-banner')) return;
+  if (state.mock) {
     const real = new URL(location.href); real.searchParams.delete('mock');
     mount(bannerSlot, h('div', { class: 'mock-banner', role: 'status' }, h('div', { class: 'wrap' },
       h('strong', {}, 'Example data'),
-      h('span', {}, st.mockReason === 'requested'
-        ? 'You are viewing illustrative fixtures (?mock=1). Names are real projects, but every number, quote and person shown is made up for layout — not a real result.'
-        : 'The live API is not reachable, so this page shows illustrative fixtures. Every number, quote and person shown is made up — not a real result.'),
-      st.mockReason === 'requested' ? h('a', { href: real.pathname.split('/').pop() + real.search }, 'Try live data') : null)));
-  });
+      h('span', {}, 'You are viewing illustrative fixtures (?mock=1). Names are real projects, but every number, quote and person shown is made up for layout — not a real result.'),
+      h('a', { href: real.pathname + real.search + real.hash }, 'Try live data'))));
+  }
 
   const footer = h('footer', { class: 'site-footer' }, h('div', { class: 'wrap' },
     h('div', { class: 'cols' },
