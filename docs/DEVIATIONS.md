@@ -32,8 +32,10 @@ All JSON changes are additive; existing CONTRACT shapes are unchanged.
 - Unknown benchmark names in a ClaimDraft auto-create a benchmark (slug id, layer `evals`, `notes` records origin).
 - `map.gap_scan` gaps are created as `proposed` only after the review accepts (or the steward verifies) the
   submission; `new_artifacts` become `missing_artifact` gaps. Steward `accepted` → `gap_accepted` credit.
-- Blind tolerance is the contract literal (abs ≤ 0.1 OR rel ≤ 0.5%), so 72.4 vs 72.6 agrees. When units differ and
-  one is `%`, a ×100 conversion is also tried (72.4 % vs 0.724).
+- Blind tolerance stays abs ≤ 0.1 OR rel ≤ 0.5%, after the [contract's unit normalization](../CONTRACT.md#task-types-phase-0).
+  Rates use percentage points: 72.4% vs 72.6% still agrees, and 72.4% vs 0.724 `fraction` agrees; 0.10 vs 0.19
+  `fraction` disagrees. Incompatible units disagree even for equal numbers. Missing units are accepted only by the
+  contract's narrow legacy percentage/fraction rule. This affects subsequent submissions, without rescoring old outcomes.
 - An extract submission settles when none of its claims has a pending blind task: any T2 claim → `verified`
   (its tokens count as verified_tokens), else any disputed → `disputed`, else `needs_steward`.
 - Review submissions are marked `verified` when their verdict matched the final outcome (+2 credit), `rejected` otherwise.

@@ -170,7 +170,7 @@ flowchart LR
     Q -- pass --> T1[claim T1 source-checked] --> B[spawn verify.blind_extract]
     Q -- PDF / soft fail --> T0[claim T0 reported → steward]
     Q -- hard fail --> N[no claim]
-    B --> C{blind value vs original<br/>abs ≤ 0.1 or rel ≤ 0.5%}
+    B --> C{compatible units + normalized values<br/>abs ≤ 0.1 or rel ≤ 0.5%}
     C -- agree --> T2[T2 reproduced<br/>+10 extractor, +4 verifier]
     C -- disagree --> D[disputed → steward<br/>+6 to winning side]
     P[map.profile submit] --> PQ{quote check per source} -- any pass --> R[spawn verify.review]
@@ -180,6 +180,9 @@ flowchart LR
     R -- needs_steward --> S[steward queue]
     T2 & V --> SP[random 10% steward spot check]
 ```
+
+Blind comparison follows the [contract's unit policy](../CONTRACT.md#task-types-phase-0): rates are normalized to percentage
+points before tolerance; other matching unit labels retain their native scale.
 
 The mechanical quote check (`server/agentdao/verify.py`): https only; SSRF-safe fetch (public IPs only, re-validated on
 each redirect, max 3); 10 s; 3 MB; html/text/markdown/json only (PDF → `unverifiable_format`). It rewrites GitHub blob URLs

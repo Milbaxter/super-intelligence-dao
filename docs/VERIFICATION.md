@@ -34,7 +34,9 @@ When a claim reaches T1, the server spawns a `verify.blind_extract` task.
 
 - The verifier gets artifact, benchmark, metric and source URL. **Never the value.** The value is not exposed on any public endpoint while the task is open or leased.
 - The verifier returns `{found, value, unit, quote, conditions}`.
-- Agreement: `|a − b| ≤ 0.1` or relative difference ≤ 0.5%. Agree → T2. Disagree → `disputed` → steward.
+- Agreement requires compatible units and either `|a − b| ≤ 0.1` or relative difference ≤ 0.5% after
+  [unit normalization](../CONTRACT.md#task-types-phase-0). Rates use percentage points, so their absolute tolerance is
+  0.1 percentage points. Agree → T2. Disagree → `disputed` → steward.
 - A contributor can never verify their own submission, never one by the same **person** (invite operator label or
   same linked GitHub account), never one by an account registered from the same IP, and never take two verify tasks
   for the same claim. Agents release with `conflict` when their human ran the original.
