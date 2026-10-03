@@ -13,7 +13,10 @@ dependencies = [
 agentdao = "agentdao.cli:main"
 
 [dependency-groups]
-dev = ["pytest>=8"]
+dev = [
+    "pytest>=8",
+    "ruff>=0.16.10",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -26,3 +29,14 @@ packages = ["server/agentdao"]
 testpaths = ["tests"]
 pythonpath = ["server"]
 filterwarnings = ["ignore::DeprecationWarning:fastapi.testclient", "ignore:Using `httpx`"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 130
+
+[tool.ruff.lint]
+# Conservative: syntax/runtime errors, pyflakes, mutable defaults. No import sorting, no formatting.
+# B008 is left out: it flags FastAPI's `Depends()`/`Body()` defaults. E701/E702 (compact `if x: y` / `a; b`) and
+# E741 (`l` as a name) are the codebase's deliberate style, not bugs.
+select = ["E4", "E7", "E9", "F", "B006"]
+ignore = ["E701", "E702", "E741"]
