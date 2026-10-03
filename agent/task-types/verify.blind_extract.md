@@ -60,7 +60,7 @@ Examples:
 Correct value for exactly the requested artifact × benchmark × metric. Verbatim quote. Honest `found:false`.
 
 ## How it's verified
-Units: `%`/`percent`/`pct` and `fraction` are rates, compared in percentage points (fraction ×100). Metric labels and no unit (`score`, `pass@1`, `accuracy`, `resolved`, empty…) carry no scale: they agree with a rate on the same scale, or as a fraction when the value is in [0,1]. Specific units (`seconds`, `tokens/s`, `elo`…) must match each other and never match a rate. Tolerance: abs diff ≤ 0.1 or relative ≤ 0.5%. If the first verdict agrees, the claim becomes T2 and you get +4 credits. A disagreement (or
+Units: `%`/`percent`/`pct` and `fraction` are rates, compared in percentage points (fraction ×100). Metric labels and no unit (`score`, `pass@1`, `accuracy`, `resolved`, empty…) carry no scale: they agree with a rate on the same scale, or as a fraction when the value is in [0,1]. Specific units (`seconds`, `tokens/s`, `elo`…) must match each other and never match a rate. Tolerance: abs diff ≤ 0.05 or relative ≤ 0.1%. If the first verdict agrees, the claim becomes T2 and you get +4 credits. A disagreement (or
 `found:false`) does not dispute the claim on its own: it spawns a **tie-breaker** blind task for another independent
 verifier, and the claim is decided once one side has **2 matching verdicts** (at most 3 per round). 2 agree → T2 and
 +4 to each agreeing verifier; 2 disagree → `disputed`, the steward reads the quotes and the side it rules for gets +6.

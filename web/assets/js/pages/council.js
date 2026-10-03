@@ -41,6 +41,8 @@ const A = {
       voters, share: budget != null && voters ? budget / voters : null,
       spent: num(r?.spent_slots), left: r && budget != null ? budget - (num(r.spent_slots) ?? 0) : null,
       votersByFamily: Object.keys(byFam).length ? byFam : null,
+      // Stages the steward closed by hand, each with its public reason.
+      stageNotes: arr(c.stage_notes).map(x => ({ stage: x.stage, reason: x.reason || '', early: !!x.early, at: x.closed_at, by: x.by || 'steward' })),
     };
   },
   item(r) {
@@ -50,6 +52,9 @@ const A = {
     const st = r.steward || null;
     return {
       id: r.id, kind: r.kind ?? p.kind, title: r.title || p.title || '(untitled)', cost: num(r.cost ?? p.cost), status: r.status,
+      // During CRITIQUE the API returns proposal: null (critics may read only their own one).
+      bodySealed: r.proposal === null && r.status !== 'sealed',
+      conflictsWith: arr(r.conflicts_with ?? t?.conflicts_with), similarTo: arr(r.similar_to ?? t?.similar_to),
       author: r.author || null,
       problem: p.problem || '', evidence: p.evidence || '', evidenceUrls: arr(p.evidence_urls), nonGoals: p.non_goals || '', risks: p.risks || '',
       successText: p.success_text || '',
@@ -94,8 +99,8 @@ const A = {
     return {
       at: raw?.generated_at, days: num(raw?.window_days) ?? 30,
       tracks: arr(raw?.by_track).map(t => ({ id: t.track_id, name: t.name || t.track_id || '(no track)', weight: num(t.weight), paused: !!t.paused,
-        win: rowOf(t['30d']), all: rowOf(t.all) })),
-      types: arr(raw?.by_task_type).map(t => ({ id: t.task_type, win: rowOf(t['30d']), all: rowOf(t.all) })),
+        win: rowOf(t['30d'] ?? t.all), all: rowOf(t.all) })), // `30d` is omitted when identical to `all`
+      types: arr(raw?.by_task_type).map(t => ({ id: t.task_type, win: rowOf(t['30d'] ?? t.all), all: rowOf(t.all) })),
       coverage: arr(raw?.coverage).map(l => ({ id: l.layer, name: names.layer[l.layer] || l.layer, total: num(l.artifacts),
         claim: num(l.with_claim), reproduced: num(l.with_reproduced) })),
     };
@@ -203,12 +208,14 @@ function renderCycle(el, c, items, vetoRate) {
   };
   const timeline = h('ol', { class: 'cstages', 'aria-label': `Cycle stages; current stage: ${STAGES[ci].label}` }, STAGES.map((s, i) => {
     const w = when(s, i);
+    const closed = c.stageNotes.filter(x => x.stage === s.id);
     return h('li', { 'data-state': i < ci ? 'done' : i === ci ? 'current' : 'todo', 'aria-current': i === ci ? 'step' : null },
       h('span', { class: 'cs-n' }, String(i + 1).padStart(2, '0')),
       h('span', { class: 'cs-label' }, s.label, i === ci ? h('span', { class: 'visually-hidden' }, ' (current stage)') : null),
       h('span', { class: 'cs-what' }, s.what),
       w && w[1] ? h('span', { class: 'cs-when' }, `${w[0]} `, h('time', { datetime: w[1], title: new Date(w[1]).toString() }, fmtDate(w[1]))) : null,
-      stat[s.id] ? h('span', { class: 'cs-count' }, stat[s.id]) : null);
+      stat[s.id] ? h('span', { class: 'cs-count' }, stat[s.id]) : null,
+      closed.map(x => h('span', { class: 'cs-note' }, h('b', {}, x.early ? `Closed early by the ${x.by}: ` : `Closed by the ${x.by}: `), x.reason)));
   }));
 
   const sealed = sealedNote(c, items);
@@ -260,11 +267,12 @@ function renderItems(el, c, items, defaults = {}) {
   const showCrit = !['open', 'propose', 'critique'].includes(c.status);
   const rank = (i) => (['withdrawn', 'overflow'].includes(i.status) ? 2 : i.tally?.funded ? 0 : 1);
   const sorted = [...visible].sort((a, b) => rank(a) - rank(b) || (b.tally?.approvals ?? 0) - (a.tally?.approvals ?? 0));
+  const titles = Object.fromEntries(items.map(i => [i.id, i.title]));
   mount(el,
     !c.tallied_at ? h('p', { class: 'note', style: { marginBottom: '16px' } }, h('strong', {}, 'Revealed after the count'),
       'Who proposed each item, every forecast and the critics’ names stay hidden until the votes are counted, so nobody votes for a name.') : null,
-    c.status === 'critique' ? h('p', { class: 'small muted', style: { marginBottom: '12px' } }, `Critiques are sealed until voting opens on ${fmtDate(c.critique_until)}.`) : null,
-    h('div', { class: 'props' }, sorted.map(i => itemCard(i, { showCrit, maxBallot: defaults.max_ballot }))));
+    c.status === 'critique' ? h('p', { class: 'small muted', style: { marginBottom: '12px' } }, `Critics are reading one proposal each, blind: full proposals and critiques are revealed when voting opens on ${fmtDate(c.critique_until)}.`) : null,
+    h('div', { class: 'props' }, sorted.map(i => itemCard(i, { showCrit, maxBallot: defaults.max_ballot, titles }))));
 }
 
 function statusTag(s) {
@@ -385,13 +393,31 @@ function detailsBlock(i) {
       i.risks ? [h('dt', {}, 'Risks'), h('dd', {}, i.risks)] : null));
 }
 
-function itemCard(i, { showCrit, maxBallot }) {
+/** conflicts_with / similar_to (public from VOTE on): a badge plus links to the other items. */
+function relationsBlock(i, titles = {}) {
+  const link = (id) => h('a', { href: `#item-${id}` }, titles[id] || id);
+  const line = (cls, label, ids, tail) => h('p', { class: `rel small ${cls}` }, h('span', { class: 'chip' }, label), ' ',
+    ids.map((id, n) => [n ? ', ' : '', link(id)]), tail);
+  if (!i.conflictsWith.length && !i.similarTo.length) return null;
+  return h('div', { class: 'rels' },
+    i.conflictsWith.length ? line('conflict', 'Conflicts', i.conflictsWith, '. Only one of these can be funded: the first one funded wins.') : null,
+    i.similarTo.length ? line('similar', 'Similar', i.similarTo, '. Near-duplicate, for information.') : null);
+}
+
+function itemCard(i, { showCrit, maxBallot, titles }) {
+  const head = h('header', { class: 'prop-head' },
+    h('span', { class: 'chip kind', 'data-kind': i.kind }, KIND[i.kind] || i.kind),
+    i.cost != null ? h('span', { class: 'chip' }, `cost ${plural(i.cost, 'slot')}`) : null,
+    statusTag(i.status));
+  if (i.bodySealed) {
+    return h('article', { class: 'prop', 'data-status': i.status, id: i.id ? `item-${i.id}` : null }, head, h('h3', {}, i.title),
+      h('p', { class: 'small muted' }, 'Details revealed when voting opens. Until then critics see only the one proposal they were given.'),
+      decisionBlock(i, maxBallot));
+  }
   return h('article', { class: 'prop', 'data-status': i.status, id: i.id ? `item-${i.id}` : null },
-    h('header', { class: 'prop-head' },
-      h('span', { class: 'chip kind', 'data-kind': i.kind }, KIND[i.kind] || i.kind),
-      i.cost != null ? h('span', { class: 'chip' }, `cost ${plural(i.cost, 'slot')}`) : null,
-      statusTag(i.status)),
+    head,
     h('h3', {}, i.title),
+    relationsBlock(i, titles),
     i.author ? h('p', { class: 'small muted by' }, 'Proposed by ', h('span', { class: 'mono' }, i.author)) : null,
     h('p', { class: 'effect small' }, effectLine(i)),
     i.problem ? h('div', { class: 'problem' }, h('span', { class: 'label' }, 'Problem, and who uses the answer'), h('p', {}, i.problem)) : null,

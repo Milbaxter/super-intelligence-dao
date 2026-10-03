@@ -114,14 +114,22 @@ def task_summary(row: dict, conn=None) -> dict:
     }
 
 
-def task_full(conn, row: dict, base_url: str) -> dict:
-    """Public/agent task view. Never includes target_claim_id or anything derived from the claim value."""
+def task_full(conn, row: dict, base_url: str, reveal: bool = False) -> dict:
+    """Public/agent task view. Never includes target_claim_id or anything derived from the claim value.
+    reveal=True only for the lease holder (claim response): a steer.critique's full proposal stays out of public
+    reads until voting opens, so critics can't read every other proposal on the ballot."""
     subs = db.all_(conn, """SELECT s.id, c.handle AS contributor, s.status, s.created_at FROM submissions s
                             JOIN contributors c ON c.id = s.contributor_id WHERE s.task_id=? ORDER BY s.created_at""", (row["id"],))
     inputs = jload(row["inputs"], {})
     if row["type"] in config.STEER_TASK_TYPES:
         for s in subs:  # council work is anonymous until the tally (who proposed/critiqued/voted what)
             s["contributor"] = None
+        if (row["type"] == "steer.critique" and not reveal and isinstance(inputs, dict)
+                and isinstance(inputs.get("proposal"), dict) and db.scalar(
+                    conn, "SELECT status FROM council_cycles WHERE id=?", (inputs.get("cycle_id"),)) in ("propose", "critique")):
+            p = inputs["proposal"]
+            inputs["proposal"] = {"title": p.get("title"), "kind": p.get("kind"), "cost": p.get("cost"),
+                                  "sealed": "full text revealed when voting opens"}
         if row["type"] == "steer.vote" and isinstance(inputs, dict) and isinstance(inputs.get("items"), list):
             # Per-ballot random order (position bias): seeded by the task's current/last lease, stable across re-reads.
             lease_id = db.scalar(conn, "SELECT id FROM leases WHERE task_id=? ORDER BY created_at DESC, rowid DESC LIMIT 1", (row["id"],))

@@ -116,7 +116,8 @@ def test_blind_agreement_promotes_to_t2_and_credits(client):
 
 def test_values_agree_tolerance():
     from agentdao.lifecycle import values_agree
-    assert values_agree(72.4, "%", 72.49, "%") and values_agree(1000, "score", 1004, "score")
+    assert values_agree(72.4, "%", 72.45, "%") and values_agree(1000, "score", 1000.9, "score")
+    assert not values_agree(65.5, "%", 65.6, "%")  # adjacent columns of a wide table (field test)
     assert not values_agree(72.4, "%", 73.0, "%") and values_agree(72.4, "%", 0.724, "")
 
 
@@ -124,29 +125,33 @@ def test_values_agree_tolerance():
     (72.4, "%", 0.724, "fraction", True),
     (72.4, " Percent ", 0.724, " FRACTION ", True),
     (72.4, "percentage", 72.4, "pct", True),
-    (72.4, "%", 72.6, "%", True),  # existing relative tolerance
-    (0.10, "fraction", 0.1009, "fraction", True),  # 0.09 percentage points
-    (0.10, "fraction", 0.101, "fraction", True),  # inclusive 0.1-point boundary
-    (10.0, "%", 0.101, "fraction", True),
-    (0.10, "fraction", 0.101000001, "fraction", False),
-    (1.0945, "fraction", 1.1, "fraction", True),  # inclusive 0.5% relative boundary
-    (1.09449999, "fraction", 1.1, "fraction", False),
+    (72.4, "%", 72.47, "%", True),  # relative tolerance 0.1%
+    (72.4, "%", 72.6, "%", False),
+    (65.5, "%", 65.6, "%", False),  # adjacent table columns must not agree
+    (0.10, "fraction", 0.1004, "fraction", True),  # 0.04 percentage points
+    (0.10, "fraction", 0.1009, "fraction", False),  # 0.09 points
+    (0.10, "fraction", 0.1005, "fraction", True),  # inclusive 0.05-point boundary
+    (10.0, "%", 0.1005, "fraction", True),
+    (0.10, "fraction", 0.100500001, "fraction", False),
+    (1.0989, "fraction", 1.1, "fraction", True),  # inclusive 0.1% relative boundary
+    (1.09889999, "fraction", 1.1, "fraction", False),
     (0.10, "fraction", 0.102, "fraction", False),
     (0.10, "fraction", 0.19, "fraction", False),
-    (0.10, "fraction", 10.09, "%", True),
+    (0.10, "fraction", 10.04, "%", True),
+    (0.10, "fraction", 10.09, "%", False),
     (0.10, "fraction", 10.2, "%", False),
     (0.0, "%", 0.09, "fraction", False),  # raw closeness cannot bypass scale
-    (0.0, "%", 0.0009, "fraction", True),
+    (0.0, "%", 0.0004, "fraction", True),
     (72.4, "%", 72.4, "fraction", False),
     (0.724, "%", 72.4, "fraction", False),  # never try the opposite conversion
     (72.4, "%", 72.4, "milliseconds", False),
     (72.4, "%", 0.724, "seconds", False),
     (0.0, "%", 0.0, "seconds", False),
-    (1000, "tokens/s", 1004, "tokens/s", True),
-    (1000, "tokens/s", 1006, "tokens/s", False),
+    (1000, "tokens/s", 1001, "tokens/s", True),
+    (1000, "tokens/s", 1002, "tokens/s", False),
     (72.4, " SCORE ", 72.4, "score", True),
-    (0.10, "score", 0.19, "score", True),  # opaque units keep native tolerance
-    (0.10, "pass@1", 0.19, "pass@1", True),
+    (0.10, "score", 0.14, "score", True),  # opaque units keep native tolerance
+    (0.10, "pass@1", 0.14, "pass@1", True),
     (72.4, "%", 0.724, "score", True),  # generic label in [0,1] may be a fraction
     (72.4, "%", 0.724, "pass@1", True),
     (1.0, "seconds", 1000.0, "milliseconds", False),
@@ -167,7 +172,7 @@ def test_values_agree_tolerance():
     (84.1, "%", 84.1, "pass@5", True),
     (65.5, "%", 66.5, "score", False),
     (0.10, "fraction", 0.19, "score", False),  # fraction scale kept: 10 vs 19 points
-    (1000, "tokens/s", 1004, "score", True),
+    (1000, "tokens/s", 1001, "score", True),
     (1000, "tokens/s", 1004, "seconds", False),
     (float("inf"), "%", 72.4, "%", False),
     (float("-inf"), "score", 72.4, "score", False),

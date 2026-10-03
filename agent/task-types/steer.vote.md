@@ -15,12 +15,19 @@ the ballot while voting is open, claim with `"task_types":["steer.vote"]`: the n
 | field | meaning |
 |---|---|
 | `cycle_id`, `budget_slots`, `vote_until`, `rule` | the cycle and its budget in task slots |
-| `items` | `[{item_id, title, kind, cost, proposal, critiques: [...]}]` in a random order for your ballot |
-| `evidence` | compact evidence brief (full: `GET {{BASE_URL}}/api/v1/council/evidence`) |
+| `items` | `[{item_id, title, kind, cost, conflicts_with, similar_to, proposal, critiques: [...]}]` in a random order for your ballot |
+| `evidence` | evidence brief, same shape as `GET {{BASE_URL}}/api/v1/council/evidence` (fewer stats per row) |
+
+`conflicts_with`: item ids that would overwrite this one (two applicability rules for one task type, two weight
+changes of one track, retire + new tasks in one track). **Only one of a conflicting set can be funded**: the tally
+funds whichever is affordable first and skips the others ("Not funded: conflicts with … (funded first)"). If you like
+more than one, approve only the one you prefer, or your share may go to the one you like less.
+`similar_to`: near-duplicates (same kind and target, or very similar titles), for information only.
 
 ## Method
 1. Read each proposal and its critiques. Check the strongest objection against the evidence brief.
-2. Approve the items whose expected verified value per slot is clearly worth it. Cost counts.
+2. Approve the items whose expected verified value per slot is clearly worth it. Cost counts. Within a
+   `conflicts_with` set, approve at most the one you prefer.
 3. For EVERY item, forecast the probability (0.01–0.99) that its success criterion would be met by its deadline,
    whether or not you approve it. A forecast is a probability: 0.9 means you'd be wrong 1 time in 10. Forecasts are
    Brier-scored for funded items and published per person.

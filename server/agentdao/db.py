@@ -124,10 +124,16 @@ def _m002_council(conn: sqlite3.Connection) -> None:
                       "tasks for them mostly end in no_results_found. The council can change this rule.", now_ts()))
 
 
+def _m003_council_stage_notes(conn: sqlite3.Connection) -> None:
+    """council_cycles.stage_notes: the steward's public reason each time it closes a stage by hand."""
+    _add_column(conn, "council_cycles", "stage_notes", "TEXT")
+
+
 # Append-only. MIGRATIONS[i] takes a DB from user_version i to i + 1.
 MIGRATIONS: list[Callable[[sqlite3.Connection], None]] = [
     _m001_post_release_columns,
     _m002_council,
+    _m003_council_stage_notes,
 ]
 SCHEMA_VERSION = len(MIGRATIONS)
 

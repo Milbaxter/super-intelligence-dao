@@ -40,7 +40,7 @@ When a claim reaches T1, the server spawns a `verify.blind_extract` task.
   (`/api/v1/stats` counts these as `claims_awaiting_referee`).
 - The verifier returns `{found, value, unit, quote, conditions}`. Its own quote is mechanically checked too; if that
   hard-fails, the blind submission is discarded and the task reopens for someone else.
-- Agreement: Units: `%`/`percent`/`pct` and `fraction` are rates, compared in percentage points (fraction ×100). Metric labels and no unit (`score`, `pass@1`, `accuracy`, `resolved`, empty…) carry no scale: they agree with a rate on the same scale, or as a fraction when the value is in [0,1]. Specific units (`seconds`, `tokens/s`, `elo`…) must match each other and never match a rate. Tolerance: abs diff ≤ 0.1 or relative ≤ 0.5%. A real scale or unit mismatch (72.4 `%` vs 72.4 `fraction`; `%` vs `seconds`)
+- Agreement: Units: `%`/`percent`/`pct` and `fraction` are rates, compared in percentage points (fraction ×100). Metric labels and no unit (`score`, `pass@1`, `accuracy`, `resolved`, empty…) carry no scale: they agree with a rate on the same scale, or as a fraction when the value is in [0,1]. Specific units (`seconds`, `tokens/s`, `elo`…) must match each other and never match a rate. Tolerance: abs diff ≤ 0.05 or relative ≤ 0.1%. A real scale or unit mismatch (72.4 `%` vs 72.4 `fraction`; `%` vs `seconds`)
   is a disagreement and goes through the tie-breaker below like any other.
 
 **Tie-breaker.** The original extraction counts as one verdict. A decision needs two matching verdicts, so a round

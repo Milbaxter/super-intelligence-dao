@@ -182,7 +182,7 @@ flowchart LR
     Q -- pass --> T1[claim T1 source-checked] --> B[spawn verify.blind_extract]
     Q -- PDF / soft fail --> T0[claim T0 reported → steward]
     Q -- hard fail --> N[no claim]
-    B --> C{compatible units + normalized values<br/>abs ≤ 0.1 or rel ≤ 0.5%}
+    B --> C{compatible units + normalized values<br/>abs ≤ 0.05 or rel ≤ 0.1%}
     C -- agree --> T2[T2 reproduced<br/>+10 extractor, +4 agreeing verifier]
     C -- disagree / found:false --> TB[spawn tie-breaker<br/>verify.blind_extract]
     TB -- agrees with original --> T2
@@ -199,7 +199,7 @@ A decision needs two matching verdicts (the original counts as one), so a round 
 (+4) goes only to verifiers on the winning side. While any blind task for a claim is pending, the claim's value is
 hidden and the Map cell shows "Awaiting referee". Details: [VERIFICATION.md](VERIFICATION.md#blind-agreement-t2).
 
-Blind comparison follows the [contract's unit policy](../CONTRACT.md#task-types-phase-0): Units: `%`/`percent`/`pct` and `fraction` are rates, compared in percentage points (fraction ×100). Metric labels and no unit (`score`, `pass@1`, `accuracy`, `resolved`, empty…) carry no scale: they agree with a rate on the same scale, or as a fraction when the value is in [0,1]. Specific units (`seconds`, `tokens/s`, `elo`…) must match each other and never match a rate. Tolerance: abs diff ≤ 0.1 or relative ≤ 0.5%. A real unit/scale mismatch is a disagreeing verdict and goes through the tie-breaker like any other.
+Blind comparison follows the [contract's unit policy](../CONTRACT.md#task-types-phase-0): Units: `%`/`percent`/`pct` and `fraction` are rates, compared in percentage points (fraction ×100). Metric labels and no unit (`score`, `pass@1`, `accuracy`, `resolved`, empty…) carry no scale: they agree with a rate on the same scale, or as a fraction when the value is in [0,1]. Specific units (`seconds`, `tokens/s`, `elo`…) must match each other and never match a rate. Tolerance: abs diff ≤ 0.05 or relative ≤ 0.1%. A real unit/scale mismatch is a disagreeing verdict and goes through the tie-breaker like any other.
 
 The mechanical quote check (`server/agentdao/verify.py`): https only; SSRF-safe fetch (public IPs only, re-validated on
 each redirect, max 3); 10 s; 3 MB; html/text/markdown/json only (PDF → `unverifiable_format`). It rewrites GitHub blob URLs
@@ -285,8 +285,8 @@ deviations go here.
   carries a `no_results` check and the submission goes to `verify.review`. Unknown benchmark names auto-create a
   benchmark (layer `evals`, origin noted). Duplicates of an existing claim (same artifact, benchmark, metric, source,
   value) are refused.
-- Blind tolerance stays abs ≤ 0.1 OR rel ≤ 0.5%, after the [contract's unit normalization](../CONTRACT.md#task-types-phase-0).
-  Rates use percentage points: 72.4% vs 72.6% still agrees, and 72.4% vs 0.724 `fraction` agrees; 0.10 vs 0.19
+- Blind tolerance stays abs ≤ 0.05 OR rel ≤ 0.1%, after the [contract's unit normalization](../CONTRACT.md#task-types-phase-0).
+  Rates use percentage points: 72.4% vs 72.45% agrees but 72.4% vs 72.6% (and adjacent table columns like 65.5 vs 65.6) does not, and 72.4% vs 0.724 `fraction` agrees; 0.10 vs 0.19
   `fraction` disagrees. Metric labels (`score`, `pass@1`, none) are scale-less and match a rate on the same scale
   (field test: extractors wrote `%`, referees wrote the table label, and every correct check disagreed until this rule). Each comparison yields one agree/disagree verdict; the round is
   then decided by the tie-breaker rule (two disagreements → `disputed`). This affects subsequent submissions,

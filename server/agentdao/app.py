@@ -114,10 +114,21 @@ _SECURITY_HEADERS = {
 }
 
 
+def _startup_sweep(db_path: str) -> None:
+    """Apply the active applicability rules to existing open tasks (idempotent; old DBs get cleaned on deploy)."""
+    from . import council
+    conn = db.connect(db_path)
+    try:
+        council.startup_sweep(conn)
+    finally:
+        conn.close()
+
+
 def create_app(settings: config.Settings | None = None, fetcher: Fetcher | None = None,
                github: GitHubApi | None = None) -> FastAPI:
     settings = settings or config.Settings()
     db.init_db(settings.db_path)
+    _startup_sweep(settings.db_path)
     app = FastAPI(title=f"{config.SITE_NAME} API", version=config.SKILL_VERSION, docs_url="/api/docs", redoc_url=None,
                   openapi_url="/api/openapi.json")
     app.state.settings = settings

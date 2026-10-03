@@ -312,6 +312,29 @@ def _no_task_reason(conn, task_types: list[str] | None, max_minutes: int | None)
     return "none_eligible_for_you"  # model family, release cooldown, own work, same person/IP, GitHub requirement
 
 
+def no_task_headers(conn, contributor: dict, reason: str, task_types: list[str] | None, max_minutes: int | None) -> dict:
+    """Headers for a 204: X-No-Task-Reason, plus X-Min-Budget-Minutes (all_over_max_minutes: the smallest
+    budget_minutes among matching open tasks) and X-No-Task-Detail (steer.critique: nothing left you may critique)."""
+    headers = {"X-No-Task-Reason": reason}
+    sql, params = "SELECT {} FROM tasks WHERE status='open'", []
+    if task_types:
+        sql += f" AND type IN ({','.join('?' for _ in task_types)})"
+        params += task_types
+    if reason == "all_over_max_minutes":
+        smallest = db.scalar(conn, sql.format("MIN(budget_minutes)"), params)
+        if smallest is not None:
+            headers["X-Min-Budget-Minutes"] = str(int(smallest))
+    elif reason == "none_eligible_for_you" and db.scalar(
+            conn, sql.format("1") + " AND type='steer.critique'" + (" AND budget_minutes <= ?" if max_minutes else "") + " LIMIT 1",
+            [*params, *([max_minutes] if max_minutes else [])]):
+        from . import council
+        person = council.person_of(contributor)
+        headers["X-No-Task-Detail"] = ("council_needs_verified_work"
+                                       if council.verified_count(conn, person) < config.COUNCIL_MIN_VERIFIED_TO_VOTE
+                                       else "all_items_critiqued_or_own")
+    return headers
+
+
 def claim_task(conn, contributor: dict, model_family: str, model: str | None,
                task_types: list[str] | None, max_minutes: int | None,
                allow_same_ip: bool = False, require_github: bool = False) -> tuple[dict, dict] | str:
@@ -319,7 +342,11 @@ def claim_task(conn, contributor: dict, model_family: str, model: str | None,
     with tx(conn):
         if _active_lease_count(conn, contributor["id"]) >= config.MAX_ACTIVE_LEASES:
             raise ApiError(409, "lease_limit", f"You already hold {config.MAX_ACTIVE_LEASES} active leases; submit or release one first.")
-        sql, params = "SELECT * FROM tasks WHERE status='open'", []
+        from . import council
+        rules = council.active_rules(conn)
+        sql = """SELECT *, (SELECT kind FROM artifacts a WHERE a.id = json_extract(tasks.inputs, '$.artifact_id'))
+                 AS _artifact_kind FROM tasks WHERE status='open'"""
+        params: list = []
         if task_types:
             sql += f" AND type IN ({','.join('?' for _ in task_types)})"
             params += task_types
@@ -332,6 +359,9 @@ def claim_task(conn, contributor: dict, model_family: str, model: str | None,
         sql += " ORDER BY priority DESC, created_at ASC LIMIT 500"
         best, best_score = None, None
         for task in db.all_(conn, sql, params):
+            kind = task.pop("_artifact_kind")
+            if task["type"] in config.APPLICABILITY_TASK_TYPES and kind and not council.task_allowed(rules, task["type"], kind):
+                continue  # an active applicability rule excludes it (closed by council.enforce_rules on the next sweep)
             s = eligible_score(conn, task, contributor, model_family, allow_same_ip, require_github, task_types)
             if s is not None and (best_score is None or s > best_score):
                 best, best_score = task, s
@@ -1033,12 +1063,40 @@ def steward_resolve_gap(conn, gap_id: str, status: str, note: str) -> dict:
         return db.one(conn, "SELECT * FROM gaps WHERE id=?", (gap_id,))
 
 
+def _set_verify_credit(conn, contributor_id: str, sub_id: str, granted: bool) -> int:
+    """Make the net verify_agreed credit for one verifier submission +4 (granted) or 0, idempotently: a reversal is a
+    negative `verify_agreed_reversed` ledger row, a re-grant after a reversal a positive one. Returns the delta."""
+    net = int(db.scalar(conn, """SELECT COALESCE(SUM(amount), 0) FROM ledger WHERE contributor_id=? AND ref_type='submission'
+                                 AND ref_id=? AND kind IN ('verify_agreed', 'verify_agreed_reversed')""", (contributor_id, sub_id)))
+    delta = (config.CREDITS["verify_agreed"] if granted else 0) - net
+    if not delta:
+        return 0
+    has_grant = db.scalar(conn, "SELECT 1 FROM ledger WHERE contributor_id=? AND kind='verify_agreed' AND ref_type='submission' AND ref_id=?",
+                          (contributor_id, sub_id))
+    kind = "verify_agreed" if delta > 0 and not has_grant else "verify_agreed_reversed"
+    db.insert(conn, "ledger", {"contributor_id": contributor_id, "kind": kind, "amount": delta, "ref_type": "submission",
+                               "ref_id": sub_id, "ts": db.now_ts()})
+    emit(conn, "credit", f"{delta:+d} {kind}", handle_of(conn, contributor_id), "submission", sub_id)
+    return delta
+
+
 def steward_resolve_submission(conn, submission_id: str, status: str, note: str) -> dict:
+    """Reviewed submissions: final outcome via finalize_submission. verify.blind_extract verifier submissions (e.g.
+    after a comparator bug produced wrong verdicts): set verified/rejected and fix verify_agreed credit. The claim's
+    own tier is not touched here (POST /admin/claims/{id}/resolve)."""
     if status not in ("verified", "rejected"):
         raise ApiError(422, "invalid_status", "status must be verified|rejected")
     with tx(conn):
-        if not db.scalar(conn, "SELECT 1 FROM submissions WHERE id=?", (submission_id,)):
+        sub = db.one(conn, "SELECT s.*, t.type AS task_type FROM submissions s JOIN tasks t ON t.id=s.task_id WHERE s.id=?",
+                     (submission_id,))
+        if not sub:
             raise not_found("submission", submission_id)
+        if sub["task_type"] == "verify.blind_extract":
+            _set_sub(conn, submission_id, status, sub["task_id"], "verified" if status == "verified" else "rejected")
+            delta = _set_verify_credit(conn, sub["contributor_id"], submission_id, granted=status == "verified")
+            emit(conn, "steward_submission_resolved", f"steward set blind verdict submission {status} (credit {delta:+d})",
+                 "steward", "submission", submission_id, {"note": note})
+            return db.one(conn, "SELECT id, status FROM submissions WHERE id=?", (submission_id,))
         finalize_submission(conn, submission_id, status, actor="steward")
         emit(conn, "steward_submission_resolved", f"steward set submission {status}", "steward", "submission", submission_id, {"note": note})
         return db.one(conn, "SELECT id, status FROM submissions WHERE id=?", (submission_id,))

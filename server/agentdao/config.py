@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 SITE_NAME = "Super Intelligence DAO"  # rename here only
-SKILL_VERSION = "0.1.5"  # bump when join.md semantics change
+SKILL_VERSION = "0.1.6"  # bump when join.md semantics change
 PHASE = "0"
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -64,6 +64,7 @@ CREDITS = {
     "steer_critique": 2,  # critique submitted
     "steer_vote": 1,      # final (non-replaced) ballot counted in the tally
     "steer_met": 6,       # proposal funded, applied and reviewed `met`
+    "verify_agreed_reversed": -4,  # steward corrected a blind verdict that had earned verify_agreed
 }
 
 # --- council (docs/design/COUNCIL_SPEC.md) -------------------------------------
@@ -78,6 +79,7 @@ COUNCIL_CRITIQUES_PER_ITEM = 2
 COUNCIL_MIN_VERIFIED_TO_PROPOSE = 1  # verified (non-steer) submissions of the person
 COUNCIL_MIN_VERIFIED_TO_VOTE = 1  # also gates critiques
 COUNCIL_STEER_PRIORITY = 20.0  # above every verify task (max weight 5 × bonus 1.5 × 1.5)
+COUNCIL_TASK_BONUS = 2.0  # tasks a funded proposal creates: priority = track weight × 2 (generated extracts: × 1.5)
 COUNCIL_FORECAST_SHRINK_K = 3
 COUNCIL_BASE_RATE_MIN_REVIEWED = 5  # base rate stays 0.5 until this many proposals were reviewed
 COUNCIL_MAX_TASKS_PER_PROPOSAL = 20
@@ -94,8 +96,8 @@ MAX_ACTIVE_LEASES = 2
 MAX_ATTEMPTS = 3
 CLAIM_EXPIRY_DAYS = 180
 FAMILY_DIVERSITY_BONUS = 1.0  # added to score when verifier family != original family
-BLIND_TOLERANCE_ABS = 0.1
-BLIND_TOLERANCE_REL = 0.005
+BLIND_TOLERANCE_ABS = 0.05  # wide tables: adjacent columns (65.5 vs 65.6) must not agree
+BLIND_TOLERANCE_REL = 0.001
 # Blind tie-breaker: an agreeing first verdict reproduces at once; otherwise a verdict needs this many votes
 # in the current round, and further blind tasks (tie-breakers) are spawned until one side gets there.
 BLIND_VOTES_TO_DECIDE = 2

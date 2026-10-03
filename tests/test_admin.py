@@ -40,10 +40,10 @@ def test_join_md_templating_and_missing_files(client, app):
     (agent / "join.md").write_text("Base: {{BASE_URL}} v{{SKILL_VERSION}}")
     (agent / "task-types" / "map.extract.md").write_text("POST {{BASE_URL}}/api/v1/tasks/claim")
     r = client.get("/join.md")
-    assert r.text == "Base: http://test v0.1.5" and r.headers["content-type"].startswith("text/markdown")
+    assert r.text == "Base: http://test v0.1.6" and r.headers["content-type"].startswith("text/markdown")
     assert client.get("/task-types/map.extract.md").text == "POST http://test/api/v1/tasks/claim"
     sv = client.get("/skill-version").json()
-    assert sv["version"] == "0.1.5" and len(sv["sha256"]) == 64
+    assert sv["version"] == "0.1.6" and len(sv["sha256"]) == 64
     web = app.state.settings.web_dir
     web.mkdir()
     (web / "index.html").write_text("<h1>hi</h1>")

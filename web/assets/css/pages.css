@@ -409,6 +409,7 @@ aside .codeline button { flex-basis: 100%; border-left: 0; border-top: 1px solid
 .cstages .cs-what { font-size: .8rem; color: var(--muted); line-height: 1.35; }
 .cstages .cs-when { font-family: var(--mono); font-size: .68rem; color: var(--ink-2); }
 .cstages .cs-count { font-family: var(--mono); font-size: .7rem; font-weight: 600; color: var(--ink); }
+.cstages .cs-note { font-size: .72rem; color: var(--ink-2); border-left: 3px solid var(--caution); padding-left: 6px; overflow-wrap: anywhere; }
 .cstages li[data-state="current"] { background: linear-gradient(180deg, color-mix(in srgb, var(--signal) 10%, transparent), transparent 85%); padding-left: 8px; }
 @media (max-width: 1000px) { .cstages { grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 8px; } }
 @media (max-width: 600px) {
@@ -484,6 +485,9 @@ td .fam-row { margin-left: 0; }
 .fambars .fb i[data-fam="open-weight"] { --fam: #9a5bd0; }
 .fambars .fv { font-family: var(--mono); font-size: .72rem; text-align: right; color: var(--ink-2); }
 .split { border-left: 3px solid var(--caution); padding-left: 8px; color: var(--ink-2); }
+.rels { display: grid; gap: 4px; margin-top: -4px; }
+.rel { color: var(--ink-2); overflow-wrap: anywhere; }
+.rel.conflict .chip { border-color: var(--caution); color: var(--ink); background: color-mix(in srgb, var(--caution) 18%, transparent); }
 .decision { display: grid; gap: 6px; padding: 12px 14px; background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius); font-size: .93rem; }
 .decision b { font-weight: 650; }
 .why[data-funded="true"] b, .review[data-outcome="met"] b, .ratify[data-decision="approve"] b { color: var(--t2); }

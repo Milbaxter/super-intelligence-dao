@@ -38,6 +38,7 @@ def main(argv: list[str] | None = None) -> int:
     cn.add_argument("--critique-days", type=float, default=None)
     cn.add_argument("--vote-days", type=float, default=None)
     cn.add_argument("--note", default=None)
+    cn.add_argument("--reason", default=None, help="advance: public reason for closing the stage (required)")
     args = p.parse_args(argv)
     settings = config.Settings()
 
@@ -80,6 +81,8 @@ def main(argv: list[str] | None = None) -> int:
     db.init_db(settings.db_path)
     conn = db.connect(settings.db_path)
     try:
+        from . import council as _council
+        _council.startup_sweep(conn)
         if args.cmd == "invite":
             from .api_admin import create_invites
             for code in create_invites(conn, max(1, min(args.count, 1000)), args.note,
@@ -93,7 +96,7 @@ def main(argv: list[str] | None = None) -> int:
                     out = council.cycle_json(conn, council.open_cycle(conn, args.budget, args.propose_days,
                                                                       args.critique_days, args.vote_days, args.note))
                 elif args.action == "advance":
-                    out = council.cycle_json(conn, council.advance(conn, force=True))
+                    out = council.cycle_json(conn, council.advance(conn, force=True, reason=args.reason))
                 elif args.action == "review":
                     out = {"reviewed": council.review_due(conn)}
                 else:

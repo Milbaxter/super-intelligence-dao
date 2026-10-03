@@ -37,6 +37,10 @@
         "title": "Benchmark harness results on Terminal-Bench 2.x",
         "cost": 18,
         "status": "applied",
+        "conflicts_with": [],
+        "similar_to": [
+          "ci_207"
+        ],
         "proposal": {
           "title": "Benchmark harness results on Terminal-Bench 2.x",
           "kind": "tasks",
@@ -275,7 +279,11 @@
               "t_20116",
               "t_20117"
             ]
-          }
+          },
+          "conflicts_with": [],
+          "similar_to": [
+            "ci_207"
+          ]
         },
         "steward": {
           "decision": "approve",
@@ -295,6 +303,8 @@
         "title": "Stop extraction tasks for apps",
         "cost": 1,
         "status": "applied",
+        "conflicts_with": [],
+        "similar_to": [],
         "proposal": {
           "title": "Stop extraction tasks for apps",
           "kind": "applicability",
@@ -390,7 +400,9 @@
           "applied_effect": {
             "rule_id": "ar_2",
             "closed_tasks": 3
-          }
+          },
+          "conflicts_with": [],
+          "similar_to": []
         },
         "steward": {
           "decision": "approve",
@@ -410,6 +422,8 @@
         "title": "Raise Map: gap scans to weight 4",
         "cost": 1,
         "status": "applied",
+        "conflicts_with": [],
+        "similar_to": [],
         "proposal": {
           "title": "Raise Map: gap scans to weight 4",
           "kind": "reweight",
@@ -489,7 +503,9 @@
             "track_id": "map-gaps",
             "old_weight": 3,
             "new_weight": 4
-          }
+          },
+          "conflicts_with": [],
+          "similar_to": []
         },
         "steward": {
           "decision": "approve",
@@ -509,6 +525,8 @@
         "title": "New track: reproducibility of open-weight model cards",
         "cost": 15,
         "status": "awaiting_ratification",
+        "conflicts_with": [],
+        "similar_to": [],
         "proposal": {
           "title": "New track: reproducibility of open-weight model cards",
           "kind": "new_track",
@@ -701,7 +719,9 @@
           "agg_forecast": 0.382,
           "n_forecasts": 11,
           "base_rate": 0.5,
-          "proposer_forecast": 0.55
+          "proposer_forecast": 0.55,
+          "conflicts_with": [],
+          "similar_to": []
         },
         "steward": null,
         "applied_at": null,
@@ -717,6 +737,8 @@
         "title": "Profile the 20 most-used inference engines",
         "cost": 20,
         "status": "not_funded",
+        "conflicts_with": [],
+        "similar_to": [],
         "proposal": {
           "title": "Profile the 20 most-used inference engines",
           "kind": "tasks",
@@ -944,7 +966,9 @@
           "agg_forecast": 0.5,
           "n_forecasts": 11,
           "base_rate": 0.5,
-          "proposer_forecast": 0.65
+          "proposer_forecast": 0.65,
+          "conflicts_with": [],
+          "similar_to": []
         },
         "steward": null,
         "applied_at": null,
@@ -960,6 +984,8 @@
         "title": "Pause R&D: harness of harnesses",
         "cost": 1,
         "status": "vetoed",
+        "conflicts_with": [],
+        "similar_to": [],
         "proposal": {
           "title": "Pause R&D: harness of harnesses",
           "kind": "retire",
@@ -1045,7 +1071,9 @@
           "agg_forecast": 0.539,
           "n_forecasts": 11,
           "base_rate": 0.5,
-          "proposer_forecast": 0.7
+          "proposer_forecast": 0.7,
+          "conflicts_with": [],
+          "similar_to": []
         },
         "steward": {
           "decision": "veto",
@@ -1065,6 +1093,10 @@
         "title": "Terminal-Bench results for agent harnesses",
         "cost": 12,
         "status": "withdrawn",
+        "conflicts_with": [],
+        "similar_to": [
+          "ci_201"
+        ],
         "proposal": {
           "title": "Terminal-Bench results for agent harnesses",
           "kind": "tasks",
@@ -1397,7 +1429,16 @@
         "ci_204",
         "ci_206"
       ]
-    }
+    },
+    "stage_notes": [
+      {
+        "stage": "critique",
+        "closed_at": "2026-09-26T09:00:00Z",
+        "reason": "Every proposal had two critiques; opening the vote a day early.",
+        "early": true,
+        "by": "steward"
+      }
+    ]
   },
   "rule": "Each voter gets an equal share of the budget; your share only pays for items you approved.",
   "veto_rate": {

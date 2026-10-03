@@ -206,8 +206,9 @@ def council_open(body=Body(default={}), conn=Depends(get_conn)):
 
 
 @router.post("/council/advance")
-def council_advance(conn=Depends(get_conn)):
-    return council.cycle_json(conn, council.advance(conn, force=True))
+def council_advance(body=Body(default={}), conn=Depends(get_conn)):
+    reason = _obj(body or {}).get("reason")
+    return council.cycle_json(conn, council.advance(conn, force=True, reason=reason))
 
 
 @router.post("/council/items/{item_id}/withdraw")

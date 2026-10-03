@@ -28,6 +28,16 @@ def make_verified(conn, handle, n=1, track=None):
                             VALUES (?,?,?,?,?,?,?,?)""", (db.new_id("s"), tid, cid, "claude", "{}", "verified", 1000, now))
 
 
+def verify_task(conn, handle, task_id):
+    """A verified submission by `handle` on an existing task (resolved now)."""
+    cid = db.scalar(conn, "SELECT id FROM contributors WHERE handle=?", (handle,))
+    now = db.now_ts()
+    with db.tx(conn):
+        conn.execute("""INSERT INTO submissions (id,task_id,contributor_id,model_family,payload,status,tokens_estimate,created_at,resolved_at)
+                        VALUES (?,?,?,?,?,?,?,?,?)""", (db.new_id("s"), task_id, cid, "claude", "{}", "verified", 1000, now, now))
+        conn.execute("UPDATE tasks SET status='verified' WHERE id=?", (task_id,))
+
+
 def member(client, conn, handle, family="claude", verified=1):
     h = register(client, handle, family)
     if verified:
@@ -72,8 +82,8 @@ def propose(client, h, payload):
     return out["checks"][0]["item_id"]
 
 
-def advance(client):
-    r = client.post(f"{API}/admin/council/advance", headers=STEWARD)
+def advance(client, reason="test: close the stage now"):
+    r = client.post(f"{API}/admin/council/advance", json={"reason": reason}, headers=STEWARD)
     assert r.status_code == 200, r.text
     return r.json()
 
@@ -305,10 +315,15 @@ def test_full_cycle(client, conn, monkeypatch):
     ov = client.get(f"{API}/council").json()
     assert ov["cycle"]["status"] == "closed" and ov["veto_rate"] == {"approved": 2, "vetoed": 1, "rate": 0.333}
 
-    # Review at the deadline (lazy): A gets a verified output in scope → met; C has < 5 resolved → missed.
+    # Review at the deadline (lazy): A (scope proposal_tasks by default) gets a verified output on one of its own
+    # tasks → met; other work in the track doesn't count; C has < 5 resolved → missed.
+    assert all(json.loads(t["inputs"])["council_item"] == a for t in
+               db.all_(conn, "SELECT inputs FROM tasks WHERE id IN (?, ?)", created))
+    verify_task(conn, "bob", created[0])
+    make_verified(conn, "bob", track="map-harnesses")  # same track, not a proposal task: out of scope
     real = db.utcnow
     monkeypatch.setattr(db, "utcnow", lambda: real() + timedelta(days=8))
-    make_verified(conn, "bob", track="map-harnesses")  # in scope of A
+    make_verified(conn, "bob", track="map-harnesses")  # after the deadline: out of the window
     ov = client.get(f"{API}/council").json()["cycle"]
     st = {i["id"]: i for i in ov["items"]}
     assert st[a]["status"] == "met" and st[a]["measured_value"] == 1
@@ -348,7 +363,7 @@ def test_one_cycle_at_a_time_and_empty_cycle(client):
     assert client.post(f"{API}/admin/council/open", json={}, headers=STEWARD).status_code == 409
     cyc = advance(client)
     assert cyc["status"] == "closed" and "no proposals" in cyc["note"]
-    assert client.post(f"{API}/admin/council/advance", headers=STEWARD).status_code == 409
+    assert client.post(f"{API}/admin/council/advance", json={"reason": "x"}, headers=STEWARD).status_code == 409
     open_cycle(client)  # a new one may open now
 
 
@@ -502,7 +517,7 @@ def test_not_useful_release(client, conn):
     ev = client.get(f"{API}/council/evidence").json()
     by_type = {t["task_type"]: t for t in ev["by_task_type"]}
     assert by_type["map.extract"]["all"]["releases"]["not_useful"] == 1
-    assert by_type["map.extract"]["30d"]["releases"]["not_useful"] == 1
+    assert "30d" not in by_type["map.extract"]  # identical to `all` → omitted
     tr = {t["track_id"]: t for t in ev["by_track"]}
     assert tr["map-harnesses"]["all"]["releases"]["not_useful"] == 1 and tr["map-harnesses"]["weight"] == 5
     assert ev["coverage"][0]["layer"] == "harnesses" and ev["rules"][0]["task_type"] == "map.extract"
@@ -519,3 +534,161 @@ def test_steward_cannot_create_steer_tasks(client):
 ])
 def test_vote_payload_validation(payload, field):
     assert field in {e["field"] for e in council.validate_payload("steer.vote", payload)}
+
+
+# ------------------------------------------------------------------ v1.1: field-test fixes
+
+
+def test_rules_apply_to_existing_tasks_at_claim_and_startup(app, client, conn):
+    """Open tasks that break an active rule are never offered, and the startup sweep closes them (idempotently)."""
+    from agentdao.app import _startup_sweep
+    h = register(client, "worker")
+    _artifact(conn, "some-dataset", "dataset")
+    bad = create_task(client, inputs={"artifact_id": "some-dataset"}, priority=99)  # top of the queue
+    good = create_task(client)
+    assert claim_ok(client, h)["task"]["id"] == good  # the violating task is skipped although it ranks first
+    _startup_sweep(app.state.settings.db_path)
+    assert db.scalar(conn, "SELECT status FROM tasks WHERE id=?", (bad,)) == "closed"
+    n_events = db.scalar(conn, "SELECT COUNT(*) FROM events WHERE kind='tasks_closed_by_rule'")
+    _startup_sweep(app.state.settings.db_path)
+    assert db.scalar(conn, "SELECT COUNT(*) FROM events WHERE kind='tasks_closed_by_rule'") == n_events == 1
+
+
+def test_relaxed_rule_recreates_tasks(client, conn):
+    _artifact(conn, "some-dataset", "dataset")
+    q = "SELECT COUNT(*) FROM tasks WHERE type='map.extract' AND json_extract(inputs,'$.artifact_id')=? AND status='open'"
+    taskgen.generate(conn)
+    assert db.scalar(conn, q, ("some-dataset",)) == 0
+    out = council.add_rule(conn, "map.extract", "exclude", ["tool"], "steward", "datasets do have leaderboards")
+    assert len(out["recreated_task_ids"]) == 1 and db.scalar(conn, q, ("some-dataset",)) == 1
+    out = council.add_rule(conn, "map.extract", "exclude", ["dataset"], "steward", "back again")
+    assert out["closed_tasks"] == 1 and out["recreated_task_ids"] == [] and db.scalar(conn, q, ("some-dataset",)) == 0
+
+
+def test_proposal_for_rule_excluded_artifact_is_rejected(client, conn):
+    a = member(client, conn, "aaa")
+    _artifact(conn, "some-dataset", "dataset")
+    open_cycle(client)
+    cl = claim_ok(client, a)
+    bad = proposal("x", "tasks", {"track_id": "map-harnesses", "tasks": [
+        {"type": "map.extract", "title": "t", "inputs": {"artifact_id": "some-dataset"}}]})
+    r = submit(client, a, cl["lease"]["id"], bad)
+    assert r.status_code == 422 and "applicability rule" in r.text
+
+
+def test_mes_skips_conflicting_item():
+    items = [{"id": "A", "cost": 1, "title": "Exclude apps", "approvers": ["a", "b", "c"], "conflicts": ["B"]},
+             {"id": "B", "cost": 1, "title": "Include models", "approvers": ["a", "b"], "conflicts": ["A"]},
+             {"id": "C", "cost": 1, "approvers": ["c"]}]
+    r = council.equal_shares(["a", "b", "c"], items, 9)
+    assert r["A"]["funded"] and r["C"]["funded"] and not r["B"]["funded"]
+    assert r["B"]["why"] == "Not funded: conflicts with Exclude apps (funded first)"
+
+
+def test_ballot_relations():
+    app_rule = {"kind": "applicability", "effect": {"task_type": "map.extract", "exclude_artifact_kinds": ["app"]}}
+    items = [{"id": "A", "title": "Skip apps in extraction", **app_rule},
+             {"id": "B", "title": "Only models", "kind": "applicability", "effect": {"task_type": "map.extract", "include_artifact_kinds": ["model"]}},
+             {"id": "C", "title": "Raise harness weight", "kind": "reweight", "effect": {"track_id": "h", "weight": 5}},
+             {"id": "D", "title": "Pause harnesses", "kind": "retire", "effect": {"track_id": "h"}},
+             {"id": "E", "title": "Harness tasks", "kind": "tasks", "effect": {"track_id": "h", "tasks": []}},
+             {"id": "F", "title": "More harness tasks", "kind": "tasks", "effect": {"track_id": "h", "tasks": []}},
+             {"id": "G", "title": "Skip apps in profiling", "kind": "applicability", "effect": {"task_type": "map.profile"}}]
+    r = council.ballot_relations(items)
+    assert r["A"]["conflicts_with"] == ["B"] and r["C"]["conflicts_with"] == ["D"]
+    assert sorted(r["D"]["conflicts_with"]) == ["C", "E", "F"] and r["E"]["conflicts_with"] == ["D"]
+    assert r["E"]["similar_to"] == ["F"]  # same kind + target, no conflict
+    assert r["A"]["similar_to"] == ["G"]  # title Jaccard 3/5 ≥ 0.5
+    assert sorted(r["C"]["related"]) == ["D", "E", "F"] and r["G"]["related"] == []
+
+
+def test_conflicts_shown_from_vote_and_critique_bodies_sealed(client, conn):
+    a, b, c = member(client, conn, "aaa"), member(client, conn, "bbb", "gpt"), member(client, conn, "ccc", "gemini")
+    open_cycle(client, budget_slots=10)
+    x = propose(client, a, proposal("Skip apps", "applicability", {"task_type": "map.extract", "exclude_artifact_kinds": ["app"]},
+                                    metric="no_results_rate", target=0.2, track_id=None))
+    y = propose(client, b, proposal("Only models", "applicability", {"task_type": "map.extract", "include_artifact_kinds": ["model"]},
+                                    metric="no_results_rate", target=0.2, track_id=None))
+    cyc = advance(client)
+    # CRITIQUE: only id/kind/title/cost publicly; critique tasks' proposals redacted in public reads
+    assert all(i["proposal"] is None and i["conflicts_with"] is None for i in cyc["items"])
+    assert "Answers which harnesses are best" not in public_dump(client)
+    cl = claim_ok(client, c)
+    assert cl["task"]["inputs"]["proposal"]["problem"].startswith("Answers")  # the lease holder sees it
+    other = y if cl["task"]["inputs"]["item_id"] == x else x
+    assert cl["task"]["inputs"]["related_items"] == [{"item_id": other, "title": "Only models" if other == y else "Skip apps",
+                                                      "kind": "applicability", "conflicts": True}]
+    pub = client.get(f"{API}/tasks/{cl['task']['id']}").json()["inputs"]["proposal"]
+    assert "problem" not in pub and pub["sealed"]
+    cyc = advance(client)
+    items = {i["id"]: i for i in cyc["items"]}
+    assert items[x]["conflicts_with"] == [y] and items[x]["proposal"]["problem"]
+    for n, h in enumerate((a, b, c)):
+        cl = claim_ok(client, h, task_types=["steer.vote"])
+        if n == 0:
+            assert {v["item_id"]: v["conflicts_with"] for v in cl["task"]["inputs"]["items"]} == {x: [y], y: [x]}
+        submit_ok(client, h, cl["lease"]["id"], {"approve": [x, y], "forecasts": {x: 0.5, y: 0.5}})
+    cyc = advance(client)
+    t = {i["id"]: i["tally"] for i in cyc["items"]}
+    assert t[x]["funded"] and not t[y]["funded"] and t[y]["why"] == "Not funded: conflicts with Skip apps (funded first)"
+    assert t[y]["conflicts_with"] == [x]
+
+
+def test_advance_needs_reason_and_is_recorded(client, conn):
+    open_cycle(client)
+    r = client.post(f"{API}/admin/council/advance", headers=STEWARD)
+    assert r.status_code == 422 and r.json()["error"]["code"] == "reason_required"
+    cyc = advance(client, reason="nobody is proposing")
+    assert cyc["stage_notes"][0]["stage"] == "propose" and cyc["stage_notes"][0]["reason"] == "nobody is proposing"
+    assert cyc["stage_notes"][0]["early"] is True
+    assert any(e["summary"] == "steward closed the propose stage early: nobody is proposing"
+               for e in client.get(f"{API}/activity").json())
+
+
+def test_success_scope_validation_and_measure(client, conn):
+    errs = lambda p: {e["field"] for e in council.validate_payload("steer.propose", p)}  # noqa: E731
+    assert "success.scope" in errs(proposal("r", "reweight", {"track_id": "map-harnesses", "weight": 2}, scope="proposal_tasks"))
+    assert "success.reported_by" in errs(proposal("r", "reweight", {"track_id": "map-harnesses", "weight": 2}, reported_by="third-party"))
+    assert not errs(proposal("r", "reweight", {"track_id": "map-harnesses", "weight": 2}, metric="reproduced_claims",
+                             reported_by="leaderboard"))
+    assert council._clean_proposal(proposal("t", "tasks", {}))["success"]["scope"] == "proposal_tasks"
+    assert council._clean_proposal(proposal("t", "retire", {}))["success"]["scope"] == "track"
+    # measure: window [applied_at, review_due_at) and scope
+    member(client, conn, "bob")
+    t0, t1 = db.ts_in(days=-1), db.ts_in(days=1)
+    mine = create_task(client, inputs={"artifact_id": "foo-agent", "council_item": "ci_x"})
+    other = create_task(client)
+    verify_task(conn, "bob", mine)
+    verify_task(conn, "bob", other)
+    item = lambda scope: {"id": "ci_x", "applied_at": t0, "review_due_at": t1, "payload": json.dumps(  # noqa: E731
+        {"success": {"metric": "verified_outputs", "target": 1, "track_id": "map-harnesses", "scope": scope}})}
+    assert council.measure(conn, item("proposal_tasks")) == 1 and council.measure(conn, item("track")) == 2
+    assert council.measure(conn, {**item("track"), "review_due_at": db.ts_in(days=-0.5)}) == 0
+
+
+def test_evidence_brief_same_shape_in_task_inputs(client, conn):
+    a = member(client, conn, "aaa")
+    open_cycle(client)
+    full = client.get(f"{API}/council/evidence").json()
+    compact = claim_ok(client, a)["task"]["inputs"]["evidence"]
+    assert set(full) | {"full_brief_url"} == set(compact)
+    assert full["last_cycle"] is None and compact["last_cycle"] is None
+    assert [t["track_id"] for t in full["by_track"]] == [t["track_id"] for t in compact["by_track"]]
+    st = compact["by_track"][0]["all"]
+    assert set(st) == set(council.COMPACT_STAT_KEYS) and set(st) <= set(full["by_track"][0]["all"])
+    assert {"open", "leased", "attempted", "median_open_priority"} <= set(st)
+    assert full["coverage"][0]["artifacts_by_kind"] == {"harness": 1} and full["active_contributors_30d"] == {"claude": 1}
+    assert "verified_outputs" in full["metric_definitions"] and compact["metric_definitions"] == full["metric_definitions"]
+
+
+def test_no_task_headers(client, conn):
+    h = member(client, conn, "aaa")
+    create_task(client, budget_minutes=45)
+    r = claim(client, h, max_minutes=10, task_types=["map.extract"])
+    assert r.status_code == 204 and r.headers["x-no-task-reason"] == "all_over_max_minutes"
+    assert r.headers["x-min-budget-minutes"] == "45"
+    open_cycle(client)
+    propose(client, h, proposal("p", "reweight", {"track_id": "map-harnesses", "weight": 2}))
+    advance(client)
+    r = claim(client, h, task_types=["steer.critique"])  # only its own proposal is on the ballot
+    assert r.status_code == 204 and r.headers["x-no-task-detail"] == "all_items_critiqued_or_own"

@@ -404,3 +404,38 @@ def test_queue_lists_overdue_first_blind_check(client, conn):
     [item] = client.get("/api/v1/admin/queue", headers=STEWARD).json()["undecided_blind_rounds"]
     assert item["id"] == claim_id and item["blind_round"]["overdue"] is True
     assert item["blind_round"]["votes"] == {"agree": 0, "disagree": 0} and item["blind_round"]["age_days"] >= 4
+
+
+def test_steward_corrects_blind_verdict_submission_and_credit(client, conn):
+    """A comparator bug produced a wrong verdict: the steward flips the verifier submission; verify_agreed follows
+    idempotently (reversal = negative ledger row, re-grant after reversal = one positive row)."""
+    setup(client)
+    _, _, out = blind(client, "victor", AGREE)
+    sub = out["submission_id"]
+    assert credits(client)["victor"] == 4
+
+    def resolve(status):
+        r = client.post(f"/api/v1/admin/submissions/{sub}/resolve", json={"status": status, "note": "comparator bug"},
+                        headers=STEWARD)
+        assert r.status_code == 200, r.text
+        return r.json()
+
+    assert resolve("rejected") == {"id": sub, "status": "rejected"}
+    assert credits(client)["victor"] == 0
+    resolve("rejected")  # idempotent
+    assert credits(client)["victor"] == 0
+    assert db.scalar(conn, "SELECT COUNT(*) FROM ledger WHERE kind='verify_agreed_reversed' AND ref_id=?", (sub,)) == 1
+    resolve("verified")
+    resolve("verified")
+    assert credits(client)["victor"] == 4 and sub_status(conn, sub) == "verified"
+
+
+
+def test_steward_verifies_uncredited_blind_verdict(client):
+    """A disagreeing verdict (no credit yet) that the steward marks verified earns verify_agreed once."""
+    setup(client)
+    _, _, out = blind(client, "wendy", DISAGREE)
+    for _ in range(2):
+        r = client.post(f"/api/v1/admin/submissions/{out['submission_id']}/resolve", json={"status": "verified"}, headers=STEWARD)
+        assert r.status_code == 200 and r.json()["status"] == "verified"
+    assert credits(client)["wendy"] == 4

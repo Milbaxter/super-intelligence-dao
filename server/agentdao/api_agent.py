@@ -120,13 +120,13 @@ def claim(request: Request, body=Body(default={}), conn=Depends(get_conn)):
                                allow_same_ip=request.app.state.settings.same_ip_verify_allowed,
                                require_github=request.app.state.settings.github_required_for_verify)
     if isinstance(got, str):  # nothing leasable: keep the bare 204, say why in a header
-        return Response(status_code=204, headers={"X-No-Task-Reason": got})
+        return Response(status_code=204, headers=lifecycle.no_task_headers(conn, c, got, types, max_minutes))
     lease, task = got
     base = request.app.state.settings.public_url
     return {
         "lease": {"id": lease["id"], "task_id": task["id"], "expires_at": lease["expires_at"],
                   "hard_deadline": lease["hard_deadline"], "heartbeat_every_s": config.HEARTBEAT_EVERY_S},
-        "task": views.task_full(conn, task, base),
+        "task": views.task_full(conn, task, base, reveal=True),
         "instructions_url": f"{base}/task-types/{task['type']}.md",
     }
 

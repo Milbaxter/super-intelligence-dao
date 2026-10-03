@@ -221,7 +221,8 @@ CREATE TABLE IF NOT EXISTS council_cycles (
     tallied_at     TEXT,
     closed_at      TEXT,
     opened_by      TEXT,
-    note           TEXT
+    note           TEXT,
+    stage_notes    TEXT                 -- JSON list: steward stage closes [{stage, closed_at, reason, early, by}]
 );
 
 CREATE TABLE IF NOT EXISTS council_items (
