@@ -868,12 +868,15 @@ def _settle_dispute(conn, claim: dict, extractor_wins: bool) -> None:
 
 def _settle_open_round(conn, claim: dict, new_special_status: str | None) -> None:
     """Steward resolved a claim mid-tie-break: close its pending blind tasks and settle the round's verdicts
-    by the steward's outcome (claim kept → agree side wins, disputed/retracted → disagree side wins)."""
-    votes = _round_votes(conn, claim["id"])
-    if not votes:
-        return
-    for t in db.all_(conn, """SELECT id FROM tasks WHERE type='verify.blind_extract' AND target_claim_id=?
-                              AND status IN ('draft','open','leased','submitted','needs_steward')""", (claim["id"],)):
+    by the steward's outcome (claim kept → agree side wins, disputed/retracted → disagree side wins).
+
+    The steward's ruling also decides rounds that were stuck: blind tasks in needs_steward (max attempts) are closed
+    even without verdicts, and verdicts of a round handed to the steward (_abandon_round_if_orphaned) are settled —
+    otherwise views.blind_pending would keep the value withheld forever."""
+    votes = _round_votes(conn, claim["id"]) + _round_votes(conn, claim["id"], "needs_steward")
+    statuses = ("draft", "open", "leased", "submitted", "needs_steward") if votes else ("needs_steward",)
+    for t in db.all_(conn, f"""SELECT id FROM tasks WHERE type='verify.blind_extract' AND target_claim_id=?
+                               AND status IN ({','.join('?' for _ in statuses)})""", (claim["id"], *statuses)):
         conn.execute("UPDATE leases SET status='released', released_at=? WHERE task_id=? AND status='active'", (db.now_ts(), t["id"]))
         set_task_status(conn, t["id"], "closed")
     if new_special_status == "disputed":
@@ -940,7 +943,7 @@ def recheck_claim(conn, checker: QuoteChecker, claim_id: str) -> dict:
     claim = db.one(conn, "SELECT * FROM claims WHERE id=?", (claim_id,))
     if not claim:
         raise not_found("claim", claim_id)
-    checker._cache.pop(claim["source_url"], None)  # steward recheck bypasses cache
+    checker.invalidate(claim["source_url"])  # steward recheck bypasses cache
     res = checker.check(claim["source_url"], claim["quote"] or "", claim["value"])
     with tx(conn):
         fields: dict = {"check_result": jdump(res)}

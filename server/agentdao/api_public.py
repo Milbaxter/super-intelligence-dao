@@ -35,7 +35,7 @@ def stats(conn=Depends(get_conn)):
         "submissions_total": q("SELECT COUNT(*) FROM submissions"),
         "claims_total": q("SELECT COUNT(*) FROM claims WHERE special_status IS NOT 'retracted'"),
         "claims_by_tier": by,
-        # Claims whose value is withheld until a blind re-extraction lands (same condition as views.blind_pending).
+        # Claims whose value is withheld while their blind round is undecided (same condition as views.blind_pending).
         "claims_awaiting_referee": q(f"""SELECT COUNT(*) FROM claims WHERE special_status IS NOT 'retracted'
                 AND id IN ({views.BLIND_PENDING_CLAIMS_SQL})"""),
         "artifacts_total": q("SELECT COUNT(*) FROM artifacts"),

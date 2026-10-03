@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 """Simulated Super Intelligence DAO contributors for end-to-end tests (stdlib only; talks ONLY to the public HTTP API).
 
-Two simulated agents:
+Simulated agents:
   * the *extractor* (``--invite/--handle/--model-family``) claims Map tasks and submits plausible payloads;
   * the *verifier* (``--verifier-invite`` …, different handle and preferably a different model family) then claims
-    the verify tasks the extractor's submissions spawned (``verify.blind_extract``, ``verify.review``) so a claim can
-    reach T2 ``reproduced`` (``--mode honest``) or ``disputed`` (``--mode disagree``).
+    the verify tasks the extractor's submissions spawned (``verify.blind_extract``, ``verify.review``);
+  * a *second verifier* (``--verifier2-invite`` …) takes the tie-breaker blind checks that the first verifier's
+    disagreements spawn. It is only registered when a tie-breaker exists.
+
+Blind rule: an agreeing first verdict reproduces the claim; a disagreement spawns a tie-breaker and 2 matching
+verdicts decide. So ``--mode honest`` reaches T2 ``reproduced`` with one verifier, and ``--mode disagree`` (both
+verifiers misread the source) reaches ``disputed`` only after the second verifier; with ``--check`` it also asserts
+the claim is still undecided (value withheld, not disputed) after the first.
 
 For ``map.extract`` and ``map.profile`` the sim serves fixture pages from a tiny local HTTP server (loopback only,
 default port 8799) and cites them as ``source_url``. The backend must allow ``http://localhost`` sources in dev/test
@@ -13,7 +19,7 @@ mode only (see docs/PROTOCOL.md and docs/SECURITY.md).
 
 Examples:
   uv run python scripts/sim_agent.py --base-url http://localhost:8787 --steward-key dev-steward --tasks 3
-  python3 scripts/sim_agent.py --invite INV1 --verifier-invite INV2 --handle sim-a --mode disagree --check
+  python3 scripts/sim_agent.py --invite INV1 --verifier-invite INV2 --verifier2-invite INV3 --mode disagree --check
 Run it against a dev database: verify tasks the sim did not spawn itself are released with reason ``gave_up``.
 """
 from __future__ import annotations
@@ -270,7 +276,7 @@ def blind_extract(inp: dict, mode: str) -> dict:
     mine = [ln for ln in lines if a_name.lower() in ln.lower()]
     if mode == "disagree":
         # A realistic mistake: read the wrong row (another benchmark). The quote is still verbatim,
-        # so it passes the mechanical check, and the values disagree → claim becomes disputed.
+        # so it passes the mechanical check, and the values disagree (two such verdicts → disputed).
         for ln in mine:
             if b_name.lower() not in ln.lower() and (r := pick(ln)):
                 return r
@@ -383,6 +389,10 @@ def main() -> int:
     ap.add_argument("--verifier-handle", default="sim-verifier")
     ap.add_argument("--verifier-model-family", choices=FAMILIES, help="default: a family different from the extractor")
     ap.add_argument("--verifier-api-key")
+    ap.add_argument("--verifier2-invite", help="invite code for the tie-breaker verifier (a third operator)")
+    ap.add_argument("--verifier2-handle", default="sim-verifier-2")
+    ap.add_argument("--verifier2-model-family", choices=FAMILIES, help="default: a family different from the other two")
+    ap.add_argument("--verifier2-api-key")
     ap.add_argument("--no-verifier", action="store_true", help="only run the extractor")
     ap.add_argument("--steward-key", help="if set, mint missing invite codes via POST /admin/invites")
     ap.add_argument("--tasks", type=int, default=3, help="number of primary tasks the extractor attempts")
@@ -409,18 +419,22 @@ def main() -> int:
         return 2
     check_skill_version(public)
 
-    need = int(not a.invite and not a.api_key) + int(not a.no_verifier and not a.verifier_invite and not a.verifier_api_key)
-    if need and a.steward_key:
-        steward = Api(a.base_url, key=a.steward_key, who="steward")
-        # One call per agent, each with its own person label: codes minted together share an operator and could
-        # never verify each other (extractor and verifier simulate two different humans).
-        codes = [steward.call("POST", "/admin/invites", {"count": 1, "note": "sim_agent", "person": f"sim-{who}-{time.time_ns()}"})[1]["codes"][0]
-                 for who in ("extractor", "verifier")[:need]]
-        if not a.invite and not a.api_key:
-            a.invite = codes.pop(0)
-        if not a.no_verifier and not a.verifier_invite and not a.verifier_api_key:
-            a.verifier_invite = codes.pop(0)
-        log("steward", f"minted {need} invite(s)")
+    steward = Api(a.base_url, key=a.steward_key, who="steward") if a.steward_key else None
+
+    def mint(who: str) -> str | None:
+        """One invite per sim agent, each with its own person label: codes minted together share an operator and
+        could never verify each other (every sim agent simulates a different human)."""
+        if not steward:
+            return None
+        code = steward.call("POST", "/admin/invites", {"count": 1, "note": "sim_agent",
+                                                         "person": f"sim-{who}-{time.time_ns()}"})[1]["codes"][0]
+        log("steward", f"minted an invite for the {who}")
+        return code
+
+    if not a.invite and not a.api_key:
+        a.invite = mint("extractor")
+    if not a.no_verifier and not a.verifier_invite and not a.verifier_api_key:
+        a.verifier_invite = mint("verifier")
 
     ext = SimAgent(a.base_url, a.handle, a.model_family, "extractor")
     ext.register(a.invite, a.api_key)
@@ -441,47 +455,78 @@ def main() -> int:
             submissions.append({"task": lt["task"], "res": res})
             spawned += res.get("spawned_task_ids") or []
 
-    # ---- verifier
-    if not a.no_verifier and spawned:
-        vfam = a.verifier_model_family or next(f for f in FAMILIES if f != a.model_family)
-        ver = SimAgent(a.base_url, a.verifier_handle, vfam, "verifier")
-        ver.register(a.verifier_invite, a.verifier_api_key)
-        todo = set(spawned)
+    # ---- verifiers: the first takes what the extractor spawned; tie-breakers its verdicts spawn go to the second
+    def verify_pass(ver: SimAgent, todo: set[str]) -> list[str]:
+        """Work through `todo` (task ids); returns the task ids this verifier's submissions spawned (tie-breakers)."""
+        new: list[str] = []
         for _ in range(a.max_verify):
             if not todo:
                 break
             lt = ver.claim(VERIFY_TYPES)
             if not lt:
-                log("verifier", f"no eligible verify task (204); {len(todo)} spawned task(s) not reached")
+                log(ver.who, f"no eligible verify task (204); {len(todo)} spawned task(s) not reached")
                 break
             task = lt["task"]
             if task["id"] not in todo:
                 ver.release(lt["lease"]["id"], "gave_up", "sim_agent only handles tasks spawned by its own run")
-                log("verifier", f"released foreign task {task['id']} ({task['type']})")
+                log(ver.who, f"released foreign task {task['id']} ({task['type']})")
                 continue
-            log("verifier", f"claimed {task['id']} {task['type']} (inputs: "
-                            f"{sorted((task.get('inputs') or {}).keys())})")
+            log(ver.who, f"claimed {task['id']} {task['type']} (inputs: {sorted((task.get('inputs') or {}).keys())})")
             if task["type"] == "verify.blind_extract" and {"value", "quote"} & set(task.get("inputs") or {}):
-                log("verifier", "WARN blind task exposes value/quote in inputs: blindness broken!")
-            run_one(ver, lt, fx, a.mode, seen_types)
+                log(ver.who, "WARN blind task exposes value/quote in inputs: blindness broken!")
+            res = run_one(ver, lt, fx, a.mode, seen_types)
             todo.discard(task["id"])
+            new += (res or {}).get("spawned_task_ids") or []
+        return new
+
+    claim_ids = [c["claim_id"] for sub in submissions if sub["task"]["type"] == "map.extract"
+                 for c in (sub["res"].get("checks") or []) if c.get("claim_id")]
+
+    def claim_states() -> list[dict]:
+        out = []
+        for cid in claim_ids:
+            try:
+                out.append(public.call("GET", f"/claims/{cid}", auth=False)[1])
+            except ApiError as exc:
+                log("sim", f"claim {cid}: lookup failed {exc}")
+        return out
+
+    failures: list[str] = []
+    if not a.no_verifier and spawned:
+        vfam = a.verifier_model_family or next(f for f in FAMILIES if f != a.model_family)
+        ver = SimAgent(a.base_url, a.verifier_handle, vfam, "verifier")
+        ver.register(a.verifier_invite, a.verifier_api_key)
+        tiebreaks = verify_pass(ver, set(spawned))
+        mid = claim_states()
+        for cl in mid:
+            log("sim", f"after 1st verifier: claim {cl['id']} display_status={cl.get('display_status')} "
+                       f"value_hidden={cl.get('value_hidden')}")
+        if a.mode == "disagree" and mid:
+            # One disagreement must not dispute a claim: it stays undecided (value withheld) with a tie-breaker open.
+            if any(cl.get("display_status") == "disputed" for cl in mid):
+                failures.append("a single disagreeing verdict disputed a claim")
+            if not any(cl.get("value_hidden") for cl in mid):
+                failures.append("no claim is awaiting a tie-breaker after the first disagreement")
+            if not tiebreaks:
+                failures.append("the first disagreement spawned no tie-breaker task")
+        if tiebreaks:
+            v2fam = a.verifier2_model_family or next(f for f in FAMILIES if f not in (a.model_family, vfam))
+            ver2 = SimAgent(a.base_url, a.verifier2_handle, v2fam, "verifier2")
+            if not a.verifier2_invite and not a.verifier2_api_key:
+                a.verifier2_invite = mint("verifier2")
+            ver2.register(a.verifier2_invite, a.verifier2_api_key)
+            log("sim", f"{len(tiebreaks)} tie-breaker task(s) → second verifier")
+            verify_pass(ver2, set(tiebreaks))
     elif not spawned:
         log("sim", "no verify tasks were spawned; skipping verifier")
 
     # ---- outcome
     time.sleep(0.5)
     tiers: list[str] = []
-    claim_ids = [c["claim_id"] for sub in submissions if sub["task"]["type"] == "map.extract"
-                 for c in (sub["res"].get("checks") or []) if c.get("claim_id")]
-    for cid in claim_ids:
-        try:
-            _, cl = public.call("GET", f"/claims/{cid}", auth=False)
-        except ApiError as exc:
-            log("sim", f"claim {cid}: lookup failed {exc}")
-            continue
+    for cl in claim_states():
         st = cl.get("display_status") or cl.get("special_status") or cl.get("tier")
         tiers.append(st)
-        log("sim", f"claim {cid}: tier={cl.get('tier')} display_status={st}")
+        log("sim", f"claim {cl['id']}: tier={cl.get('tier')} display_status={st} value_hidden={cl.get('value_hidden')}")
     _, me = ext.api.call("GET", "/me")
     log("sim", f"extractor credits={me.get('credits')} verified_tokens={me.get('verified_tokens')}")
     for s in me.get("recent_submissions") or []:
@@ -491,7 +536,9 @@ def main() -> int:
         want = "reproduced" if a.mode == "honest" else "disputed"
         extracted = any(s["task"]["type"] == "map.extract" for s in submissions)
         if extracted and want not in tiers:
-            print(f"CHECK FAILED: expected a claim with display_status={want}, got {tiers}", file=sys.stderr)
+            failures.append(f"expected a claim with display_status={want}, got {tiers}")
+        if failures:
+            print("CHECK FAILED: " + "; ".join(failures), file=sys.stderr)
             return 1
         print(f"CHECK OK ({want}: {tiers.count(want)} claim(s))")
     return 0

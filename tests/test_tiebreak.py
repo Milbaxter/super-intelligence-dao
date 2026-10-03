@@ -177,3 +177,76 @@ def test_steward_closing_tiebreak_hands_round_to_steward(client, conn):
     assert r.status_code < 300, r.text
     assert sub_status(conn, out["submission_id"]) == "needs_steward"
     assert sub_status(conn, ext_sub) == "needs_steward"
+
+
+# ---- value redaction while a round is undecided but nothing is on the board
+
+
+def give_up(client, task_id, n=3):
+    """n fresh verifiers lease the blind task and release it with a counted reason (MAX_ATTEMPTS=3 → needs_steward)."""
+    for i in range(n):
+        h = register(client, f"quitter{task_id[-6:]}{i}", "gemini")
+        r = claim(client, h, task_types=["verify.blind_extract"])
+        assert r.status_code == 200 and r.json()["task"]["id"] == task_id, r.text
+        assert client.post(f"/api/v1/leases/{r.json()['lease']['id']}/release", json={"reason": "gave_up"},
+                           headers=h).status_code < 300
+
+
+def value_shown(client, claim_id) -> bool:
+    """Checks every public surface agrees on whether the claim's value is withheld; returns True if shown."""
+    c = client.get(f"/api/v1/claims/{claim_id}").json()
+    cell = next(cell for l in client.get("/api/v1/map").json()["layers"] for cell in l["cells"] if claim_id in cell["claim_ids"])
+    awaiting = client.get("/api/v1/stats").json()["claims_awaiting_referee"]
+    listed = next(x for x in client.get("/api/v1/claims").json()["items"] if x["id"] == claim_id)
+    if c["value_hidden"]:
+        assert c["value"] is None and c["quote"] is None and listed["value"] is None
+        assert cell["value_hidden"] is True and cell["value_summary"].startswith("awaiting referee")
+        assert awaiting == 1 and "72.4" not in client.get("/api/v1/map").text
+        return False
+    assert c["value"] == 72.4 and listed["value"] == 72.4 and cell["value_hidden"] is False and awaiting == 0
+    return True
+
+
+def test_value_hidden_while_tiebreak_stuck_in_needs_steward(client, conn):
+    _, claim_id, _ = setup(client)
+    _, _, out = blind(client, "victor", DISAGREE)
+    tb = out["spawned_task_ids"][0]
+    give_up(client, tb)
+    assert task_status(conn, tb) == "needs_steward"
+    assert not value_shown(client, claim_id)  # nothing pending, but the round (1 disagree) is undecided
+    client.post(f"/api/v1/admin/claims/{claim_id}/resolve", json={"special_status": "none", "note": "ok"}, headers=STEWARD)
+    assert task_status(conn, tb) == "closed"
+    assert sub_status(conn, out["submission_id"]) == "rejected"  # claim kept: the disagree verdict loses
+    assert value_shown(client, claim_id)
+
+
+def test_value_hidden_while_first_blind_check_stuck(client, conn):
+    _, claim_id, _ = setup(client)
+    t1 = db.scalar(conn, "SELECT id FROM tasks WHERE type='verify.blind_extract' AND target_claim_id=?", (claim_id,))
+    give_up(client, t1)
+    assert task_status(conn, t1) == "needs_steward"
+    assert not value_shown(client, claim_id)  # a steward could reopen it: keep it blind
+    client.post(f"/api/v1/admin/claims/{claim_id}/resolve", json={"tier": "source-checked", "note": "ok"}, headers=STEWARD)
+    assert task_status(conn, t1) == "closed"
+    assert value_shown(client, claim_id)
+
+
+def test_reopened_stuck_blind_task_stays_blind(client, conn):
+    _, claim_id, _ = setup(client)
+    t1 = db.scalar(conn, "SELECT id FROM tasks WHERE type='verify.blind_extract' AND target_claim_id=?", (claim_id,))
+    give_up(client, t1)
+    client.post(f"/api/v1/admin/tasks/{t1}/status", json={"status": "open"}, headers=STEWARD)
+    assert not value_shown(client, claim_id)
+    _, _, out = blind(client, "victor", AGREE)
+    assert out["status"] == "verified" and value_shown(client, claim_id)
+
+
+def test_round_handed_to_steward_stays_hidden_until_resolved(client, conn):
+    _, claim_id, _ = setup(client)
+    _, t1, out = blind(client, "victor", DISAGREE)
+    client.post(f"/api/v1/admin/tasks/{out['spawned_task_ids'][0]}/status", json={"status": "closed"}, headers=STEWARD)
+    assert sub_status(conn, out["submission_id"]) == "needs_steward"
+    assert not value_shown(client, claim_id)
+    client.post(f"/api/v1/admin/claims/{claim_id}/resolve", json={"tier": "reproduced", "note": "ok"}, headers=STEWARD)
+    assert sub_status(conn, out["submission_id"]) == "rejected" and task_status(conn, t1) == "rejected"
+    assert value_shown(client, claim_id)

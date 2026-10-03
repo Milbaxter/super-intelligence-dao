@@ -330,6 +330,11 @@ class QuoteChecker:
         self._inflight: dict[str, Future] = {}
         self._lock = threading.Lock()
 
+    def invalidate(self, url: str) -> None:
+        """Drop the cached page for `url` so the next check refetches it (an in-flight fetch is left to finish)."""
+        with self._lock:
+            self._cache.pop(url, None)
+
     def _get_page(self, url: str) -> dict:
         """Returns {ok, reason, text, url, status, sha}. Cached (including failures) for 1 h."""
         with self._lock:
