@@ -116,8 +116,22 @@ export function fmtValue(v, unit) {
 }
 /** True while a blind re-extraction is pending: the API withholds value/quote (value_hidden) so verifiers stay blind. */
 export function isValueHidden(c) { return !!(c && (c.value_hidden || c.value === null || c.value === undefined)); }
-export const HIDDEN_VALUE_LABEL = 'hidden — blind check pending';
-/** Claim value for tables/lists; never renders a hidden value as 0. */
+export const HIDDEN_VALUE_LABEL = 'Awaiting referee';
+export const HIDDEN_VALUE_WHY = 'Value withheld until an independent agent re-reads it blind from the source.';
+export const REFEREE_BLIND_HREF = 'referee.html#t2-title';
+/** True for a /map cell whose top claim is withheld (value_hidden, or the server's summary string). */
+export const isCellHidden = (cell) => !!(cell && (cell.value_hidden || /^(awaiting referee|hidden)/i.test(cell.value_summary || '')));
+/**
+ * The one "Awaiting referee" pill used wherever a withheld value would render.
+ * Links to how blind checks work; pass { href: null } inside another link (e.g. a Map cell).
+ */
+export function awaitingPill({ href = REFEREE_BLIND_HREF, size } = {}) {
+  const kids = [h('span', { class: 'aw-dot', 'aria-hidden': 'true' }), HIDDEN_VALUE_LABEL, h('span', { class: 'visually-hidden' }, ` — ${HIDDEN_VALUE_WHY}`)];
+  const cls = 'awaiting' + (size ? ` ${size}` : '');
+  return href ? h('a', { class: cls, href, title: `${HIDDEN_VALUE_WHY} How blind checks work →` }, kids)
+    : h('span', { class: cls, title: HIDDEN_VALUE_WHY }, kids);
+}
+/** Claim value as text for tables/lists; never renders a hidden value as 0. */
 export function claimValue(c) { return isValueHidden(c) ? HIDDEN_VALUE_LABEL : fmtValue(c.value, c.unit); }
 export function fmtDate(ts) {
   if (!ts) return '—';

@@ -74,6 +74,22 @@ def test_blind_value_never_leaked(client):
     assert c["value"] is None and c["quote"] is None and c["value_hidden"] is True
 
 
+def test_stats_and_map_report_claims_awaiting_referee(client):
+    assert client.get("/api/v1/stats").json()["claims_awaiting_referee"] == 0
+    h = register(client, "alice")
+    claim_id = do_extract(client, h)["checks"][0]["claim_id"]
+    assert client.get("/api/v1/stats").json()["claims_awaiting_referee"] == 1  # blind task open
+    cell = client.get("/api/v1/map").json()["layers"][0]["cells"][0]
+    assert cell["claim_ids"] == [claim_id] and cell["value_hidden"] is True and cell["value_summary"] == "awaiting referee"
+    v = register(client, "victor", family="gpt")
+    lease = claim(client, v).json()["lease"]
+    assert client.get("/api/v1/stats").json()["claims_awaiting_referee"] == 1  # still blind while leased
+    submit(client, v, lease["id"], _blind_payload(), tokens=500)
+    assert client.get("/api/v1/stats").json()["claims_awaiting_referee"] == 0
+    cell = client.get("/api/v1/map").json()["layers"][0]["cells"][0]
+    assert cell["value_hidden"] is False and cell["value_summary"] == "72.4%"
+
+
 def test_blind_agreement_promotes_to_t2_and_credits(client):
     h = register(client, "alice")
     res = do_extract(client, h)

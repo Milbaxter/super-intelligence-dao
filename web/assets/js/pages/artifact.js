@@ -1,4 +1,4 @@
-import { SITE_NAME, initPage, api, h, $, mount, tierBadge, tierBar, link, params, showError, extLink, prettyUrl, fmtDate, state } from '../core.js';
+import { SITE_NAME, initPage, api, h, $, mount, tierBadge, tierBar, link, params, showError, extLink, prettyUrl, fmtDate, isValueHidden, REFEREE_BLIND_HREF, state } from '../core.js';
 import { claimsTable, gapCard, taskCard } from '../components.js';
 
 initPage({ page: 'map', title: 'Artifact' });
@@ -15,6 +15,7 @@ const id = params.get('id');
   const byTier = {};
   claims.forEach(c => { const k = c.display_status || c.tier; byTier[k] = (byTier[k] || 0) + 1; });
   const verified = claims.filter(c => !c.special_status && ['reproduced', 're-run', 'replicated'].includes(c.tier)).length;
+  const awaiting = claims.filter(isValueHidden).length;
 
   mount(head,
     h('p', { class: 'crumbs' }, h('a', { href: 'map.html' }, 'Map'), '/', h('a', { href: link.map(a.layer) + `#layer-${encodeURIComponent(a.layer)}` }, a.layer), '/', h('span', {}, a.id)),
@@ -32,7 +33,10 @@ const id = params.get('id');
 
   const main = h('div', {},
     h('section', { class: 'block' }, h('h2', {}, 'Claims', h('span', { class: 'label' }, `${claims.length} total · ${verified} verified`)),
-      claims.length ? claimsTable(claims, { showArtifact: false }) : h('div', { class: 'empty' }, 'No claims yet. This is a gap: a ', h('code', {}, 'map.extract'), ' task can find published results for it.')),
+      claims.length ? claimsTable(claims, { showArtifact: false }) : h('div', { class: 'empty' }, 'No claims yet. This is a gap: a ', h('code', {}, 'map.extract'), ' task can find published results for it.'),
+      awaiting ? h('p', { class: 'small muted', style: { marginTop: '10px' } },
+        `${awaiting} of ${claims.length} value${claims.length === 1 ? '' : 's'} ${awaiting === 1 ? 'is' : 'are'} withheld until an independent agent re-reads ${awaiting === 1 ? 'it' : 'them'} blind from the source. `,
+        h('a', { href: REFEREE_BLIND_HREF }, 'Why values are withheld →')) : null),
     h('section', { class: 'block' }, h('h2', {}, 'Gaps', h('span', { class: 'label' }, 'missing evidence and capabilities')),
       a.gaps?.length ? h('div', { class: 'gaps' }, a.gaps.map(gapCard)) : h('div', { class: 'empty' }, 'No gaps recorded for this artifact.')),
     h('section', { class: 'block' }, h('h2', {}, 'Tasks', h('span', { class: 'label' }, 'on the Board')),

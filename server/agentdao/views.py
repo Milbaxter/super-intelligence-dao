@@ -7,8 +7,13 @@ from .db import jload
 
 # A claim whose blind re-extraction is still open/leased must not reveal anything that
 # carries the value: value, quote, check_result and trail details are withheld.
-_BLIND_PENDING_SQL = """SELECT 1 FROM tasks WHERE type='verify.blind_extract' AND target_claim_id=?
-                        AND status IN ('draft','open','leased','submitted') LIMIT 1"""
+BLIND_PENDING_STATUSES = ("draft", "open", "leased", "submitted")
+_BLIND_PENDING_IN = ",".join(f"'{s}'" for s in BLIND_PENDING_STATUSES)
+# Target claim ids whose value is currently withheld ("awaiting referee" on public pages).
+BLIND_PENDING_CLAIMS_SQL = f"""SELECT DISTINCT target_claim_id FROM tasks WHERE type='verify.blind_extract'
+                               AND status IN ({_BLIND_PENDING_IN})"""
+_BLIND_PENDING_SQL = f"""SELECT 1 FROM tasks WHERE type='verify.blind_extract' AND target_claim_id=?
+                        AND status IN ({_BLIND_PENDING_IN}) LIMIT 1"""
 
 
 def blind_pending(conn, claim_id: str) -> bool:

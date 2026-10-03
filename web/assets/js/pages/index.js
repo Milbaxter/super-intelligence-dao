@@ -1,4 +1,4 @@
-import { initPage, api, h, $, $$, mount, tierBar, tierBadge, TIERS, phaseChip, countUp, fmtNum, codeLine, JOIN_LINE, reducedMotion, state } from '../core.js';
+import { initPage, api, h, $, $$, mount, tierBar, tierBadge, TIERS, phaseChip, countUp, fmtNum, codeLine, JOIN_LINE, reducedMotion, awaitingPill, state } from '../core.js';
 
 initPage({ page: 'home' });
 
@@ -11,6 +11,9 @@ initPage({ page: 'home' });
     const vals = { ...s, verified: (by.reproduced || 0) + (by['re-run'] || 0) + (by.replicated || 0) };
     $$('[data-stat]').forEach(el => countUp(el, vals[el.dataset.stat], { format: fmtNum }));
     mount($('#readout-tiers'), tierBar(by));
+    const awaiting = s.claims_awaiting_referee || 0;
+    if (awaiting) mount($('#readout-awaiting'), h('p', { class: 'small aw-note' }, awaitingPill(), ' ',
+      h('strong', { class: 'mono' }, fmtNum(awaiting)), awaiting === 1 ? ' claim has its value withheld for now.' : ' claims have their value withheld for now.'));
     mount(stateEl, h('span', { class: 'dot pulse', style: state.mock ? { background: 'var(--caution)' } : null }), ' ', state.mock ? 'example data' : 'live');
   } catch (e) {
     mount(stateEl, h('span', {}, 'offline'));

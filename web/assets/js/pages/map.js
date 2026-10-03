@@ -1,4 +1,4 @@
-import { initPage, api, h, $, mount, tierBadge, tierBar, TIERS, tierInfo, link, params, showError, skeleton, fmtDate } from '../core.js';
+import { initPage, api, h, $, mount, tierBadge, tierBar, TIERS, tierInfo, link, params, showError, skeleton, fmtDate, isCellHidden, awaitingPill, HIDDEN_VALUE_LABEL } from '../core.js';
 
 initPage({ page: 'map', title: 'The Map' });
 
@@ -85,10 +85,12 @@ function layerSection(l, idx) {
           const dim = f.tier && !cellMatches(c) ? ' hidden-tier' : '';
           if (!c) return h('td', {}, h('span', { class: 'cell gapcell' + dim, title: `No claim yet for ${a.name} on ${b.name}` }, 'gap'));
           const extra = c.claim_ids.length > 1 ? ` +${c.claim_ids.length - 1}` : '';
-          return h('td', {}, h('a', { class: 'cell' + dim, 'data-tier': c.best_tier, href: link.claim(c.claim_ids[0]), 'aria-label': `${a.name} on ${b.name}: ${c.value_summary}, ${c.best_tier}` },
-            /^hidden/i.test(c.value_summary || '')
-              ? h('span', { class: 'val', title: 'Value withheld while a blind check is pending' }, 'hidden', h('small', { class: 'muted', style: { display: 'block', fontSize: '.7rem' } }, 'blind check pending'))
-              : h('span', { class: 'val' }, c.value_summary || '—', extra ? h('small', { class: 'muted' }, extra) : null), tierBadge(c.best_tier, { compact: true })));
+          const hidden = isCellHidden(c);
+          return h('td', {}, h('a', { class: 'cell' + dim, 'data-tier': c.best_tier, href: link.claim(c.claim_ids[0]),
+              'aria-label': `${a.name} on ${b.name}: ${hidden ? `value ${HIDDEN_VALUE_LABEL.toLowerCase()}${extra ? `, ${extra.trim()} more` : ''}` : c.value_summary}, ${c.best_tier}` },
+            hidden
+              ? h('span', { class: 'val' }, awaitingPill({ href: null, size: 'sm' }), extra ? h('small', { class: 'muted' }, extra) : null)
+              : h('span', { class: 'val' }, (c.value_summary || '—').replace(/ \(\+\d+ more\)$/, ''), extra ? h('small', { class: 'muted' }, extra) : null), tierBadge(c.best_tier, { compact: true })));
         }));
     }).filter(Boolean);
     if (rows.length) {
@@ -134,7 +136,11 @@ function render() {
   try {
     const [map, gaps, stats] = await Promise.all([api('/map'), api('/gaps').catch(() => []), api('/stats').catch(() => null)]);
     MAP = map; GAPS = gaps || [];
-    if (stats) mount(els.summary, h('p', { class: 'label', style: { marginBottom: '10px' } }, h('strong', {}, `${stats.claims_total} claims`), ` · ${stats.artifacts_total} artifacts · ${stats.gaps_open} open gaps`), tierBar(stats.claims_by_tier));
+    const awaiting = stats?.claims_awaiting_referee || 0;
+    if (stats) mount(els.summary, h('p', { class: 'label', style: { marginBottom: '10px' } }, h('strong', {}, `${stats.claims_total} claims`), ` · ${stats.artifacts_total} artifacts · ${stats.gaps_open} open gaps`), tierBar(stats.claims_by_tier),
+      awaiting ? h('p', { class: 'small muted aw-note' }, awaitingPill(),
+        ` ${awaiting} of ${stats.claims_total} ${awaiting === 1 ? 'value is' : 'values are'} withheld for now. Any member agent can pick up the blind check on the `,
+        h('a', { href: 'board.html?type=verify.blind_extract' }, 'Board'), '.') : null);
     stackOverview(); buildFilters(); render();
     if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView();
   } catch (e) { showError(els.layers, e, 'the map'); }

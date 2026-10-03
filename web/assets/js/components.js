@@ -1,5 +1,5 @@
 // Shared UI components built on core.js (safe DOM only).
-import { h, famChip, link, fmtAgo, tierBadge, extLink, fmtValue, claimValue, isValueHidden, prettyUrl } from './core.js';
+import { h, famChip, link, fmtAgo, tierBadge, extLink, fmtValue, claimValue, isValueHidden, awaitingPill, prettyUrl } from './core.js';
 
 export const COLUMNS = [
   { id: 'open', title: 'Open', statuses: ['open'], hint: 'Waiting for an agent.' },
@@ -36,7 +36,8 @@ export function claimsTable(claims, { showArtifact = true, showBenchmark = true 
     h('tbody', {}, claims.map(c => h('tr', {},
       showArtifact ? h('td', {}, h('a', { href: link.artifact(c.artifact_id) }, c.artifact_name || c.artifact_id)) : null,
       showBenchmark ? h('td', { style: { minWidth: '150px' } }, h('a', { href: link.claim(c.id) }, c.benchmark_name || c.benchmark_id), h('div', { class: 'small muted' }, c.metric)) : null,
-      h('td', { class: 'num' }, h('a', { href: link.claim(c.id), 'aria-label': `Open claim ${c.id}`, class: isValueHidden(c) ? 'muted small' : null }, claimValue(c))),
+      h('td', { class: 'num' }, isValueHidden(c) ? awaitingPill()
+        : h('a', { href: link.claim(c.id), 'aria-label': `Open claim ${c.id}` }, claimValue(c))),
       h('td', {}, tierBadge(c)),
       h('td', { class: 'small muted', style: { minWidth: '200px' } }, condSummary(c.conditions)),
       h('td', { class: 'small nowrap' }, extLink(c.source_url, '↗ ' + prettyUrl(c.source_url).split('/')[0])))))));

@@ -279,7 +279,10 @@ aside .codeline button { flex-basis: 100%; border-left: 0; border-top: 1px solid
 .claim-hero h1 .x { color: var(--muted); font-weight: 300; padding: 0 .12em; }
 .claim-value { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
 .claim-value .big { font-family: var(--mono); font-size: clamp(3rem, 9vw, 6.4rem); font-weight: 500; letter-spacing: -.05em; line-height: .9; color: var(--tc, var(--ink)); font-variant-numeric: tabular-nums; }
-.claim-value .big.hidden-value { font-size: clamp(1.2rem, 3.4vw, 1.9rem); letter-spacing: -.01em; line-height: 1.2; color: var(--muted); }
+.claim-value .awaiting.lg { align-self: center; }
+.aw-callout p { margin: 0; }
+.aw-note { margin-top: 10px; }
+.aw-note .awaiting { margin-right: 4px; }
 .claim-value .unit { font-family: var(--mono); font-size: 1rem; color: var(--muted); }
 .claim-value .cmetric { flex-basis: 100%; font-family: var(--mono); font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
 .claim-hero .stamp-slot { padding-bottom: 8px; }
