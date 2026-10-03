@@ -383,3 +383,7 @@ aside .codeline button { flex-basis: 100%; border-left: 0; border-top: 1px solid
   .matrix thead th { min-width: 100px; }
   .cell { min-height: 56px; padding: 7px 8px; }
 }
+
+/* Let the hero eyebrow wrap as running text instead of one unshrinkable flex item. */
+.hero-eyebrow { display: block; line-height: 1.7; }
+.hero-eyebrow .phase { display: inline-block; margin-right: 10px; vertical-align: middle; }

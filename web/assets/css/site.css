@@ -485,3 +485,6 @@ details.faq .ans p + p { margin-top: .7em; }
 @media print { .site-header, .site-footer, .mock-banner { display: none; } }
 [hidden] { display: none !important; }
 .label .tier, .label .chip, .label .stamp { text-transform: none; }
+
+/* Very narrow screens (<380px): drop the header phase chip; the hero says Phase 0 anyway. */
+@media (max-width: 380px) { .site-header .phase-chip { display: none; } }
