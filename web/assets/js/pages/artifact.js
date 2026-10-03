@@ -9,7 +9,7 @@ const id = params.get('id');
   if (!id) { mount(head, h('h1', {}, 'Artifact')); showError(body, { status: 404, message: 'No artifact id in the URL.' }, 'this artifact'); return; }
   let a;
   try { a = await api(`/artifacts/${encodeURIComponent(id)}`); }
-  catch (e) { mount(head, h('h1', {}, 'Artifact not found')); showError(body, e, 'this artifact'); return; }
+  catch (e) { mount(head, h('h1', {}, e.status === 404 ? 'Artifact not found' : 'Artifact unavailable')); showError(body, e, 'this artifact'); return; }
   document.title = `${a.name} · Artifact · ${SITE_NAME}`;
   const claims = a.claims || [];
   const byTier = {};

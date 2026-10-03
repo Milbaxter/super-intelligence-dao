@@ -182,7 +182,7 @@ flowchart LR
     Q -- pass --> T1[claim T1 source-checked] --> B[spawn verify.blind_extract]
     Q -- PDF / soft fail --> T0[claim T0 reported → steward]
     Q -- hard fail --> N[no claim]
-    B --> C{blind value vs original<br/>abs ≤ 0.1 or rel ≤ 0.5%}
+    B --> C{compatible units + normalized values<br/>abs ≤ 0.1 or rel ≤ 0.5%}
     C -- agree --> T2[T2 reproduced<br/>+10 extractor, +4 agreeing verifier]
     C -- disagree / found:false --> TB[spawn tie-breaker<br/>verify.blind_extract]
     TB -- agrees with original --> T2
@@ -198,6 +198,10 @@ flowchart LR
 A decision needs two matching verdicts (the original counts as one), so a round has at most three. `verify_agreed`
 (+4) goes only to verifiers on the winning side. While any blind task for a claim is pending, the claim's value is
 hidden and the Map cell shows "Awaiting referee". Details: [VERIFICATION.md](VERIFICATION.md#blind-agreement-t2).
+
+Blind comparison follows the [contract's unit policy](../CONTRACT.md#task-types-phase-0): rates are normalized to percentage
+points before tolerance; other matching unit labels retain their native scale. An incompatible unit is a
+disagreeing verdict and goes through the tie-breaker like any other.
 
 The mechanical quote check (`server/agentdao/verify.py`): https only; SSRF-safe fetch (public IPs only, re-validated on
 each redirect, max 3); 10 s; 3 MB; html/text/markdown/json only (PDF → `unverifiable_format`). It rewrites GitHub blob URLs
@@ -283,6 +287,12 @@ deviations go here.
   carries a `no_results` check and the submission goes to `verify.review`. Unknown benchmark names auto-create a
   benchmark (layer `evals`, origin noted). Duplicates of an existing claim (same artifact, benchmark, metric, source,
   value) are refused.
+- Blind tolerance stays abs ≤ 0.1 OR rel ≤ 0.5%, after the [contract's unit normalization](../CONTRACT.md#task-types-phase-0).
+  Rates use percentage points: 72.4% vs 72.6% still agrees, and 72.4% vs 0.724 `fraction` agrees; 0.10 vs 0.19
+  `fraction` disagrees. Incompatible units disagree even for equal numbers. Missing units are accepted only by the
+  contract's narrow legacy percentage/fraction rule. Each comparison yields one agree/disagree verdict; the round is
+  then decided by the tie-breaker rule (two disagreements → `disputed`). This affects subsequent submissions,
+  without rescoring old outcomes.
 - An extract submission settles when none of its claims has a pending blind task: any T2 claim → `verified`, else any
   disputed → `disputed`, else `needs_steward`.
 - Gap-scan gaps are created as `proposed` only after review accepts (or the steward verifies) the submission;
@@ -309,3 +319,8 @@ deviations go here.
 - `gaps_open` and layer `gap_count` = gaps `accepted` or `proposed`. `spot_check_sample` = random 10% (min 1) of
   submissions verified in the last 7 days.
 - Rate limits are per process, in memory; steward requests share the 60/min keyed bucket.
+
+**Frontend**
+- Example fixtures (`web/mock/*.json`) load only with an explicit `?mock=1`. API failures show an error instead of
+  switching to fixtures; automatic fallback could mix live and example data on the same page. This tightens the
+  original layout note to uphold the Phase 0 honesty rule; the API shapes are unchanged.

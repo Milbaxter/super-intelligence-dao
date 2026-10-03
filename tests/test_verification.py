@@ -1,6 +1,9 @@
 """Verification flow: quote check → T1 → blind agreement → T2 / disputed (tie-breaker: tests/test_tiebreak.py); reviews; credits."""
 
+import pytest
+
 from agentdao import db
+from agentdao.verify import FetchResult
 from conftest import (QUOTE, SOURCE, STEWARD, claim, create_task, do_extract, extract_payload, register, submit)
 
 
@@ -115,6 +118,99 @@ def test_values_agree_tolerance():
     from agentdao.lifecycle import values_agree
     assert values_agree(72.4, "%", 72.49, "%") and values_agree(1000, "score", 1004, "score")
     assert not values_agree(72.4, "%", 73.0, "%") and values_agree(72.4, "%", 0.724, "")
+
+
+@pytest.mark.parametrize("a,unit_a,b,unit_b,expected", [
+    (72.4, "%", 0.724, "fraction", True),
+    (72.4, " Percent ", 0.724, " FRACTION ", True),
+    (72.4, "percentage", 72.4, "pct", True),
+    (72.4, "%", 72.6, "%", True),  # existing relative tolerance
+    (0.10, "fraction", 0.1009, "fraction", True),  # 0.09 percentage points
+    (0.10, "fraction", 0.101, "fraction", True),  # inclusive 0.1-point boundary
+    (10.0, "%", 0.101, "fraction", True),
+    (0.10, "fraction", 0.101000001, "fraction", False),
+    (1.0945, "fraction", 1.1, "fraction", True),  # inclusive 0.5% relative boundary
+    (1.09449999, "fraction", 1.1, "fraction", False),
+    (0.10, "fraction", 0.102, "fraction", False),
+    (0.10, "fraction", 0.19, "fraction", False),
+    (0.10, "fraction", 10.09, "%", True),
+    (0.10, "fraction", 10.2, "%", False),
+    (0.0, "%", 0.09, "fraction", False),  # raw closeness cannot bypass scale
+    (0.0, "%", 0.0009, "fraction", True),
+    (72.4, "%", 72.4, "fraction", False),
+    (0.724, "%", 72.4, "fraction", False),  # never try the opposite conversion
+    (72.4, "%", 72.4, "milliseconds", False),
+    (72.4, "%", 0.724, "seconds", False),
+    (0.0, "%", 0.0, "seconds", False),
+    (1000, "tokens/s", 1004, "tokens/s", True),
+    (1000, "tokens/s", 1006, "tokens/s", False),
+    (72.4, " SCORE ", 72.4, "score", True),
+    (0.10, "score", 0.19, "score", True),  # opaque units keep native tolerance
+    (0.10, "pass@1", 0.19, "pass@1", True),
+    (72.4, "%", 0.724, "score", False),
+    (72.4, "%", 0.724, "pass@1", False),
+    (1.0, "seconds", 1000.0, "milliseconds", False),
+    (72.4, "%", 0.724, None, True),  # legacy missing-unit fraction
+    (72.4, "pct", 0.724, "", True),
+    (100, "%", 1, None, True),
+    (0, "%", 0, None, True),
+    (72.4, "%", 72.4, None, False),
+    (120, "%", 1.2, None, False),
+    (-10, "%", -0.1, None, False),
+    (0.724, "fraction", 0.724, None, False),
+    (72.4, "score", 72.4, None, False),
+    (72.4, None, 72.4, "", False),
+    (float("inf"), "%", 72.4, "%", False),
+    (float("-inf"), "score", 72.4, "score", False),
+    (float("nan"), "fraction", 0.724, "fraction", False),
+    (1e308, "fraction", 1e308, "fraction", False),  # conversion must stay finite
+])
+def test_blind_comparison_uses_compatible_units(a, unit_a, b, unit_b, expected):
+    from agentdao.lifecycle import values_agree
+    assert values_agree(a, unit_a, b, unit_b) is expected
+    assert values_agree(b, unit_b, a, unit_a) is expected
+
+
+@pytest.mark.parametrize("original_value,original_unit,blind_value,blind_unit", [
+    (72.4, "%", 72.4, "fraction"),
+    (72.4, "%", 0.724, "seconds"),
+    (0.10, "fraction", 0.19, "fraction"),
+])
+def test_unit_or_rate_mismatch_disputes_without_awarding_credit(
+        client, fetcher, original_value, original_unit, blind_value, blind_unit):
+    """A unit/rate mismatch is a disagreeing verdict: one spawns a tie-breaker, two dispute the claim."""
+    original_quote = f"The published Foo-Agent resolved rate is {original_value} {original_unit}."
+    blind_quote = f"A separate Foo-Agent measurement is {blind_value} {blind_unit}."
+    fetcher.pages[SOURCE] = FetchResult(SOURCE, 200, "text/plain", (original_quote + "\n" + blind_quote).encode())
+    author = register(client, "alice")
+    create_task(client)
+    lease = claim(client, author).json()["lease"]
+    payload = extract_payload(value=original_value, quote=original_quote)
+    payload["claims"][0]["unit"] = original_unit
+    extraction = submit(client, author, lease["id"], payload).json()
+    assert extraction["status"] == "verifying"
+    claim_id = extraction["checks"][0]["claim_id"]
+
+    blind = {"found": True, "value": blind_value, "unit": blind_unit,
+             "quote": blind_quote, "conditions": {}}
+    verifier = register(client, "victor", family="gpt")
+    result = submit(client, verifier, claim(client, verifier).json()["lease"]["id"], blind, tokens=500).json()
+    assert result["checks"][0]["passed"] is True  # both quotes really exist
+    assert result["checks"][1]["passed"] is False
+    assert result["status"] == "verifying" and len(result["spawned_task_ids"]) == 1  # tie-breaker, no dispute yet
+    assert client.get(f"/api/v1/claims/{claim_id}").json()["special_status"] is None
+
+    tiebreaker = register(client, "wendy", family="gemini")
+    result = submit(client, tiebreaker, claim(client, tiebreaker).json()["lease"]["id"], blind, tokens=500).json()
+    assert result["checks"][1]["passed"] is False
+    assert result["status"] == "disputed"
+    stored = client.get(f"/api/v1/claims/{claim_id}").json()
+    assert stored["tier"] == "source-checked" and stored["special_status"] == "disputed"
+    queue = client.get("/api/v1/admin/queue", headers=STEWARD).json()
+    assert [c["id"] for c in queue["disputed_claims"]] == [claim_id]
+    for person in client.get("/api/v1/contributors").json():
+        assert person["credits"] == 0 and person["verified_tokens"] == 0
+    assert client.get("/api/v1/me", headers=author).json()["recent_submissions"][0]["status"] == "disputed"
 
 
 def test_blind_disagreement_disputes_claim_and_steward_resolves(client):

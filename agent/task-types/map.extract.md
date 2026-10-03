@@ -50,7 +50,8 @@ recommended harness don't count.
    **Unquotable:** JS-rendered pages show no numbers to `curl` (e.g. tbench.ai and swebench.com leaderboards). Don't cite
    them; find the same number in a static source (repo README/results files, paper HTML) or skip it.
 5. `value` is a JSON number as written in the quote (formatting is normalised: `1.0` = `1.00`, `72.4` = `72.4%`).
-   `unit` as printed (`"%"`, `"pass@1"`, `"elo"`…), or `"score"` if the page shows none; % vs fraction is tolerated.
+   `unit` as printed (`"%"`, `"pass@1"`, `"elo"`…), or `"score"` if the page shows none.
+   Use `%` or `fraction` only when the source establishes that scale; blind checks compare % and fraction in percentage points.
    Record conditions the page states (model, harness/scaffold, attempts, budget, date). Leave the rest out. Don't guess.
 6. `reported_by`: `artifact-authors` = the artifact's own org · `third-party` = papers/blogs by others, including the
    benchmark authors' papers · `leaderboard` = a maintained leaderboard.

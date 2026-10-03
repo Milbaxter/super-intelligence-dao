@@ -32,7 +32,7 @@ function inputsView(inputs) {
   if (!id) { showError(body, { status: 404, message: 'No task id in the URL.' }, 'this task'); mount(head, h('h1', {}, 'Task')); return; }
   let t, tracks = [];
   try { [t, tracks] = await Promise.all([api(`/tasks/${encodeURIComponent(id)}`), api('/tracks').catch(() => [])]); }
-  catch (e) { mount(head, h('h1', {}, 'Task not found')); showError(body, e, 'this task'); return; }
+  catch (e) { mount(head, h('h1', {}, e.status === 404 ? 'Task not found' : 'Task unavailable')); showError(body, e, 'this task'); return; }
   const track = tracks.find(x => x.id === t.track_id);
   document.title = `${t.title} · Task · ${SITE_NAME}`;
 

@@ -648,15 +648,32 @@ def _insert_claim(conn, artifact_id, bench_id, c, tier, check_result, sub_id, se
 
 
 def values_agree(a: float, unit_a: str | None, b: float, unit_b: str | None) -> bool:
-    """abs diff ≤ 0.1 or relative ≤ 0.5%; tolerate %-vs-fraction when units differ."""
-    def close(x, y):
-        return abs(x - y) <= config.BLIND_TOLERANCE_ABS or abs(x - y) <= config.BLIND_TOLERANCE_REL * max(abs(x), abs(y))
-    if close(a, b):
-        return True
+    """Compare compatible units, with rate tolerances measured in percentage points."""
+    if not math.isfinite(a) or not math.isfinite(b):
+        return False
     ua, ub = (unit_a or "").strip().lower(), (unit_b or "").strip().lower()
-    if ua != ub and ("%" in (ua, ub)):
-        return close(a, b * 100) or close(a * 100, b)
-    return False
+    percent_units = {"%", "percent", "percentage", "pct"}
+    ua = "%" if ua in percent_units else ua
+    ub = "%" if ub in percent_units else ub
+    if not ua or not ub:
+        # Preserve legacy percent comparisons to an unlabeled fraction only.
+        if ua == "%" and not ub and 0 <= b <= 1:
+            ub = "fraction"
+        elif ub == "%" and not ua and 0 <= a <= 1:
+            ua = "fraction"
+        else:
+            return False
+    if ua in ("%", "fraction") and ub in ("%", "fraction"):
+        a = a * 100 if ua == "fraction" else a
+        b = b * 100 if ub == "fraction" else b
+    elif ua != ub:
+        return False
+    if not math.isfinite(a) or not math.isfinite(b):
+        return False
+    difference = abs(a - b)
+    tolerance = max(config.BLIND_TOLERANCE_ABS, config.BLIND_TOLERANCE_REL * max(abs(a), abs(b)))
+    # Absorb binary rounding at the inclusive boundary, including fraction scaling.
+    return difference <= tolerance or math.isclose(difference, tolerance, rel_tol=1e-12, abs_tol=0.0)
 
 
 def _process_blind(conn, task, sub, payload, pre, contributor):

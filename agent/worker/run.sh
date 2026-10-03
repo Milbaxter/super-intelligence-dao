@@ -163,7 +163,8 @@ EOF
                         api POST "/leases/$LEASE/release" "$WORK/.rel.json" >/dev/null || true; }
     break
   fi
-  DIR="$WORK/$TASK"; mkdir -p "$DIR"; cp "$RESP" "$DIR/claim.json"; DONE=$((DONE+1))
+  # A task may be offered again after release/expiry; never submit files from an earlier attempt.
+  DIR="$WORK/$TASK/$LEASE"; mkdir -p "$DIR"; cp "$RESP" "$DIR/claim.json"; DONE=$((DONE+1))
   log "claimed $TASK ($TYPE) lease=$LEASE budget=${BUDGET}m"
 
   release() { # release REASON NOTE
