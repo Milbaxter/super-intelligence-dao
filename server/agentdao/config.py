@@ -98,29 +98,49 @@ DEV_STEWARD_KEY = "dev-steward"  # public, documented default: local development
 MIN_STEWARD_KEY_CHARS = 24
 LOOPBACK_HOSTS = ("127.0.0.1", "localhost", "::1")
 
+# --- submissions ----------------------------------------------------------------
+# tokens_estimate is self-reported by the agent; clamp it to a plausible per-task bound.
+TOKENS_ESTIMATE_MAX = 5_000_000
+TOKENS_PER_BUDGET_MINUTE_MAX = 100_000
+
+# --- env vars -----------------------------------------------------------------
+ENV_PREFIX = "SIDAO_"  # Super Intelligence DAO
+LEGACY_ENV_PREFIX = "AGENTDAO_"  # backward-compatible fallback (production still sets these)
+
+
+def _env(name: str, default: str = "") -> str:
+    """Read SIDAO_<name>, falling back to legacy AGENTDAO_<name>, then `default`."""
+    for key in (ENV_PREFIX + name, LEGACY_ENV_PREFIX + name):
+        val = os.environ.get(key)
+        if val is not None:
+            return val
+    return default
+
 
 @dataclass
 class Settings:
-    """Runtime settings, resolved from env at app/CLI start (tests pass explicit values)."""
+    """Runtime settings, resolved from env at app/CLI start (tests pass explicit values).
 
-    db_path: str = field(default_factory=lambda: os.environ.get("AGENTDAO_DB", str(REPO_ROOT / "data" / "agentdao.db")))
-    public_url: str = field(default_factory=lambda: os.environ.get("AGENTDAO_PUBLIC_URL", "http://localhost:8787").rstrip("/"))
-    steward_key: str = field(default_factory=lambda: os.environ.get("AGENTDAO_STEWARD_KEY", DEV_STEWARD_KEY))
+    Each field reads SIDAO_<NAME>, falling back to the legacy AGENTDAO_<NAME> (see `_env`).
+    """
+
+    db_path: str = field(default_factory=lambda: _env("DB", str(REPO_ROOT / "data" / "agentdao.db")))
+    public_url: str = field(default_factory=lambda: _env("PUBLIC_URL", "http://localhost:8787").rstrip("/"))
+    steward_key: str = field(default_factory=lambda: _env("STEWARD_KEY", DEV_STEWARD_KEY))
     web_dir: Path = REPO_ROOT / "web"
     agent_dir: Path = REPO_ROOT / "agent"
     seed_dir: Path = REPO_ROOT / "seed"
     rate_agent_per_min: int = RATE_AGENT_PER_MIN
     rate_public_per_min: int = RATE_PUBLIC_PER_MIN
     # Dev/test only: let the quote checker fetch http://localhost|127.0.0.1|[::1] sources (scripts/sim_agent.py fixtures).
-    allow_local_sources: bool = field(default_factory=lambda: os.environ.get("AGENTDAO_ALLOW_LOCAL_SOURCES", "") == "1")
+    allow_local_sources: bool = field(default_factory=lambda: _env("ALLOW_LOCAL_SOURCES") == "1")
     # Dev/test only: let contributors registered from the same IP verify each other (sim agents share one machine).
     # Also implied by allow_local_sources. Never set in production.
-    dev_allow_same_ip: bool = field(default_factory=lambda: os.environ.get("AGENTDAO_DEV_ALLOW_SAME_IP", "") == "1")
+    dev_allow_same_ip: bool = field(default_factory=lambda: _env("DEV_ALLOW_SAME_IP") == "1")
     # Salt for contributors.registered_ip_hash (keep it stable; changing it breaks same-IP matching for old accounts).
-    ip_salt: str = field(default_factory=lambda: os.environ.get("AGENTDAO_IP_SALT", "agentdao-ip-v1"))
+    ip_salt: str = field(default_factory=lambda: _env("IP_SALT", "agentdao-ip-v1"))
     # Minimum GitHub account age for linking (verify.* tasks need a linked account).
-    github_min_age_days: int = field(default_factory=lambda: int(os.environ.get("AGENTDAO_GITHUB_MIN_AGE_DAYS")
-                                                                 or GITHUB_MIN_AGE_DAYS))
+    github_min_age_days: int = field(default_factory=lambda: int(_env("GITHUB_MIN_AGE_DAYS") or GITHUB_MIN_AGE_DAYS))
     # Optional: only raises GitHub API rate limits (60/h unauthenticated → 5000/h). Never sent anywhere else.
     github_token: str = field(default_factory=lambda: os.environ.get("GITHUB_TOKEN", ""), repr=False)
 
@@ -140,11 +160,11 @@ def unsafe_for_public_bind(settings: Settings, host: str) -> list[str]:
         return []
     problems = []
     if settings.steward_key == DEV_STEWARD_KEY or len(settings.steward_key or "") < MIN_STEWARD_KEY_CHARS:
-        problems.append(f"AGENTDAO_STEWARD_KEY is the dev default or shorter than {MIN_STEWARD_KEY_CHARS} chars "
+        problems.append(f"SIDAO_STEWARD_KEY (alias AGENTDAO_STEWARD_KEY) is the dev default or shorter than {MIN_STEWARD_KEY_CHARS} chars "
                         "(generate one: python3 -c 'import secrets;print(secrets.token_urlsafe(32))')")
     if settings.allow_local_sources:
-        problems.append("AGENTDAO_ALLOW_LOCAL_SOURCES=1 is a dev/test-only SSRF escape hatch")
+        problems.append("SIDAO_ALLOW_LOCAL_SOURCES=1 (alias AGENTDAO_ALLOW_LOCAL_SOURCES) is a dev/test-only SSRF escape hatch")
     if settings.dev_allow_same_ip:
-        problems.append("AGENTDAO_DEV_ALLOW_SAME_IP=1 disables the same-IP self-verification block and the "
+        problems.append("SIDAO_DEV_ALLOW_SAME_IP=1 (alias AGENTDAO_DEV_ALLOW_SAME_IP) disables the same-IP self-verification block and the "
                         "GitHub requirement for verify tasks (dev only)")
     return problems

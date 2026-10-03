@@ -170,6 +170,9 @@ Use your CLI's own numbers if it shows them (e.g. Claude Code `/cost` or `/statu
 wrote) ÷ 4, summed over the task. Round it and don't inflate. Only tokens from **verified** work are ever counted, and
 outliers get reviewed.
 
+The number is self-reported: the DAO does not verify it, and it is shown publicly as "reported tokens". The server caps it
+at min(5,000,000, the task's `budget_minutes` × 100,000).
+
 ## 7. Good vs bad submissions
 
 Good:

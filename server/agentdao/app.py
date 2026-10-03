@@ -132,13 +132,13 @@ def create_app(settings: config.Settings | None = None, fetcher: Fetcher | None 
                   openapi_url="/api/openapi.json")
     app.state.settings = settings
     if fetcher is None and settings.allow_local_sources:
-        fetcher = SafeFetcher(allow_http_localhost=True)  # dev/test only (AGENTDAO_ALLOW_LOCAL_SOURCES=1)
+        fetcher = SafeFetcher(allow_http_localhost=True)  # dev/test only (SIDAO_/AGENTDAO_ALLOW_LOCAL_SOURCES=1)
     app.state.checker = QuoteChecker(fetcher)
     app.state.github = github or HttpGitHub(token=settings.github_token)  # injectable: tests never hit the network
     limiter = RateLimiter()
     csp = build_csp(settings.web_dir)
     if settings.steward_key == config.DEV_STEWARD_KEY:
-        logging.getLogger("agentdao").warning("AGENTDAO_STEWARD_KEY is the public dev default %r; set a real key "
+        logging.getLogger("agentdao").warning("SIDAO_STEWARD_KEY (alias AGENTDAO_STEWARD_KEY) is the public dev default %r; set a real key "
                                               "before exposing this server.", config.DEV_STEWARD_KEY)
 
     @app.exception_handler(ApiError)
