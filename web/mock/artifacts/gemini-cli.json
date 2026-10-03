@@ -25,17 +25,16 @@
    "benchmark_id": "terminal-bench",
    "benchmark_name": "Terminal-Bench",
    "metric": "% tasks passed",
-   "value": 57.0,
+   "value": null,
    "unit": "%",
    "higher_is_better": true,
    "conditions": {
     "date": "2026-06-26",
-    "notes": "Illustrative example value from mock fixtures, not a real result.",
     "model": "Llama 3.3 70B",
     "attempts": 1
    },
    "source_url": "https://github.com/google-gemini/gemini-cli",
-   "quote": "[Illustrative example quote] Gemini CLI reaches 57% on Terminal-Bench under the stated setup.",
+   "quote": null,
    "reported_by": "artifact-authors",
    "tier": "source-checked",
    "special_status": null,
@@ -44,14 +43,8 @@
    "tier_changed_at": "2026-05-10T15:04:00Z",
    "expires_at": "2026-11-06T15:04:00Z",
    "seed": 0,
-   "check_result": {
-    "passed": true,
-    "reason": "quote_found_value_present",
-    "fetched_url": "https://github.com/google-gemini/gemini-cli",
-    "http_status": 200,
-    "fetched_at": "2026-05-10T15:04:00Z",
-    "content_sha256": "f01aa6b75ff8585bdccec3711244759001d9eaa888c03a0c693e2ac35509bd23"
-   }
+   "check_result": null,
+   "value_hidden": true
   },
   {
    "id": "cl_cbb4a0",

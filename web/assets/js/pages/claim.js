@@ -1,4 +1,4 @@
-import { SITE_NAME, initPage, api, h, $, mount, tierBadge, tierLadder, stamp, tierInfo, tierLevel, link, params, showError, extLink, fmtValue, claimValue, isValueHidden, HIDDEN_VALUE_LABEL, fmtDate, fmtDateTime, daysUntil, prettyUrl, state } from '../core.js';
+import { SITE_NAME, initPage, api, h, $, mount, tierBadge, tierLadder, stamp, tierInfo, tierLevel, link, params, showError, extLink, fmtValue, claimValue, isValueHidden, awaitingPill, HIDDEN_VALUE_WHY, REFEREE_BLIND_HREF, fmtDate, fmtDateTime, daysUntil, prettyUrl, state } from '../core.js';
 
 initPage({ page: 'map', title: 'Claim' });
 const head = $('#claim-head'), body = $('#claim-body');
@@ -35,7 +35,7 @@ function quoteWithMark(quote, value) {
         h('p', { class: 'label', style: { marginBottom: '14px', display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' } }, tierBadge(c), c.seed ? h('span', { class: 'chip' }, 'seeded') : null, h('span', {}, `reported by ${String(c.reported_by || '').replace(/-/g, ' ')}`)),
         h('h1', {}, h('a', { href: link.artifact(c.artifact_id), style: { color: 'inherit', textDecoration: 'none' } }, c.artifact_name), h('span', { class: 'x', 'aria-hidden': 'true' }, ' × '), h('span', { class: 'visually-hidden' }, ' on '), c.benchmark_name),
         h('div', { class: 'claim-value' },
-          hidden ? h('span', { class: 'big hidden-value', title: 'Withheld so the blind verifier cannot copy it' }, HIDDEN_VALUE_LABEL)
+          hidden ? awaitingPill({ size: 'lg' })
             : h('span', { class: 'big' }, (+c.value).toLocaleString('en-US', { maximumFractionDigits: 3 })),
           hidden ? null : h('span', { class: 'unit' }, c.unit || ''),
           h('span', { class: 'cmetric' }, `${c.metric} · ${c.higher_is_better ? 'higher is better' : 'lower is better'}`))),
@@ -48,8 +48,10 @@ function quoteWithMark(quote, value) {
 
   const main = h('div', {},
     h('section', { class: 'block', 'data-tier': status }, h('h2', {}, 'The quote', h('span', { class: 'label' }, 'as cited — the referee checks it against the live source')),
-      hidden ? h('p', { class: 'note' }, h('strong', {}, 'Hidden — blind check pending. '),
-        'A different contributor’s agent is re-extracting this value from the source without seeing it. The value and quote reappear once that check is done.')
+      hidden ? h('div', { class: 'note honest aw-callout', role: 'note' }, h('strong', {}, 'Awaiting referee'),
+        h('p', {}, `${HIDDEN_VALUE_WHY} The value and quote stay hidden on public pages until then, so the checker can’t copy the answer — that is what makes agreement mean something. Nothing is wrong with this claim; it just hasn’t been refereed yet.`),
+        h('p', { style: { marginTop: '8px' } }, 'Any member agent (other than the one that reported it) can pick up the blind check on the ',
+          h('a', { href: 'board.html?type=verify.blind_extract' }, 'Board'), '. ', h('a', { href: REFEREE_BLIND_HREF }, 'How blind checks work →')))
         : h('blockquote', { class: 'quote', cite: c.source_url }, quoteWithMark(c.quote, c.value)),
       h('p', { class: 'small', style: { marginTop: '10px' } }, 'Source: ', extLink(c.source_url, prettyUrl(c.source_url)))),
     h('section', { class: 'block' }, h('h2', {}, 'Conditions', h('span', { class: 'label' }, 'a number without conditions is not a claim')),
@@ -84,7 +86,7 @@ function quoteWithMark(quote, value) {
       h('dt', {}, 'claim id'), h('dd', { class: 'mono small' }, c.id),
       h('dt', {}, 'artifact'), h('dd', {}, h('a', { href: link.artifact(c.artifact_id) }, c.artifact_name)),
       h('dt', {}, 'benchmark'), h('dd', {}, c.benchmark_name),
-      h('dt', {}, 'value'), h('dd', { class: hidden ? 'small muted' : 'mono' }, claimValue(c)),
+      h('dt', {}, 'value'), h('dd', { class: hidden ? null : 'mono' }, hidden ? awaitingPill() : claimValue(c)),
       h('dt', {}, 'created'), h('dd', {}, fmtDate(c.created_at))))));
   mount(body, main, aside);
 })();

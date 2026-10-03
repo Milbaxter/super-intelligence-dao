@@ -293,7 +293,8 @@
       "cl_eb4a10"
      ],
      "best_tier": "disputed",
-     "value_summary": "2611 tokens/s"
+     "value_summary": "2611 tokens/s",
+     "value_hidden": false
     }
    ],
    "gap_ids": [
@@ -404,7 +405,8 @@
       "cl_99ef54"
      ],
      "best_tier": "reproduced",
-     "value_summary": "63.3%"
+     "value_summary": "63.3%",
+     "value_hidden": false
     },
     {
      "artifact_id": "olmo-2-32b",
@@ -413,7 +415,8 @@
       "cl_a1821d"
      ],
      "best_tier": "reported",
-     "value_summary": "83.8%"
+     "value_summary": "83.8%",
+     "value_hidden": false
     },
     {
      "artifact_id": "olmo-2-32b",
@@ -422,7 +425,8 @@
       "cl_d519e0"
      ],
      "best_tier": "source-checked",
-     "value_summary": "33.3 pass@1"
+     "value_summary": "awaiting referee",
+     "value_hidden": true
     },
     {
      "artifact_id": "olmo-2-32b",
@@ -431,7 +435,8 @@
       "cl_a2940e"
      ],
      "best_tier": "reported",
-     "value_summary": "82.2 pass@1"
+     "value_summary": "82.2 pass@1",
+     "value_hidden": false
     },
     {
      "artifact_id": "qwen2-5-coder-32b",
@@ -440,7 +445,8 @@
       "cl_ed2002"
      ],
      "best_tier": "reported",
-     "value_summary": "79.8%"
+     "value_summary": "79.8%",
+     "value_hidden": false
     },
     {
      "artifact_id": "qwen2-5-coder-32b",
@@ -449,7 +455,8 @@
       "cl_cdc6b3"
      ],
      "best_tier": "reported",
-     "value_summary": "65.8%"
+     "value_summary": "65.8%",
+     "value_hidden": false
     },
     {
      "artifact_id": "qwen2-5-coder-32b",
@@ -458,7 +465,8 @@
       "cl_400934"
      ],
      "best_tier": "reproduced",
-     "value_summary": "34.2 pass@1"
+     "value_summary": "34.2 pass@1",
+     "value_hidden": false
     },
     {
      "artifact_id": "qwen2-5-coder-32b",
@@ -467,7 +475,8 @@
       "cl_98f0e2"
      ],
      "best_tier": "source-checked",
-     "value_summary": "37.7 pass@1"
+     "value_summary": "37.7 pass@1",
+     "value_hidden": false
     },
     {
      "artifact_id": "deepseek-v3",
@@ -476,7 +485,8 @@
       "cl_2008c8"
      ],
      "best_tier": "reproduced",
-     "value_summary": "66.3%"
+     "value_summary": "66.3%",
+     "value_hidden": false
     },
     {
      "artifact_id": "deepseek-v3",
@@ -485,7 +495,8 @@
       "cl_05a09b"
      ],
      "best_tier": "reproduced",
-     "value_summary": "45.9%"
+     "value_summary": "45.9%",
+     "value_hidden": false
     },
     {
      "artifact_id": "deepseek-v3",
@@ -494,7 +505,8 @@
       "cl_b053cf"
      ],
      "best_tier": "disputed",
-     "value_summary": "22.7 pass@1"
+     "value_summary": "22.7 pass@1",
+     "value_hidden": false
     },
     {
      "artifact_id": "deepseek-v3",
@@ -503,7 +515,8 @@
       "cl_04dba5"
      ],
      "best_tier": "source-checked",
-     "value_summary": "18 pass@1"
+     "value_summary": "18 pass@1",
+     "value_hidden": false
     },
     {
      "artifact_id": "mistral-small-3",
@@ -512,7 +525,8 @@
       "cl_9aeb4e"
      ],
      "best_tier": "source-checked",
-     "value_summary": "79.2%"
+     "value_summary": "79.2%",
+     "value_hidden": false
     },
     {
      "artifact_id": "mistral-small-3",
@@ -521,7 +535,8 @@
       "cl_1a57b2"
      ],
      "best_tier": "reported",
-     "value_summary": "51.2 pass@1"
+     "value_summary": "51.2 pass@1",
+     "value_hidden": false
     },
     {
      "artifact_id": "mistral-small-3",
@@ -530,7 +545,8 @@
       "cl_b4efe1"
      ],
      "best_tier": "reported",
-     "value_summary": "24 pass@1"
+     "value_summary": "24 pass@1",
+     "value_hidden": false
     },
     {
      "artifact_id": "gemma-3-27b",
@@ -539,7 +555,8 @@
       "cl_355a2c"
      ],
      "best_tier": "reported",
-     "value_summary": "54.1%"
+     "value_summary": "54.1%",
+     "value_hidden": false
     },
     {
      "artifact_id": "gemma-3-27b",
@@ -548,7 +565,8 @@
       "cl_bb8c1b"
      ],
      "best_tier": "stale",
-     "value_summary": "86.5 pass@1"
+     "value_summary": "86.5 pass@1",
+     "value_hidden": false
     },
     {
      "artifact_id": "gemma-3-27b",
@@ -557,7 +575,8 @@
       "cl_5cd935"
      ],
      "best_tier": "reproduced",
-     "value_summary": "62.6 pass@1"
+     "value_summary": "62.6 pass@1",
+     "value_hidden": false
     },
     {
      "artifact_id": "llama-3-3-70b",
@@ -566,7 +585,8 @@
       "cl_14b660"
      ],
      "best_tier": "reproduced",
-     "value_summary": "54.2%"
+     "value_summary": "54.2%",
+     "value_hidden": false
     },
     {
      "artifact_id": "llama-3-3-70b",
@@ -575,7 +595,8 @@
       "cl_160854"
      ],
      "best_tier": "source-checked",
-     "value_summary": "31.6 pass@1"
+     "value_summary": "31.6 pass@1",
+     "value_hidden": false
     }
    ],
    "gap_ids": [
@@ -689,7 +710,8 @@
       "cl_731e54"
      ],
      "best_tier": "reported",
-     "value_summary": "33.4%"
+     "value_summary": "33.4%",
+     "value_hidden": false
     },
     {
      "artifact_id": "openhands",
@@ -698,7 +720,8 @@
       "cl_20a350"
      ],
      "best_tier": "reported",
-     "value_summary": "51.6%"
+     "value_summary": "51.6%",
+     "value_hidden": false
     },
     {
      "artifact_id": "openhands",
@@ -707,7 +730,8 @@
       "cl_6247fe"
      ],
      "best_tier": "stale",
-     "value_summary": "80.2%"
+     "value_summary": "80.2%",
+     "value_hidden": false
     },
     {
      "artifact_id": "swe-agent",
@@ -716,7 +740,8 @@
       "cl_9d8dbb"
      ],
      "best_tier": "source-checked",
-     "value_summary": "29.9%"
+     "value_summary": "29.9%",
+     "value_hidden": false
     },
     {
      "artifact_id": "aider",
@@ -725,7 +750,8 @@
       "cl_756fab"
      ],
      "best_tier": "disputed",
-     "value_summary": "64%"
+     "value_summary": "64%",
+     "value_hidden": false
     },
     {
      "artifact_id": "aider",
@@ -734,7 +760,8 @@
       "cl_5231cb"
      ],
      "best_tier": "reported",
-     "value_summary": "48.4%"
+     "value_summary": "48.4%",
+     "value_hidden": false
     },
     {
      "artifact_id": "codex-cli",
@@ -743,7 +770,8 @@
       "cl_b2ad7b"
      ],
      "best_tier": "source-checked",
-     "value_summary": "71.5%"
+     "value_summary": "71.5%",
+     "value_hidden": false
     },
     {
      "artifact_id": "codex-cli",
@@ -752,7 +780,8 @@
       "cl_a3137f"
      ],
      "best_tier": "reported",
-     "value_summary": "80.8%"
+     "value_summary": "80.8%",
+     "value_hidden": false
     },
     {
      "artifact_id": "codex-cli",
@@ -761,7 +790,8 @@
       "cl_6158c5"
      ],
      "best_tier": "reported",
-     "value_summary": "79.1%"
+     "value_summary": "79.1%",
+     "value_hidden": false
     },
     {
      "artifact_id": "gemini-cli",
@@ -770,7 +800,8 @@
       "cl_02eada"
      ],
      "best_tier": "source-checked",
-     "value_summary": "57%"
+     "value_summary": "awaiting referee",
+     "value_hidden": true
     },
     {
      "artifact_id": "gemini-cli",
@@ -779,7 +810,8 @@
       "cl_cbb4a0"
      ],
      "best_tier": "reported",
-     "value_summary": "35.4%"
+     "value_summary": "35.4%",
+     "value_hidden": false
     },
     {
      "artifact_id": "goose",
@@ -788,7 +820,8 @@
       "cl_dfca0c"
      ],
      "best_tier": "reported",
-     "value_summary": "49%"
+     "value_summary": "49%",
+     "value_hidden": false
     },
     {
      "artifact_id": "goose",
@@ -797,7 +830,8 @@
       "cl_fb4243"
      ],
      "best_tier": "source-checked",
-     "value_summary": "53.5%"
+     "value_summary": "53.5%",
+     "value_hidden": false
     },
     {
      "artifact_id": "opencode",
@@ -806,7 +840,8 @@
       "cl_458533"
      ],
      "best_tier": "reproduced",
-     "value_summary": "47.2%"
+     "value_summary": "47.2%",
+     "value_hidden": false
     }
    ],
    "gap_ids": [
@@ -867,7 +902,8 @@
       "cl_6962ab"
      ],
      "best_tier": "source-checked",
-     "value_summary": "23.1%"
+     "value_summary": "23.1%",
+     "value_hidden": false
     },
     {
      "artifact_id": "langgraph",
@@ -876,7 +912,8 @@
       "cl_d25056"
      ],
      "best_tier": "reproduced",
-     "value_summary": "35.7%"
+     "value_summary": "35.7%",
+     "value_hidden": false
     }
    ],
    "gap_ids": [
@@ -985,7 +1022,8 @@
       "cl_07330a"
      ],
      "best_tier": "reproduced",
-     "value_summary": "16.2%"
+     "value_summary": "16.2%",
+     "value_hidden": false
     },
     {
      "artifact_id": "shieldgemma",
@@ -994,7 +1032,8 @@
       "cl_b39220"
      ],
      "best_tier": "source-checked",
-     "value_summary": "41.7%"
+     "value_summary": "41.7%",
+     "value_hidden": false
     }
    ],
    "gap_ids": [

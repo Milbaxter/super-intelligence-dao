@@ -35,6 +35,9 @@ def stats(conn=Depends(get_conn)):
         "submissions_total": q("SELECT COUNT(*) FROM submissions"),
         "claims_total": q("SELECT COUNT(*) FROM claims WHERE special_status IS NOT 'retracted'"),
         "claims_by_tier": by,
+        # Claims whose value is withheld until a blind re-extraction lands (same condition as views.blind_pending).
+        "claims_awaiting_referee": q(f"""SELECT COUNT(*) FROM claims WHERE special_status IS NOT 'retracted'
+                AND id IN ({views.BLIND_PENDING_CLAIMS_SQL})"""),
         "artifacts_total": q("SELECT COUNT(*) FROM artifacts"),
         "gaps_open": q("SELECT COUNT(*) FROM gaps WHERE status IN ('accepted','proposed')"),
         "verified_tokens": q("SELECT COALESCE(SUM(tokens_estimate),0) FROM submissions WHERE status='verified'"),
@@ -130,8 +133,7 @@ def map_(conn=Depends(get_conn)):
     counts = views.artifact_counts(conn)
     now = db.now_ts()
     all_claims = db.all_(conn, views.CLAIM_SELECT + " WHERE c.special_status IS NOT 'retracted'")
-    hidden = {r["target_claim_id"] for r in db.all_(conn, """SELECT target_claim_id FROM tasks WHERE type='verify.blind_extract'
-                AND status IN ('draft','open','leased','submitted')""")}
+    hidden = {r["target_claim_id"] for r in db.all_(conn, views.BLIND_PENDING_CLAIMS_SQL)}
     benches = {b["id"]: b for b in db.all_(conn, "SELECT * FROM benchmarks")}
     layers_out = []
     for l in db.all_(conn, "SELECT * FROM layers ORDER BY sort, id"):
@@ -148,11 +150,12 @@ def map_(conn=Depends(get_conn)):
             statuses = [views.display_status(c, now) for c in cs]
             top = max(cs, key=lambda c: (views.display_status(c, now) in config.TIER_RANK,
                                          config.TIER_RANK.get(views.display_status(c, now), -1), c["tier_changed_at"]))
-            summary = "hidden (blind check pending)" if top["id"] in hidden else views.fmt_value(top["value"], top["unit"])
+            top_hidden = top["id"] in hidden
+            summary = "awaiting referee" if top_hidden else views.fmt_value(top["value"], top["unit"])
             if len(cs) > 1:
                 summary += f" (+{len(cs) - 1} more)"
             cell_out.append({"artifact_id": aid, "benchmark_id": bid, "claim_ids": [c["id"] for c in cs],
-                             "best_tier": views.best_tier(statuses), "value_summary": summary})
+                             "best_tier": views.best_tier(statuses), "value_summary": summary, "value_hidden": top_hidden})
         layers_out.append({
             "id": l["id"], "name": l["name"], "description": l["description"],
             "artifacts": [{k: v for k, v in views.artifact_summary(a, counts).items() if k not in ("description",)} for a in arts],

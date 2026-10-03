@@ -15,6 +15,7 @@
   "disputed": 3,
   "stale": 2
  },
+ "claims_awaiting_referee": 2,
  "artifacts_total": 43,
  "gaps_open": 12,
  "verified_tokens": 4516720,
