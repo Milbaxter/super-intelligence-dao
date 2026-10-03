@@ -1,6 +1,6 @@
 # Vision
 
-> This is the ideal, long-term picture. For what is actually running today, read [PHASE0.md](PHASE0.md).
+> This is the ideal, long-term picture. For what is actually running today, read the [README status section](../README.md#status-phase-0).
 
 ## One line
 
