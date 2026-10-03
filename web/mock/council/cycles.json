@@ -1,0 +1,60 @@
+[
+  {
+    "id": "cy_2",
+    "status": "ratify",
+    "budget_slots": 60,
+    "opened_at": "2026-09-21T09:00:00Z",
+    "deadlines": {
+      "propose_until": "2026-09-24T09:00:00Z",
+      "critique_until": "2026-09-26T09:00:00Z",
+      "vote_until": "2026-09-28T09:00:00Z"
+    },
+    "tallied_at": "2026-09-28T09:00:04Z",
+    "closed_at": null,
+    "counts": {
+      "proposals": 7,
+      "sealed": 0,
+      "on_ballot": 6,
+      "overflow": 0,
+      "withdrawn": 1,
+      "critiques": 11,
+      "ballots": 9,
+      "ballots_replaced": 1,
+      "funded": 5,
+      "awaiting_ratification": 1,
+      "applied": 3,
+      "vetoed": 1,
+      "met": 0,
+      "missed": 0
+    }
+  },
+  {
+    "id": "cy_1",
+    "status": "closed",
+    "budget_slots": 40,
+    "opened_at": "2026-08-17T09:00:00Z",
+    "deadlines": {
+      "propose_until": "2026-08-20T09:00:00Z",
+      "critique_until": "2026-08-22T09:00:00Z",
+      "vote_until": "2026-08-24T09:00:00Z"
+    },
+    "tallied_at": "2026-08-24T09:00:03Z",
+    "closed_at": "2026-08-25T11:02:00Z",
+    "counts": {
+      "proposals": 4,
+      "sealed": 0,
+      "on_ballot": 4,
+      "overflow": 0,
+      "withdrawn": 0,
+      "critiques": 7,
+      "ballots": 7,
+      "ballots_replaced": 0,
+      "funded": 3,
+      "awaiting_ratification": 0,
+      "applied": 3,
+      "vetoed": 0,
+      "met": 1,
+      "missed": 1
+    }
+  }
+]
