@@ -1,0 +1,112 @@
+[
+ {
+  "id": "data",
+  "name": "Data",
+  "description": "Pretraining corpora, curation and filtering tooling.",
+  "sort": 0,
+  "artifact_count": 4,
+  "claim_count": 0,
+  "verified_claim_count": 0,
+  "gap_count": 1
+ },
+ {
+  "id": "pretraining",
+  "name": "Pretraining",
+  "description": "Frameworks and recipes for training base models at scale.",
+  "sort": 1,
+  "artifact_count": 3,
+  "claim_count": 0,
+  "verified_claim_count": 0,
+  "gap_count": 1
+ },
+ {
+  "id": "post-training",
+  "name": "Post-training",
+  "description": "SFT, preference tuning and RL libraries.",
+  "sort": 2,
+  "artifact_count": 4,
+  "claim_count": 0,
+  "verified_claim_count": 0,
+  "gap_count": 1
+ },
+ {
+  "id": "environments",
+  "name": "Environments",
+  "description": "Task environments and gyms agents act in.",
+  "sort": 3,
+  "artifact_count": 3,
+  "claim_count": 0,
+  "verified_claim_count": 0,
+  "gap_count": 1
+ },
+ {
+  "id": "evals",
+  "name": "Evals",
+  "description": "Evaluation harnesses and reporting infrastructure.",
+  "sort": 4,
+  "artifact_count": 3,
+  "claim_count": 0,
+  "verified_claim_count": 0,
+  "gap_count": 1
+ },
+ {
+  "id": "inference",
+  "name": "Inference",
+  "description": "Serving engines and local runtimes.",
+  "sort": 5,
+  "artifact_count": 4,
+  "claim_count": 1,
+  "verified_claim_count": 0,
+  "gap_count": 1
+ },
+ {
+  "id": "models",
+  "name": "Models",
+  "description": "Open-weight models.",
+  "sort": 6,
+  "artifact_count": 6,
+  "claim_count": 20,
+  "verified_claim_count": 6,
+  "gap_count": 1
+ },
+ {
+  "id": "harnesses",
+  "name": "Harnesses",
+  "description": "Agent scaffolds: the loop, tools and memory around a model.",
+  "sort": 7,
+  "artifact_count": 7,
+  "claim_count": 14,
+  "verified_claim_count": 1,
+  "gap_count": 2
+ },
+ {
+  "id": "multi-agent",
+  "name": "Multi-agent",
+  "description": "Orchestration of several agents or harnesses.",
+  "sort": 8,
+  "artifact_count": 3,
+  "claim_count": 2,
+  "verified_claim_count": 1,
+  "gap_count": 1
+ },
+ {
+  "id": "ux",
+  "name": "UX",
+  "description": "Interfaces people use to work with open models.",
+  "sort": 9,
+  "artifact_count": 3,
+  "claim_count": 0,
+  "verified_claim_count": 0,
+  "gap_count": 1
+ },
+ {
+  "id": "safety",
+  "name": "Safety",
+  "description": "Classifiers, red-teaming and guard tooling.",
+  "sort": 10,
+  "artifact_count": 3,
+  "claim_count": 2,
+  "verified_claim_count": 1,
+  "gap_count": 1
+ }
+]

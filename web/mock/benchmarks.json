@@ -1,0 +1,112 @@
+[
+ {
+  "id": "swe-bench-verified",
+  "name": "SWE-bench Verified",
+  "layer": "harnesses",
+  "url": "https://www.swebench.com/",
+  "description": "Human-validated subset of real GitHub issues.",
+  "measures": "% resolved",
+  "saturated": 0,
+  "claim_count": 2
+ },
+ {
+  "id": "terminal-bench",
+  "name": "Terminal-Bench",
+  "layer": "harnesses",
+  "url": "https://www.tbench.ai/",
+  "description": "Hard, realistic tasks in a terminal sandbox.",
+  "measures": "% tasks passed",
+  "saturated": 0,
+  "claim_count": 6
+ },
+ {
+  "id": "aider-polyglot",
+  "name": "Aider Polyglot",
+  "layer": "harnesses",
+  "url": "https://aider.chat/docs/leaderboards/",
+  "description": "Exercism exercises across six languages.",
+  "measures": "% correct",
+  "saturated": 0,
+  "claim_count": 6
+ },
+ {
+  "id": "mmlu-pro",
+  "name": "MMLU-Pro",
+  "layer": "models",
+  "url": "https://github.com/TIGER-AI-Lab/MMLU-Pro",
+  "description": "Harder, 10-option successor to MMLU.",
+  "measures": "accuracy",
+  "saturated": 0,
+  "claim_count": 5
+ },
+ {
+  "id": "gpqa-diamond",
+  "name": "GPQA Diamond",
+  "layer": "models",
+  "url": "https://github.com/idavidrein/gpqa",
+  "description": "Graduate-level, Google-proof science questions.",
+  "measures": "accuracy",
+  "saturated": 0,
+  "claim_count": 4
+ },
+ {
+  "id": "livecodebench",
+  "name": "LiveCodeBench",
+  "layer": "models",
+  "url": "https://livecodebench.github.io/",
+  "description": "Contamination-aware rolling coding benchmark.",
+  "measures": "pass@1",
+  "saturated": 0,
+  "claim_count": 5
+ },
+ {
+  "id": "humaneval",
+  "name": "HumanEval",
+  "layer": "models",
+  "url": "https://github.com/openai/human-eval",
+  "description": "Function-level Python synthesis.",
+  "measures": "pass@1",
+  "saturated": 1,
+  "claim_count": 6
+ },
+ {
+  "id": "gaia",
+  "name": "GAIA",
+  "layer": "multi-agent",
+  "url": "https://huggingface.co/gaia-benchmark",
+  "description": "General assistant tasks needing tools and browsing.",
+  "measures": "% correct",
+  "saturated": 0,
+  "claim_count": 2
+ },
+ {
+  "id": "harmbench",
+  "name": "HarmBench",
+  "layer": "safety",
+  "url": "https://www.harmbench.org/",
+  "description": "Standardised red-teaming evaluation.",
+  "measures": "attack success rate",
+  "saturated": 0,
+  "claim_count": 1
+ },
+ {
+  "id": "xstest",
+  "name": "XSTest",
+  "layer": "safety",
+  "url": "https://github.com/paul-rottger/xstest",
+  "description": "Exaggerated-safety (over-refusal) test suite.",
+  "measures": "% compliance on safe prompts",
+  "saturated": 0,
+  "claim_count": 1
+ },
+ {
+  "id": "mlperf-inference",
+  "name": "MLPerf Inference",
+  "layer": "inference",
+  "url": "https://mlcommons.org/benchmarks/inference-datacenter/",
+  "description": "Industry inference throughput/latency suite.",
+  "measures": "tokens/s",
+  "saturated": 0,
+  "claim_count": 1
+ }
+]

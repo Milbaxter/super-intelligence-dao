@@ -1,0 +1,49 @@
+{
+ "id": "nanotron",
+ "name": "nanotron",
+ "layer": "pretraining",
+ "kind": "framework",
+ "url": "https://github.com/huggingface/nanotron",
+ "repo_url": "https://github.com/huggingface/nanotron",
+ "license": "Apache-2.0",
+ "open_weights": null,
+ "description": "Minimalistic 3D-parallel pretraining library.",
+ "latest_version": null,
+ "latest_release_date": null,
+ "created_at": "2026-08-04T06:04:00Z",
+ "updated_at": "2026-10-01T06:04:00Z",
+ "source": "seed",
+ "claim_count": 0,
+ "verified_claim_count": 0,
+ "best_tier": null,
+ "claims": [],
+ "gaps": [
+  {
+   "id": "g_11d94b",
+   "layer": "pretraining",
+   "kind": "missing_evidence",
+   "title": "MFU claims rarely include hardware details",
+   "description": "Model FLOPs utilisation numbers are reported without full conditions.",
+   "evidence_urls": [],
+   "status": "accepted",
+   "created_at": "2026-09-16T06:04:00Z",
+   "task_ids": []
+  }
+ ],
+ "tasks": [
+  {
+   "id": "t_42e343",
+   "type": "map.extract",
+   "track_id": "map-extract",
+   "title": "Find published benchmark results for nanotron",
+   "status": "open",
+   "priority": 6.82,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 45,
+   "attempts": 0,
+   "created_at": "2026-10-01T18:04:00Z"
+  }
+ ]
+}

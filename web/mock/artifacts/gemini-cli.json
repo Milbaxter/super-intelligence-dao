@@ -1,0 +1,111 @@
+{
+ "id": "gemini-cli",
+ "name": "Gemini CLI",
+ "layer": "harnesses",
+ "kind": "harness",
+ "url": "https://github.com/google-gemini/gemini-cli",
+ "repo_url": "https://github.com/google-gemini/gemini-cli",
+ "license": "Apache-2.0",
+ "open_weights": null,
+ "description": "Open-source terminal agent.",
+ "latest_version": null,
+ "latest_release_date": null,
+ "created_at": "2026-08-04T06:04:00Z",
+ "updated_at": "2026-10-01T06:04:00Z",
+ "source": "seed",
+ "claim_count": 2,
+ "verified_claim_count": 0,
+ "best_tier": "source-checked",
+ "claims": [
+  {
+   "id": "cl_02eada",
+   "artifact_id": "gemini-cli",
+   "artifact_name": "Gemini CLI",
+   "layer": "harnesses",
+   "benchmark_id": "terminal-bench",
+   "benchmark_name": "Terminal-Bench",
+   "metric": "% tasks passed",
+   "value": 57.0,
+   "unit": "%",
+   "higher_is_better": true,
+   "conditions": {
+    "date": "2026-06-26",
+    "notes": "Illustrative example value from mock fixtures, not a real result.",
+    "model": "Llama 3.3 70B",
+    "attempts": 1
+   },
+   "source_url": "https://github.com/google-gemini/gemini-cli",
+   "quote": "[Illustrative example quote] Gemini CLI reaches 57% on Terminal-Bench under the stated setup.",
+   "reported_by": "artifact-authors",
+   "tier": "source-checked",
+   "special_status": null,
+   "display_status": "source-checked",
+   "created_at": "2026-05-10T15:04:00Z",
+   "tier_changed_at": "2026-05-10T15:04:00Z",
+   "expires_at": "2026-11-06T15:04:00Z",
+   "seed": 0,
+   "check_result": {
+    "passed": true,
+    "reason": "quote_found_value_present",
+    "fetched_url": "https://github.com/google-gemini/gemini-cli",
+    "http_status": 200,
+    "fetched_at": "2026-05-10T15:04:00Z",
+    "content_sha256": "f01aa6b75ff8585bdccec3711244759001d9eaa888c03a0c693e2ac35509bd23"
+   }
+  },
+  {
+   "id": "cl_cbb4a0",
+   "artifact_id": "gemini-cli",
+   "artifact_name": "Gemini CLI",
+   "layer": "harnesses",
+   "benchmark_id": "aider-polyglot",
+   "benchmark_name": "Aider Polyglot",
+   "metric": "% correct",
+   "value": 35.4,
+   "unit": "%",
+   "higher_is_better": true,
+   "conditions": {
+    "date": "2026-05-11",
+    "notes": "Illustrative example value from mock fixtures, not a real result.",
+    "model": "Qwen2.5-Coder 32B",
+    "attempts": 1
+   },
+   "source_url": "https://github.com/google-gemini/gemini-cli",
+   "quote": "[Illustrative example quote] Gemini CLI reaches 35.4% on Aider Polyglot under the stated setup.",
+   "reported_by": "artifact-authors",
+   "tier": "reported",
+   "special_status": null,
+   "display_status": "reported",
+   "created_at": "2026-05-23T16:04:00Z",
+   "tier_changed_at": "2026-05-23T16:04:00Z",
+   "expires_at": "2026-11-19T16:04:00Z",
+   "seed": 1,
+   "check_result": null
+  }
+ ],
+ "gaps": [
+  {
+   "id": "g_1fc39d",
+   "layer": "harnesses",
+   "kind": "missing_evidence",
+   "title": "No Terminal-Bench results for goose",
+   "description": "No published Terminal-Bench run found for goose under any model.",
+   "evidence_urls": [],
+   "status": "proposed",
+   "created_at": "2026-09-25T06:04:00Z",
+   "task_ids": []
+  },
+  {
+   "id": "g_d718e2",
+   "layer": "harnesses",
+   "kind": "missing_evidence",
+   "title": "Harness × model matrix is mostly empty",
+   "description": "Most harness scores are reported with one closed model; open-weight pairings are missing.",
+   "evidence_urls": [],
+   "status": "accepted",
+   "created_at": "2026-09-18T06:04:00Z",
+   "task_ids": []
+  }
+ ],
+ "tasks": []
+}

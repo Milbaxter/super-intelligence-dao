@@ -1,0 +1,226 @@
+<title>Super Intelligence DAO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one narrow reading column; the loop diagram is the centerpiece, everything else supports it */
+:root {
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --ink: #15202b;
+  --muted: #56636f;
+  --line: #d5dce3;
+  --accent: #2f56d9;
+  --accent-soft: #e6ecfc;
+  --ok: #17845a;
+  --ok-soft: #e2f3ea;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10161d; --surface: #18212b; --ink: #e8edf2; --muted: #9aa8b5; --line: #2c3946;
+    --accent: #7d9bff; --accent-soft: #1e2a4a; --ok: #4cc690; --ok-soft: #173326;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10161d; --surface: #18212b; --ink: #e8edf2; --muted: #9aa8b5; --line: #2c3946;
+  --accent: #7d9bff; --accent-soft: #1e2a4a; --ok: #4cc690; --ok-soft: #173326;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.55; }
+.wrap { max-width: 860px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 64px; display: grid; gap: 56px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.12; }
+h1 { font-size: clamp(2rem, 5vw, 3.1rem); font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-size: 1.45rem; font-weight: 700; }
+h3 { font-size: 1.08rem; font-weight: 700; }
+p { margin: 0; max-width: 65ch; }
+.eyebrow { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.hero { display: grid; gap: 18px; }
+.lede { font-size: 1.15rem; color: var(--muted); }
+.aha { display: inline-flex; flex-wrap: wrap; gap: 10px; align-items: baseline; background: var(--accent-soft); border-radius: 10px; padding: 14px 18px; font-family: var(--display); font-size: 1.35rem; font-weight: 700; width: fit-content; max-width: 100%; }
+.aha .then { color: var(--accent); }
+section { display: grid; gap: 18px; }
+.diagram { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px; }
+.diagram svg { display: block; width: 100%; min-width: 600px; height: auto; }
+svg .node { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
+svg .node.ref { stroke: var(--ok); stroke-width: 2; }
+svg .hub { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+svg .t-title { fill: var(--ink); font-family: var(--display); font-weight: 700; font-size: 20px; }
+svg .t-body { fill: var(--muted); font-family: var(--body); font-size: 13.5px; }
+svg .t-arrow { fill: var(--accent); font-family: var(--mono); font-size: 12.5px; }
+svg .t-ok { fill: var(--ok); font-family: var(--mono); font-size: 12.5px; }
+svg .t-hub { fill: var(--accent); font-family: var(--display); font-weight: 700; font-size: 16px; }
+svg .t-hubsub { fill: var(--muted); font-family: var(--body); font-size: 12px; }
+svg .arrow { stroke: var(--accent); stroke-width: 2; fill: none; }
+svg .arrow.ok { stroke: var(--ok); }
+svg .head { fill: var(--accent); }
+svg .head.ok { fill: var(--ok); }
+.parts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.part { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.part p { color: var(--muted); font-size: 0.95rem; }
+.part .v1 { font-family: var(--mono); font-size: 0.8rem; color: var(--ink); border-top: 1px dashed var(--line); padding-top: 8px; }
+.part .v1 b { color: var(--accent); font-weight: 500; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 36px 1fr; gap: 12px; padding-block: 12px; border-bottom: 1px solid var(--line); min-width: 0; }
+.steps li:last-child { border-bottom: 0; }
+.steps li::before { content: counter(s); font-family: var(--mono); font-size: 0.85rem; color: var(--accent); background: var(--accent-soft); border-radius: 999px; width: 28px; height: 28px; display: grid; place-items: center; }
+.stamp { font-family: var(--mono); font-size: 0.8rem; color: var(--ok); background: var(--ok-soft); border-radius: 6px; padding: 1px 7px; white-space: nowrap; }
+code { font-family: var(--mono); font-size: 0.9em; background: var(--accent-soft); padding: 1px 6px; border-radius: 5px; overflow-wrap: anywhere; }
+.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 22px; }
+.rule { display: grid; gap: 6px; border-top: 2px solid var(--ink); padding-top: 12px; }
+.rule p { color: var(--muted); font-size: 0.95rem; }
+.later { background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; padding: 18px 20px; display: grid; gap: 8px; }
+.later p { color: var(--muted); }
+footer { color: var(--muted); font-size: 0.85rem; }
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">One-page overview · draft, nothing built yet</span>
+    <h1>Point your agent at a link. Its spare tokens become verified progress for open-source AI.</h1>
+    <p class="lede">Folding@home donated idle CPUs to fold proteins. Here, people donate their agents' unused tokens to tasks whose results the DAO can check against benchmarks.</p>
+    <div class="aha"><span>Agents propose.</span><span class="then">The referee decides.</span></div>
+    <p>That is the whole trick. Contributors never report their own scores. Nothing counts until the DAO re-runs it on tests the agent never saw, so tokens from any model, big or small, can be put to good use.</p>
+  </header>
+
+  <section>
+    <span class="eyebrow">The big picture</span>
+    <h2>One loop, five parts</h2>
+    <div class="diagram">
+      <svg viewBox="0 0 760 430" role="img" aria-label="Loop: the Map shows gaps, gaps become tasks on the Board, agents claim them through the Join link, the Referee verifies submissions, and only verified results update the Map. Steering sits in the middle.">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="head" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="ahok" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="head ok" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+
+        <!-- Map -->
+        <rect class="node" x="30" y="30" width="270" height="110" rx="12"/>
+        <text class="t-title" x="50" y="64">1 · The Map</text>
+        <text class="t-body" x="50" y="90">Scoreboard of open-source AI:</text>
+        <text class="t-body" x="50" y="109">what's best at what, under which</text>
+        <text class="t-body" x="50" y="128">conditions, and where the gaps are</text>
+
+        <!-- Board -->
+        <rect class="node" x="460" y="30" width="270" height="110" rx="12"/>
+        <text class="t-title" x="480" y="64">2 · The Board</text>
+        <text class="t-body" x="480" y="90">Task queue. Every task has a goal,</text>
+        <text class="t-body" x="480" y="109">a token budget, allowed models,</text>
+        <text class="t-body" x="480" y="128">and how it will be checked</text>
+
+        <!-- Join link -->
+        <rect class="node" x="460" y="290" width="270" height="110" rx="12"/>
+        <text class="t-title" x="480" y="324">3 · The Join link</text>
+        <text class="t-body" x="480" y="350">Your agent reads one link, then loops:</text>
+        <text class="t-body" x="480" y="369">claim → work in a sandbox → submit,</text>
+        <text class="t-body" x="480" y="388">until your spare quota is used up</text>
+
+        <!-- Referee -->
+        <rect class="node ref" x="30" y="290" width="270" height="110" rx="12"/>
+        <text class="t-title" x="50" y="324">4 · The Referee</text>
+        <text class="t-body" x="50" y="350">DAO-run machines re-run everything</text>
+        <text class="t-body" x="50" y="369">on hidden tests, catch cheating,</text>
+        <text class="t-body" x="50" y="388">and stamp results as verified</text>
+
+        <!-- Arrows, clockwise -->
+        <path class="arrow" d="M308,85 L450,85" marker-end="url(#ah)"/>
+        <text class="t-arrow" x="379" y="73" text-anchor="middle">gaps become tasks</text>
+
+        <path class="arrow" d="M595,148 L595,280" marker-end="url(#ah)"/>
+        <text class="t-arrow" x="585" y="218" text-anchor="end">agents claim</text>
+
+        <path class="arrow" d="M452,345 L310,345" marker-end="url(#ah)"/>
+        <text class="t-arrow" x="381" y="333" text-anchor="middle">work submitted</text>
+
+        <path class="arrow ok" d="M165,282 L165,150" marker-end="url(#ahok)"/>
+        <text class="t-ok" x="175" y="212">only verified</text>
+        <text class="t-ok" x="175" y="228">results</text>
+
+        <!-- Steering hub -->
+        <circle class="hub" cx="380" cy="215" r="64"/>
+        <text class="t-hub" x="380" y="208" text-anchor="middle">5 · Steering</text>
+        <text class="t-hubsub" x="380" y="228" text-anchor="middle">what counts as progress,</text>
+        <text class="t-hubsub" x="380" y="243" text-anchor="middle">what gets priority</text>
+      </svg>
+    </div>
+    <p>Every verified result sharpens the Map. A sharper Map reveals the next gaps, which become the next tasks. The loop keeps feeding itself.</p>
+  </section>
+
+  <section>
+    <span class="eyebrow">What we would build</span>
+    <h2>The five parts, and the simplest first version of each</h2>
+    <div class="parts">
+      <div class="part">
+        <h3>1 · The Map</h3>
+        <p>A public site of claims like “model M with harness H scores X on task family T at cost C.” Each claim shows whether it was independently re-run. Empty cells are the gaps.</p>
+        <div class="v1"><b>v1:</b> a static site built from a results repo</div>
+      </div>
+      <div class="part">
+        <h3>2 · The Board</h3>
+        <p>The list of open tasks. They come from gaps on the Map and from long-running research tracks. A task only goes up once its check is written.</p>
+        <div class="v1"><b>v1:</b> GitHub issues with a strict template</div>
+      </div>
+      <div class="part">
+        <h3>3 · The Join link</h3>
+        <p>One skill file that Claude Code, Codex and Gemini CLI can all read, plus a small claim → work → submit loop. Tasks arrive as signed data, never as live instructions.</p>
+        <div class="v1"><b>v1:</b> a SKILL.md and a small script</div>
+      </div>
+      <div class="part">
+        <h3>4 · The Referee</h3>
+        <p>The only place scores come from. It re-runs submissions on held-back tasks, compares against the current best with error bars, and flags cheating.</p>
+        <div class="v1"><b>v1:</b> Harbor runners on org-controlled machines</div>
+      </div>
+      <div class="part">
+        <h3>5 · Steering + Tracks</h3>
+        <p>Someone decides what “better” means and which tracks run. A track is a standing goal that keeps the Board full. The first one: make open agent harnesses better.</p>
+        <div class="v1"><b>v1:</b> the founder, plus one starter track</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">One task, end to end</span>
+    <h2>Alice's Friday afternoon</h2>
+    <ol class="steps">
+      <li><p>Alice has 40% of her weekly Claude quota left. She tells her agent: <code>join agentdao.example/join</code></p></li>
+      <li><p>Her agent claims a task: <em>“Read 20 failed Terminal-Bench runs of the current best open harness. Propose one tool change.”</em></p></li>
+      <li><p>It works in a sandbox on Alice's machine and submits a small patch.</p></li>
+      <li><p>The Referee runs the patch on tasks Alice's agent never saw: +2.1 points, and the gain holds across repeat runs. <span class="stamp">✓ verified</span></p></li>
+      <li><p>The patch is merged. The Map updates “best open harness on terminal tasks”, and Alice is credited.</p></li>
+      <li><p>The new best harness fails in new ways. Those failures become the next tasks on the Board.</p></li>
+    </ol>
+  </section>
+
+  <section>
+    <span class="eyebrow">Why it works</span>
+    <h2>Three rules that hold it together</h2>
+    <div class="rules">
+      <div class="rule">
+        <h3>Nothing counts until it's re-run</h3>
+        <p>Benchmark cheating by agents is common. Leaderboards have had to close community submissions because of it. So self-reported scores are never trusted here.</p>
+      </div>
+      <div class="rule">
+        <h3>Your account, your own CLI</h3>
+        <p>Each contributor runs the official agent on their own account. The DAO never sees logins or pools subscriptions, which keeps everyone within provider terms.</p>
+      </div>
+      <div class="rule">
+        <h3>Any model is useful</h3>
+        <p>Proposing ideas is cheap and checking them is the costly, trusted step, which the DAO keeps. Small models propose harness edits almost as well as big ones.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="later">
+      <span class="eyebrow">Later, not now</span>
+      <h3>A voice in the DAO</h3>
+      <p>Contributors could earn voting weight from the tokens they give. One adjustment would make it hard to game: count only tokens spent on work that passed the Referee. Raw token counts would reward burning quota on busywork. Governance design comes after the loop works.</p>
+    </div>
+  </section>
+
+  <footer>Draft overview based on the research report “Super Intelligence DAO structure and mechanics”. Example names and links are illustrative.</footer>
+</div>

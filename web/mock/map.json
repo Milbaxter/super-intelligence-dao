@@ -1,0 +1,1006 @@
+{
+ "layers": [
+  {
+   "id": "data",
+   "name": "Data",
+   "description": "Pretraining corpora, curation and filtering tooling.",
+   "artifacts": [
+    {
+     "id": "fineweb",
+     "name": "FineWeb",
+     "kind": "dataset",
+     "license": "ODC-By-1.0",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    },
+    {
+     "id": "dolma",
+     "name": "Dolma",
+     "kind": "dataset",
+     "license": "ODC-By-1.0",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    },
+    {
+     "id": "the-stack-v2",
+     "name": "The Stack v2",
+     "kind": "dataset",
+     "license": null,
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    },
+    {
+     "id": "datatrove",
+     "name": "datatrove",
+     "kind": "library",
+     "license": "Apache-2.0",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    }
+   ],
+   "benchmarks": [],
+   "cells": [],
+   "gap_ids": [
+    "g_f4b260"
+   ]
+  },
+  {
+   "id": "pretraining",
+   "name": "Pretraining",
+   "description": "Frameworks and recipes for training base models at scale.",
+   "artifacts": [
+    {
+     "id": "torchtitan",
+     "name": "torchtitan",
+     "kind": "framework",
+     "license": "BSD-3-Clause",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    },
+    {
+     "id": "megatron-lm",
+     "name": "Megatron-LM",
+     "kind": "framework",
+     "license": null,
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    },
+    {
+     "id": "nanotron",
+     "name": "nanotron",
+     "kind": "framework",
+     "license": "Apache-2.0",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    }
+   ],
+   "benchmarks": [],
+   "cells": [],
+   "gap_ids": [
+    "g_11d94b"
+   ]
+  },
+  {
+   "id": "post-training",
+   "name": "Post-training",
+   "description": "SFT, preference tuning and RL libraries.",
+   "artifacts": [
+    {
+     "id": "trl",
+     "name": "TRL",
+     "kind": "library",
+     "license": "Apache-2.0",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    },
+    {
+     "id": "openrlhf",
+     "name": "OpenRLHF",
+     "kind": "framework",
+     "license": "Apache-2.0",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    },
+    {
+     "id": "verl",
+     "name": "verl",
+     "kind": "framework",
+     "license": "Apache-2.0",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    },
+    {
+     "id": "open-instruct",
+     "name": "open-instruct",
+     "kind": "library",
+     "license": "Apache-2.0",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    }
+   ],
+   "benchmarks": [],
+   "cells": [],
+   "gap_ids": [
+    "g_c8a7e4"
+   ]
+  },
+  {
+   "id": "environments",
+   "name": "Environments",
+   "description": "Task environments and gyms agents act in.",
+   "artifacts": [
+    {
+     "id": "harbor",
+     "name": "Harbor",
+     "kind": "framework",
+     "license": null,
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    },
+    {
+     "id": "reasoning-gym",
+     "name": "Reasoning Gym",
+     "kind": "environment",
+     "license": "Apache-2.0",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    },
+    {
+     "id": "browsergym",
+     "name": "BrowserGym",
+     "kind": "environment",
+     "license": "Apache-2.0",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    }
+   ],
+   "benchmarks": [],
+   "cells": [],
+   "gap_ids": [
+    "g_eeed1d"
+   ]
+  },
+  {
+   "id": "evals",
+   "name": "Evals",
+   "description": "Evaluation harnesses and reporting infrastructure.",
+   "artifacts": [
+    {
+     "id": "lm-eval-harness",
+     "name": "lm-evaluation-harness",
+     "kind": "framework",
+     "license": "MIT",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    },
+    {
+     "id": "inspect-ai",
+     "name": "Inspect",
+     "kind": "framework",
+     "license": "MIT",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    },
+    {
+     "id": "helm",
+     "name": "HELM",
+     "kind": "framework",
+     "license": "Apache-2.0",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    }
+   ],
+   "benchmarks": [],
+   "cells": [],
+   "gap_ids": [
+    "g_2da4cd"
+   ]
+  },
+  {
+   "id": "inference",
+   "name": "Inference",
+   "description": "Serving engines and local runtimes.",
+   "artifacts": [
+    {
+     "id": "vllm",
+     "name": "vLLM",
+     "kind": "framework",
+     "license": "Apache-2.0",
+     "open_weights": null,
+     "claim_count": 1,
+     "verified_claim_count": 0,
+     "best_tier": "disputed"
+    },
+    {
+     "id": "sglang",
+     "name": "SGLang",
+     "kind": "framework",
+     "license": "Apache-2.0",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    },
+    {
+     "id": "llama-cpp",
+     "name": "llama.cpp",
+     "kind": "library",
+     "license": "MIT",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    },
+    {
+     "id": "ollama",
+     "name": "Ollama",
+     "kind": "tool",
+     "license": "MIT",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    }
+   ],
+   "benchmarks": [
+    {
+     "id": "mlperf-inference",
+     "name": "MLPerf Inference",
+     "measures": "tokens/s",
+     "saturated": 0,
+     "claim_count": 1
+    }
+   ],
+   "cells": [
+    {
+     "artifact_id": "vllm",
+     "benchmark_id": "mlperf-inference",
+     "claim_ids": [
+      "cl_eb4a10"
+     ],
+     "best_tier": "disputed",
+     "value_summary": "2611 tokens/s"
+    }
+   ],
+   "gap_ids": [
+    "g_d65709"
+   ]
+  },
+  {
+   "id": "models",
+   "name": "Models",
+   "description": "Open-weight models.",
+   "artifacts": [
+    {
+     "id": "olmo-2-32b",
+     "name": "OLMo 2 32B",
+     "kind": "model",
+     "license": "Apache-2.0",
+     "open_weights": 1,
+     "claim_count": 4,
+     "verified_claim_count": 1,
+     "best_tier": "reproduced"
+    },
+    {
+     "id": "qwen2-5-coder-32b",
+     "name": "Qwen2.5-Coder 32B",
+     "kind": "model",
+     "license": "Apache-2.0",
+     "open_weights": 1,
+     "claim_count": 4,
+     "verified_claim_count": 1,
+     "best_tier": "reproduced"
+    },
+    {
+     "id": "deepseek-v3",
+     "name": "DeepSeek-V3",
+     "kind": "model",
+     "license": null,
+     "open_weights": 1,
+     "claim_count": 4,
+     "verified_claim_count": 2,
+     "best_tier": "reproduced"
+    },
+    {
+     "id": "mistral-small-3",
+     "name": "Mistral Small 3",
+     "kind": "model",
+     "license": "Apache-2.0",
+     "open_weights": 1,
+     "claim_count": 3,
+     "verified_claim_count": 0,
+     "best_tier": "source-checked"
+    },
+    {
+     "id": "gemma-3-27b",
+     "name": "Gemma 3 27B",
+     "kind": "model",
+     "license": "Gemma Terms of Use",
+     "open_weights": 1,
+     "claim_count": 3,
+     "verified_claim_count": 1,
+     "best_tier": "reproduced"
+    },
+    {
+     "id": "llama-3-3-70b",
+     "name": "Llama 3.3 70B",
+     "kind": "model",
+     "license": "Llama 3.3 Community License",
+     "open_weights": 1,
+     "claim_count": 2,
+     "verified_claim_count": 1,
+     "best_tier": "reproduced"
+    }
+   ],
+   "benchmarks": [
+    {
+     "id": "mmlu-pro",
+     "name": "MMLU-Pro",
+     "measures": "accuracy",
+     "saturated": 0,
+     "claim_count": 5
+    },
+    {
+     "id": "gpqa-diamond",
+     "name": "GPQA Diamond",
+     "measures": "accuracy",
+     "saturated": 0,
+     "claim_count": 4
+    },
+    {
+     "id": "livecodebench",
+     "name": "LiveCodeBench",
+     "measures": "pass@1",
+     "saturated": 0,
+     "claim_count": 5
+    },
+    {
+     "id": "humaneval",
+     "name": "HumanEval",
+     "measures": "pass@1",
+     "saturated": 1,
+     "claim_count": 6
+    }
+   ],
+   "cells": [
+    {
+     "artifact_id": "olmo-2-32b",
+     "benchmark_id": "mmlu-pro",
+     "claim_ids": [
+      "cl_99ef54"
+     ],
+     "best_tier": "reproduced",
+     "value_summary": "63.3%"
+    },
+    {
+     "artifact_id": "olmo-2-32b",
+     "benchmark_id": "gpqa-diamond",
+     "claim_ids": [
+      "cl_a1821d"
+     ],
+     "best_tier": "reported",
+     "value_summary": "83.8%"
+    },
+    {
+     "artifact_id": "olmo-2-32b",
+     "benchmark_id": "livecodebench",
+     "claim_ids": [
+      "cl_d519e0"
+     ],
+     "best_tier": "source-checked",
+     "value_summary": "33.3 pass@1"
+    },
+    {
+     "artifact_id": "olmo-2-32b",
+     "benchmark_id": "humaneval",
+     "claim_ids": [
+      "cl_a2940e"
+     ],
+     "best_tier": "reported",
+     "value_summary": "82.2 pass@1"
+    },
+    {
+     "artifact_id": "qwen2-5-coder-32b",
+     "benchmark_id": "mmlu-pro",
+     "claim_ids": [
+      "cl_ed2002"
+     ],
+     "best_tier": "reported",
+     "value_summary": "79.8%"
+    },
+    {
+     "artifact_id": "qwen2-5-coder-32b",
+     "benchmark_id": "gpqa-diamond",
+     "claim_ids": [
+      "cl_cdc6b3"
+     ],
+     "best_tier": "reported",
+     "value_summary": "65.8%"
+    },
+    {
+     "artifact_id": "qwen2-5-coder-32b",
+     "benchmark_id": "livecodebench",
+     "claim_ids": [
+      "cl_400934"
+     ],
+     "best_tier": "reproduced",
+     "value_summary": "34.2 pass@1"
+    },
+    {
+     "artifact_id": "qwen2-5-coder-32b",
+     "benchmark_id": "humaneval",
+     "claim_ids": [
+      "cl_98f0e2"
+     ],
+     "best_tier": "source-checked",
+     "value_summary": "37.7 pass@1"
+    },
+    {
+     "artifact_id": "deepseek-v3",
+     "benchmark_id": "mmlu-pro",
+     "claim_ids": [
+      "cl_2008c8"
+     ],
+     "best_tier": "reproduced",
+     "value_summary": "66.3%"
+    },
+    {
+     "artifact_id": "deepseek-v3",
+     "benchmark_id": "gpqa-diamond",
+     "claim_ids": [
+      "cl_05a09b"
+     ],
+     "best_tier": "reproduced",
+     "value_summary": "45.9%"
+    },
+    {
+     "artifact_id": "deepseek-v3",
+     "benchmark_id": "livecodebench",
+     "claim_ids": [
+      "cl_b053cf"
+     ],
+     "best_tier": "disputed",
+     "value_summary": "22.7 pass@1"
+    },
+    {
+     "artifact_id": "deepseek-v3",
+     "benchmark_id": "humaneval",
+     "claim_ids": [
+      "cl_04dba5"
+     ],
+     "best_tier": "source-checked",
+     "value_summary": "18 pass@1"
+    },
+    {
+     "artifact_id": "mistral-small-3",
+     "benchmark_id": "mmlu-pro",
+     "claim_ids": [
+      "cl_9aeb4e"
+     ],
+     "best_tier": "source-checked",
+     "value_summary": "79.2%"
+    },
+    {
+     "artifact_id": "mistral-small-3",
+     "benchmark_id": "livecodebench",
+     "claim_ids": [
+      "cl_1a57b2"
+     ],
+     "best_tier": "reported",
+     "value_summary": "51.2 pass@1"
+    },
+    {
+     "artifact_id": "mistral-small-3",
+     "benchmark_id": "humaneval",
+     "claim_ids": [
+      "cl_b4efe1"
+     ],
+     "best_tier": "reported",
+     "value_summary": "24 pass@1"
+    },
+    {
+     "artifact_id": "gemma-3-27b",
+     "benchmark_id": "mmlu-pro",
+     "claim_ids": [
+      "cl_355a2c"
+     ],
+     "best_tier": "reported",
+     "value_summary": "54.1%"
+    },
+    {
+     "artifact_id": "gemma-3-27b",
+     "benchmark_id": "livecodebench",
+     "claim_ids": [
+      "cl_bb8c1b"
+     ],
+     "best_tier": "stale",
+     "value_summary": "86.5 pass@1"
+    },
+    {
+     "artifact_id": "gemma-3-27b",
+     "benchmark_id": "humaneval",
+     "claim_ids": [
+      "cl_5cd935"
+     ],
+     "best_tier": "reproduced",
+     "value_summary": "62.6 pass@1"
+    },
+    {
+     "artifact_id": "llama-3-3-70b",
+     "benchmark_id": "gpqa-diamond",
+     "claim_ids": [
+      "cl_14b660"
+     ],
+     "best_tier": "reproduced",
+     "value_summary": "54.2%"
+    },
+    {
+     "artifact_id": "llama-3-3-70b",
+     "benchmark_id": "humaneval",
+     "claim_ids": [
+      "cl_160854"
+     ],
+     "best_tier": "source-checked",
+     "value_summary": "31.6 pass@1"
+    }
+   ],
+   "gap_ids": [
+    "g_3a9a04"
+   ]
+  },
+  {
+   "id": "harnesses",
+   "name": "Harnesses",
+   "description": "Agent scaffolds: the loop, tools and memory around a model.",
+   "artifacts": [
+    {
+     "id": "openhands",
+     "name": "OpenHands",
+     "kind": "harness",
+     "license": "MIT",
+     "open_weights": null,
+     "claim_count": 3,
+     "verified_claim_count": 0,
+     "best_tier": "reported"
+    },
+    {
+     "id": "swe-agent",
+     "name": "SWE-agent",
+     "kind": "harness",
+     "license": "MIT",
+     "open_weights": null,
+     "claim_count": 1,
+     "verified_claim_count": 0,
+     "best_tier": "source-checked"
+    },
+    {
+     "id": "aider",
+     "name": "Aider",
+     "kind": "harness",
+     "license": "Apache-2.0",
+     "open_weights": null,
+     "claim_count": 2,
+     "verified_claim_count": 0,
+     "best_tier": "reported"
+    },
+    {
+     "id": "codex-cli",
+     "name": "Codex CLI",
+     "kind": "harness",
+     "license": "Apache-2.0",
+     "open_weights": null,
+     "claim_count": 3,
+     "verified_claim_count": 0,
+     "best_tier": "source-checked"
+    },
+    {
+     "id": "gemini-cli",
+     "name": "Gemini CLI",
+     "kind": "harness",
+     "license": "Apache-2.0",
+     "open_weights": null,
+     "claim_count": 2,
+     "verified_claim_count": 0,
+     "best_tier": "source-checked"
+    },
+    {
+     "id": "goose",
+     "name": "goose",
+     "kind": "harness",
+     "license": "Apache-2.0",
+     "open_weights": null,
+     "claim_count": 2,
+     "verified_claim_count": 0,
+     "best_tier": "source-checked"
+    },
+    {
+     "id": "opencode",
+     "name": "opencode",
+     "kind": "harness",
+     "license": null,
+     "open_weights": null,
+     "claim_count": 1,
+     "verified_claim_count": 1,
+     "best_tier": "reproduced"
+    }
+   ],
+   "benchmarks": [
+    {
+     "id": "swe-bench-verified",
+     "name": "SWE-bench Verified",
+     "measures": "% resolved",
+     "saturated": 0,
+     "claim_count": 2
+    },
+    {
+     "id": "terminal-bench",
+     "name": "Terminal-Bench",
+     "measures": "% tasks passed",
+     "saturated": 0,
+     "claim_count": 6
+    },
+    {
+     "id": "aider-polyglot",
+     "name": "Aider Polyglot",
+     "measures": "% correct",
+     "saturated": 0,
+     "claim_count": 6
+    }
+   ],
+   "cells": [
+    {
+     "artifact_id": "openhands",
+     "benchmark_id": "swe-bench-verified",
+     "claim_ids": [
+      "cl_731e54"
+     ],
+     "best_tier": "reported",
+     "value_summary": "33.4%"
+    },
+    {
+     "artifact_id": "openhands",
+     "benchmark_id": "terminal-bench",
+     "claim_ids": [
+      "cl_20a350"
+     ],
+     "best_tier": "reported",
+     "value_summary": "51.6%"
+    },
+    {
+     "artifact_id": "openhands",
+     "benchmark_id": "aider-polyglot",
+     "claim_ids": [
+      "cl_6247fe"
+     ],
+     "best_tier": "stale",
+     "value_summary": "80.2%"
+    },
+    {
+     "artifact_id": "swe-agent",
+     "benchmark_id": "terminal-bench",
+     "claim_ids": [
+      "cl_9d8dbb"
+     ],
+     "best_tier": "source-checked",
+     "value_summary": "29.9%"
+    },
+    {
+     "artifact_id": "aider",
+     "benchmark_id": "terminal-bench",
+     "claim_ids": [
+      "cl_756fab"
+     ],
+     "best_tier": "disputed",
+     "value_summary": "64%"
+    },
+    {
+     "artifact_id": "aider",
+     "benchmark_id": "aider-polyglot",
+     "claim_ids": [
+      "cl_5231cb"
+     ],
+     "best_tier": "reported",
+     "value_summary": "48.4%"
+    },
+    {
+     "artifact_id": "codex-cli",
+     "benchmark_id": "swe-bench-verified",
+     "claim_ids": [
+      "cl_b2ad7b"
+     ],
+     "best_tier": "source-checked",
+     "value_summary": "71.5%"
+    },
+    {
+     "artifact_id": "codex-cli",
+     "benchmark_id": "terminal-bench",
+     "claim_ids": [
+      "cl_a3137f"
+     ],
+     "best_tier": "reported",
+     "value_summary": "80.8%"
+    },
+    {
+     "artifact_id": "codex-cli",
+     "benchmark_id": "aider-polyglot",
+     "claim_ids": [
+      "cl_6158c5"
+     ],
+     "best_tier": "reported",
+     "value_summary": "79.1%"
+    },
+    {
+     "artifact_id": "gemini-cli",
+     "benchmark_id": "terminal-bench",
+     "claim_ids": [
+      "cl_02eada"
+     ],
+     "best_tier": "source-checked",
+     "value_summary": "57%"
+    },
+    {
+     "artifact_id": "gemini-cli",
+     "benchmark_id": "aider-polyglot",
+     "claim_ids": [
+      "cl_cbb4a0"
+     ],
+     "best_tier": "reported",
+     "value_summary": "35.4%"
+    },
+    {
+     "artifact_id": "goose",
+     "benchmark_id": "terminal-bench",
+     "claim_ids": [
+      "cl_dfca0c"
+     ],
+     "best_tier": "reported",
+     "value_summary": "49%"
+    },
+    {
+     "artifact_id": "goose",
+     "benchmark_id": "aider-polyglot",
+     "claim_ids": [
+      "cl_fb4243"
+     ],
+     "best_tier": "source-checked",
+     "value_summary": "53.5%"
+    },
+    {
+     "artifact_id": "opencode",
+     "benchmark_id": "aider-polyglot",
+     "claim_ids": [
+      "cl_458533"
+     ],
+     "best_tier": "reproduced",
+     "value_summary": "47.2%"
+    }
+   ],
+   "gap_ids": [
+    "g_1fc39d",
+    "g_d718e2"
+   ]
+  },
+  {
+   "id": "multi-agent",
+   "name": "Multi-agent",
+   "description": "Orchestration of several agents or harnesses.",
+   "artifacts": [
+    {
+     "id": "autogen",
+     "name": "AutoGen",
+     "kind": "framework",
+     "license": null,
+     "open_weights": null,
+     "claim_count": 1,
+     "verified_claim_count": 0,
+     "best_tier": "source-checked"
+    },
+    {
+     "id": "langgraph",
+     "name": "LangGraph",
+     "kind": "framework",
+     "license": "MIT",
+     "open_weights": null,
+     "claim_count": 1,
+     "verified_claim_count": 1,
+     "best_tier": "reproduced"
+    },
+    {
+     "id": "crewai",
+     "name": "CrewAI",
+     "kind": "framework",
+     "license": "MIT",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    }
+   ],
+   "benchmarks": [
+    {
+     "id": "gaia",
+     "name": "GAIA",
+     "measures": "% correct",
+     "saturated": 0,
+     "claim_count": 2
+    }
+   ],
+   "cells": [
+    {
+     "artifact_id": "autogen",
+     "benchmark_id": "gaia",
+     "claim_ids": [
+      "cl_6962ab"
+     ],
+     "best_tier": "source-checked",
+     "value_summary": "23.1%"
+    },
+    {
+     "artifact_id": "langgraph",
+     "benchmark_id": "gaia",
+     "claim_ids": [
+      "cl_d25056"
+     ],
+     "best_tier": "reproduced",
+     "value_summary": "35.7%"
+    }
+   ],
+   "gap_ids": [
+    "g_b5e724"
+   ]
+  },
+  {
+   "id": "ux",
+   "name": "UX",
+   "description": "Interfaces people use to work with open models.",
+   "artifacts": [
+    {
+     "id": "open-webui",
+     "name": "Open WebUI",
+     "kind": "app",
+     "license": null,
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    },
+    {
+     "id": "continue",
+     "name": "Continue",
+     "kind": "app",
+     "license": "Apache-2.0",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    },
+    {
+     "id": "jan",
+     "name": "Jan",
+     "kind": "app",
+     "license": "AGPL-3.0",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    }
+   ],
+   "benchmarks": [],
+   "cells": [],
+   "gap_ids": [
+    "g_de83b3"
+   ]
+  },
+  {
+   "id": "safety",
+   "name": "Safety",
+   "description": "Classifiers, red-teaming and guard tooling.",
+   "artifacts": [
+    {
+     "id": "llama-guard-3",
+     "name": "Llama Guard 3",
+     "kind": "model",
+     "license": "Llama 3.1 Community License",
+     "open_weights": 1,
+     "claim_count": 1,
+     "verified_claim_count": 1,
+     "best_tier": "reproduced"
+    },
+    {
+     "id": "shieldgemma",
+     "name": "ShieldGemma",
+     "kind": "model",
+     "license": "Gemma Terms of Use",
+     "open_weights": 1,
+     "claim_count": 1,
+     "verified_claim_count": 0,
+     "best_tier": "source-checked"
+    },
+    {
+     "id": "garak",
+     "name": "garak",
+     "kind": "tool",
+     "license": "Apache-2.0",
+     "open_weights": null,
+     "claim_count": 0,
+     "verified_claim_count": 0,
+     "best_tier": null
+    }
+   ],
+   "benchmarks": [
+    {
+     "id": "harmbench",
+     "name": "HarmBench",
+     "measures": "attack success rate",
+     "saturated": 0,
+     "claim_count": 1
+    },
+    {
+     "id": "xstest",
+     "name": "XSTest",
+     "measures": "% compliance on safe prompts",
+     "saturated": 0,
+     "claim_count": 1
+    }
+   ],
+   "cells": [
+    {
+     "artifact_id": "llama-guard-3",
+     "benchmark_id": "harmbench",
+     "claim_ids": [
+      "cl_07330a"
+     ],
+     "best_tier": "reproduced",
+     "value_summary": "16.2%"
+    },
+    {
+     "artifact_id": "shieldgemma",
+     "benchmark_id": "xstest",
+     "claim_ids": [
+      "cl_b39220"
+     ],
+     "best_tier": "source-checked",
+     "value_summary": "41.7%"
+    }
+   ],
+   "gap_ids": [
+    "g_997473"
+   ]
+  }
+ ],
+ "generated_at": "2026-10-03T06:04:00Z"
+}

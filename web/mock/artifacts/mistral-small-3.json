@@ -1,0 +1,144 @@
+{
+ "id": "mistral-small-3",
+ "name": "Mistral Small 3",
+ "layer": "models",
+ "kind": "model",
+ "url": "https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501",
+ "repo_url": null,
+ "license": "Apache-2.0",
+ "open_weights": 1,
+ "description": "24B open-weight model.",
+ "latest_version": null,
+ "latest_release_date": null,
+ "created_at": "2026-08-04T06:04:00Z",
+ "updated_at": "2026-10-01T06:04:00Z",
+ "source": "seed",
+ "claim_count": 3,
+ "verified_claim_count": 0,
+ "best_tier": "source-checked",
+ "claims": [
+  {
+   "id": "cl_9aeb4e",
+   "artifact_id": "mistral-small-3",
+   "artifact_name": "Mistral Small 3",
+   "layer": "models",
+   "benchmark_id": "mmlu-pro",
+   "benchmark_name": "MMLU-Pro",
+   "metric": "accuracy",
+   "value": 79.2,
+   "unit": "%",
+   "higher_is_better": true,
+   "conditions": {
+    "date": "2026-07-14",
+    "notes": "Illustrative example value from mock fixtures, not a real result.",
+    "attempts": 1,
+    "scaffold": "zero-shot"
+   },
+   "source_url": "https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501",
+   "quote": "[Illustrative example quote] Mistral Small 3 reaches 79.2% on MMLU-Pro under the stated setup.",
+   "reported_by": "third-party",
+   "tier": "source-checked",
+   "special_status": null,
+   "display_status": "source-checked",
+   "created_at": "2026-04-20T22:04:00Z",
+   "tier_changed_at": "2026-04-22T22:04:00Z",
+   "expires_at": "2026-10-19T22:04:00Z",
+   "seed": 1,
+   "check_result": {
+    "passed": true,
+    "reason": "quote_found_value_present",
+    "fetched_url": "https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501",
+    "http_status": 200,
+    "fetched_at": "2026-04-22T22:04:00Z",
+    "content_sha256": "ae2e0783f83394d146062e5d9e6e1ae16c3d06e56ab53d55547206e4a75567f2"
+   }
+  },
+  {
+   "id": "cl_1a57b2",
+   "artifact_id": "mistral-small-3",
+   "artifact_name": "Mistral Small 3",
+   "layer": "models",
+   "benchmark_id": "livecodebench",
+   "benchmark_name": "LiveCodeBench",
+   "metric": "pass@1",
+   "value": 51.2,
+   "unit": "pass@1",
+   "higher_is_better": true,
+   "conditions": {
+    "date": "2026-02-25",
+    "notes": "Illustrative example value from mock fixtures, not a real result.",
+    "attempts": 1,
+    "scaffold": "zero-shot"
+   },
+   "source_url": "https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501",
+   "quote": "[Illustrative example quote] Mistral Small 3 reaches 51.2 on LiveCodeBench under the stated setup.",
+   "reported_by": "third-party",
+   "tier": "reported",
+   "special_status": null,
+   "display_status": "reported",
+   "created_at": "2026-06-02T15:04:00Z",
+   "tier_changed_at": "2026-06-05T15:04:00Z",
+   "expires_at": "2026-12-02T15:04:00Z",
+   "seed": 0,
+   "check_result": null
+  },
+  {
+   "id": "cl_b4efe1",
+   "artifact_id": "mistral-small-3",
+   "artifact_name": "Mistral Small 3",
+   "layer": "models",
+   "benchmark_id": "humaneval",
+   "benchmark_name": "HumanEval",
+   "metric": "pass@1",
+   "value": 24.0,
+   "unit": "pass@1",
+   "higher_is_better": true,
+   "conditions": {
+    "date": "2026-02-20",
+    "notes": "Illustrative example value from mock fixtures, not a real result.",
+    "attempts": 1,
+    "scaffold": "zero-shot"
+   },
+   "source_url": "https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501",
+   "quote": "[Illustrative example quote] Mistral Small 3 reaches 24 on HumanEval under the stated setup.",
+   "reported_by": "artifact-authors",
+   "tier": "reported",
+   "special_status": null,
+   "display_status": "reported",
+   "created_at": "2026-03-24T22:04:00Z",
+   "tier_changed_at": "2026-03-27T22:04:00Z",
+   "expires_at": "2026-09-23T22:04:00Z",
+   "seed": 0,
+   "check_result": null
+  }
+ ],
+ "gaps": [
+  {
+   "id": "g_3a9a04",
+   "layer": "models",
+   "kind": "stale",
+   "title": "OLMo 2 claims need re-verification",
+   "description": "Several claims are close to their 180-day expiry.",
+   "evidence_urls": [],
+   "status": "accepted",
+   "created_at": "2026-09-26T06:04:00Z",
+   "task_ids": []
+  }
+ ],
+ "tasks": [
+  {
+   "id": "t_79341a",
+   "type": "verify.blind_extract",
+   "track_id": "referee",
+   "title": "Blind re-extract: Mistral Small 3 on MMLU-Pro",
+   "status": "verified",
+   "priority": 11.19,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 15,
+   "attempts": 1,
+   "created_at": "2026-09-23T23:04:00Z"
+  }
+ ]
+}

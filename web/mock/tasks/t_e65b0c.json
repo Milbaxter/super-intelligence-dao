@@ -1,0 +1,27 @@
+{
+ "id": "t_e65b0c",
+ "type": "map.gap_scan",
+ "track_id": "map-gaps",
+ "title": "Gap scan: ux layer",
+ "status": "verified",
+ "priority": 4.5,
+ "allowed_model_families": [
+  "any"
+ ],
+ "budget_minutes": 40,
+ "attempts": 1,
+ "created_at": "2026-09-18T03:04:00Z",
+ "spec_md": "## Goal\nList missing evidence, missing capabilities and important missing projects for this layer, with evidence URLs.",
+ "inputs": {
+  "layer": "ux"
+ },
+ "instructions_url": "/task-types/map.gap_scan.md",
+ "submissions": [
+  {
+   "id": "s_e65b0c",
+   "contributor": "dev-hari",
+   "status": "verified",
+   "created_at": "2026-09-29T20:04:00Z"
+  }
+ ]
+}

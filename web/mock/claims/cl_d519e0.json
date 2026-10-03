@@ -1,0 +1,57 @@
+{
+ "id": "cl_d519e0",
+ "artifact_id": "olmo-2-32b",
+ "artifact_name": "OLMo 2 32B",
+ "layer": "models",
+ "benchmark_id": "livecodebench",
+ "benchmark_name": "LiveCodeBench",
+ "metric": "pass@1",
+ "value": 33.3,
+ "unit": "pass@1",
+ "higher_is_better": true,
+ "conditions": {
+  "date": "2026-05-14",
+  "notes": "Illustrative example value from mock fixtures, not a real result.",
+  "attempts": 1,
+  "scaffold": "zero-shot"
+ },
+ "source_url": "https://huggingface.co/allenai/OLMo-2-0325-32B-Instruct",
+ "quote": "[Illustrative example quote] OLMo 2 32B reaches 33.3 on LiveCodeBench under the stated setup.",
+ "reported_by": "leaderboard",
+ "tier": "source-checked",
+ "special_status": null,
+ "display_status": "source-checked",
+ "created_at": "2026-03-24T23:04:00Z",
+ "tier_changed_at": "2026-03-27T23:04:00Z",
+ "expires_at": "2026-09-23T23:04:00Z",
+ "seed": 0,
+ "check_result": {
+  "passed": true,
+  "reason": "quote_found_value_present",
+  "fetched_url": "https://huggingface.co/allenai/OLMo-2-0325-32B-Instruct",
+  "http_status": 200,
+  "fetched_at": "2026-03-27T23:04:00Z",
+  "content_sha256": "2f77aa1e008de0ca002eacda0dd65caa097ad9a1793afd468191f3219619bca5"
+ },
+ "trail": [
+  {
+   "ts": "2026-03-24T23:04:00Z",
+   "kind": "submitted",
+   "actor": "alice-k",
+   "summary": "map.extract submission included this claim",
+   "detail": {
+    "model_family": "claude"
+   }
+  },
+  {
+   "ts": "2026-03-27T23:04:00Z",
+   "kind": "quote_check",
+   "actor": "referee",
+   "summary": "Source fetched; quote found verbatim; value present in quote → T1 source-checked",
+   "detail": {
+    "http_status": 200,
+    "fetched_url": "https://huggingface.co/allenai/OLMo-2-0325-32B-Instruct"
+   }
+  }
+ ]
+}

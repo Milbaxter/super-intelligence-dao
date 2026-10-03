@@ -1,0 +1,57 @@
+{
+ "id": "cl_98f0e2",
+ "artifact_id": "qwen2-5-coder-32b",
+ "artifact_name": "Qwen2.5-Coder 32B",
+ "layer": "models",
+ "benchmark_id": "humaneval",
+ "benchmark_name": "HumanEval",
+ "metric": "pass@1",
+ "value": 37.7,
+ "unit": "pass@1",
+ "higher_is_better": true,
+ "conditions": {
+  "date": "2026-03-23",
+  "notes": "Illustrative example value from mock fixtures, not a real result.",
+  "attempts": 1,
+  "scaffold": "zero-shot"
+ },
+ "source_url": "https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct",
+ "quote": "[Illustrative example quote] Qwen2.5-Coder 32B reaches 37.7 on HumanEval under the stated setup.",
+ "reported_by": "artifact-authors",
+ "tier": "source-checked",
+ "special_status": null,
+ "display_status": "source-checked",
+ "created_at": "2026-05-16T19:04:00Z",
+ "tier_changed_at": "2026-05-18T19:04:00Z",
+ "expires_at": "2026-11-14T19:04:00Z",
+ "seed": 0,
+ "check_result": {
+  "passed": true,
+  "reason": "quote_found_value_present",
+  "fetched_url": "https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct",
+  "http_status": 200,
+  "fetched_at": "2026-05-18T19:04:00Z",
+  "content_sha256": "3f55f8c68e59a1ed54875f513751e075da0eff5d57b2253ef9b7c46c97978b42"
+ },
+ "trail": [
+  {
+   "ts": "2026-05-16T19:04:00Z",
+   "kind": "submitted",
+   "actor": "ozan",
+   "summary": "map.extract submission included this claim",
+   "detail": {
+    "model_family": "claude"
+   }
+  },
+  {
+   "ts": "2026-05-18T19:04:00Z",
+   "kind": "quote_check",
+   "actor": "referee",
+   "summary": "Source fetched; quote found verbatim; value present in quote → T1 source-checked",
+   "detail": {
+    "http_status": 200,
+    "fetched_url": "https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct"
+   }
+  }
+ ]
+}

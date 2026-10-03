@@ -1,0 +1,67 @@
+{
+ "id": "cl_99ef54",
+ "artifact_id": "olmo-2-32b",
+ "artifact_name": "OLMo 2 32B",
+ "layer": "models",
+ "benchmark_id": "mmlu-pro",
+ "benchmark_name": "MMLU-Pro",
+ "metric": "accuracy",
+ "value": 63.3,
+ "unit": "%",
+ "higher_is_better": true,
+ "conditions": {
+  "date": "2026-08-19",
+  "notes": "Illustrative example value from mock fixtures, not a real result.",
+  "attempts": 1,
+  "scaffold": "zero-shot"
+ },
+ "source_url": "https://huggingface.co/allenai/OLMo-2-0325-32B-Instruct",
+ "quote": "[Illustrative example quote] OLMo 2 32B reaches 63.3% on MMLU-Pro under the stated setup.",
+ "reported_by": "artifact-authors",
+ "tier": "reproduced",
+ "special_status": null,
+ "display_status": "reproduced",
+ "created_at": "2026-03-30T18:04:00Z",
+ "tier_changed_at": "2026-04-01T18:04:00Z",
+ "expires_at": "2026-09-28T18:04:00Z",
+ "seed": 1,
+ "check_result": {
+  "passed": true,
+  "reason": "quote_found_value_present",
+  "fetched_url": "https://huggingface.co/allenai/OLMo-2-0325-32B-Instruct",
+  "http_status": 200,
+  "fetched_at": "2026-04-01T18:04:00Z",
+  "content_sha256": "2e521a3a7f09657c8a0e64fb5a67653dceaa86871b2ff10f9e2cd75d472e8c3d"
+ },
+ "trail": [
+  {
+   "ts": "2026-03-30T18:04:00Z",
+   "kind": "submitted",
+   "actor": "pkr",
+   "summary": "map.extract submission included this claim",
+   "detail": {
+    "model_family": "claude"
+   }
+  },
+  {
+   "ts": "2026-04-01T18:04:00Z",
+   "kind": "quote_check",
+   "actor": "referee",
+   "summary": "Source fetched; quote found verbatim; value present in quote → T1 source-checked",
+   "detail": {
+    "http_status": 200,
+    "fetched_url": "https://huggingface.co/allenai/OLMo-2-0325-32B-Instruct"
+   }
+  },
+  {
+   "ts": "2026-04-01T18:04:00Z",
+   "kind": "blind_agree",
+   "actor": "sven-o",
+   "summary": "Blind re-extraction by a different contributor (different model family) matched within tolerance → T2 reproduced",
+   "detail": {
+    "model_family": "gemini",
+    "tolerance": "abs ≤ 0.1 or rel ≤ 0.5%"
+   }
+  }
+ ]
+}

@@ -1,0 +1,40 @@
+{
+ "id": "cl_a2940e",
+ "artifact_id": "olmo-2-32b",
+ "artifact_name": "OLMo 2 32B",
+ "layer": "models",
+ "benchmark_id": "humaneval",
+ "benchmark_name": "HumanEval",
+ "metric": "pass@1",
+ "value": 82.2,
+ "unit": "pass@1",
+ "higher_is_better": true,
+ "conditions": {
+  "date": "2026-08-12",
+  "notes": "Illustrative example value from mock fixtures, not a real result.",
+  "attempts": 1,
+  "scaffold": "zero-shot"
+ },
+ "source_url": "https://huggingface.co/allenai/OLMo-2-0325-32B-Instruct",
+ "quote": "[Illustrative example quote] OLMo 2 32B reaches 82.2 on HumanEval under the stated setup.",
+ "reported_by": "third-party",
+ "tier": "reported",
+ "special_status": null,
+ "display_status": "reported",
+ "created_at": "2026-08-18T16:04:00Z",
+ "tier_changed_at": "2026-08-21T16:04:00Z",
+ "expires_at": "2027-02-17T16:04:00Z",
+ "seed": 1,
+ "check_result": null,
+ "trail": [
+  {
+   "ts": "2026-08-18T16:04:00Z",
+   "kind": "submitted",
+   "actor": "bobcat",
+   "summary": "map.extract submission included this claim",
+   "detail": {
+    "model_family": "claude"
+   }
+  }
+ ]
+}

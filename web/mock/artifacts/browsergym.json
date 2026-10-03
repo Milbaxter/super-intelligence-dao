@@ -1,0 +1,49 @@
+{
+ "id": "browsergym",
+ "name": "BrowserGym",
+ "layer": "environments",
+ "kind": "environment",
+ "url": "https://github.com/ServiceNow/BrowserGym",
+ "repo_url": "https://github.com/ServiceNow/BrowserGym",
+ "license": "Apache-2.0",
+ "open_weights": null,
+ "description": "Gym environment for web agents.",
+ "latest_version": null,
+ "latest_release_date": null,
+ "created_at": "2026-08-04T06:04:00Z",
+ "updated_at": "2026-10-01T06:04:00Z",
+ "source": "seed",
+ "claim_count": 0,
+ "verified_claim_count": 0,
+ "best_tier": null,
+ "claims": [],
+ "gaps": [
+  {
+   "id": "g_eeed1d",
+   "layer": "environments",
+   "kind": "missing_artifact",
+   "title": "Which environments ship verifiers?",
+   "description": "Unclear which open environments include machine-checkable verifiers.",
+   "evidence_urls": [],
+   "status": "proposed",
+   "created_at": "2026-09-05T06:04:00Z",
+   "task_ids": []
+  }
+ ],
+ "tasks": [
+  {
+   "id": "t_deafe5",
+   "type": "map.extract",
+   "track_id": "map-extract",
+   "title": "Find published benchmark results for BrowserGym",
+   "status": "open",
+   "priority": 7.78,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 45,
+   "attempts": 0,
+   "created_at": "2026-09-19T22:04:00Z"
+  }
+ ]
+}

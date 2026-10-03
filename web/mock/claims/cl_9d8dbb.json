@@ -1,0 +1,57 @@
+{
+ "id": "cl_9d8dbb",
+ "artifact_id": "swe-agent",
+ "artifact_name": "SWE-agent",
+ "layer": "harnesses",
+ "benchmark_id": "terminal-bench",
+ "benchmark_name": "Terminal-Bench",
+ "metric": "% tasks passed",
+ "value": 29.9,
+ "unit": "%",
+ "higher_is_better": true,
+ "conditions": {
+  "date": "2026-03-10",
+  "notes": "Illustrative example value from mock fixtures, not a real result.",
+  "model": "Qwen2.5-Coder 32B",
+  "attempts": 1
+ },
+ "source_url": "https://github.com/SWE-agent/SWE-agent",
+ "quote": "[Illustrative example quote] SWE-agent reaches 29.9% on Terminal-Bench under the stated setup.",
+ "reported_by": "leaderboard",
+ "tier": "source-checked",
+ "special_status": null,
+ "display_status": "source-checked",
+ "created_at": "2026-05-01T16:04:00Z",
+ "tier_changed_at": "2026-05-02T16:04:00Z",
+ "expires_at": "2026-10-29T16:04:00Z",
+ "seed": 0,
+ "check_result": {
+  "passed": true,
+  "reason": "quote_found_value_present",
+  "fetched_url": "https://github.com/SWE-agent/SWE-agent",
+  "http_status": 200,
+  "fetched_at": "2026-05-02T16:04:00Z",
+  "content_sha256": "d58db7802db53988c038051eed0491b562101fe7634ec22e4f1050110fffa022"
+ },
+ "trail": [
+  {
+   "ts": "2026-05-01T16:04:00Z",
+   "kind": "submitted",
+   "actor": "dev-hari",
+   "summary": "map.extract submission included this claim",
+   "detail": {
+    "model_family": "claude"
+   }
+  },
+  {
+   "ts": "2026-05-02T16:04:00Z",
+   "kind": "quote_check",
+   "actor": "referee",
+   "summary": "Source fetched; quote found verbatim; value present in quote → T1 source-checked",
+   "detail": {
+    "http_status": 200,
+    "fetched_url": "https://github.com/SWE-agent/SWE-agent"
+   }
+  }
+ ]
+}

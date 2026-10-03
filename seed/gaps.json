@@ -1,0 +1,220 @@
+[
+  {
+    "id": "g_harness_cost",
+    "layer": "harnesses",
+    "kind": "missing_evidence",
+    "title": "No independent, cost-normalized comparison of open harnesses on the same open model",
+    "description": "The only same-model harness comparisons found (DeepSeek-V4.1-Flash across Claude Code/Codex/OpenCode/Pi/mini-SWE; Nemotron 3 Super across OpenHands/OpenCode/Codex) are run by the model authors and report no cost or token usage. The DeepSWE leaderboard reports cost per task but fixes the harness to mini-swe-agent, so harness-vs-harness cost/quality trade-offs on open models are unmeasured.",
+    "evidence_urls": [
+      "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+      "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16/raw/main/README.md",
+      "https://deepswe.datacurve.ai/"
+    ]
+  },
+  {
+    "id": "g_harness_spread",
+    "layer": "harnesses",
+    "kind": "missing_evidence",
+    "title": "Harness choice moves open-model scores by up to ~9 points, but the variance is unreplicated",
+    "description": "On DeepSeek-V4.1-Flash, DeepSWE v1.1 ranges from 65.5 (OpenCode) to 74.2 (mini-SWE) depending on scaffold; on Nemotron 3 Super, SWE-bench ranges from 53.73 (Codex) to 60.47 (OpenHands). Both tables are single-source author runs; no independent replication or confidence intervals exist.",
+    "evidence_urls": [
+      "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+      "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16/raw/main/README.md"
+    ]
+  },
+  {
+    "id": "g_dsv4pro_tb21",
+    "layer": "models",
+    "kind": "missing_evidence",
+    "title": "DeepSeek-V4-Pro Terminal-Bench 2.1: 87.9 / 72.1 self-reported vs 49.2 in NVIDIA's evaluation",
+    "description": "DeepSeek reports 87.9 (V4-Pro-0813) and 72.1 (preview) on Terminal-Bench 2.1, while NVIDIA's Nemotron 3 Ultra card lists 49.2 for DS-v4-Pro (and 74.5 vs DeepSeek's 80.6 on SWE-bench Verified). Checkpoint, harness and settings differ and are only partly stated; a neutral re-run is needed to reconcile them.",
+    "evidence_urls": [
+      "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813/raw/main/README.md",
+      "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/raw/main/README.md",
+      "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16/raw/main/README.md"
+    ]
+  },
+  {
+    "id": "g_kimi26_swev",
+    "layer": "models",
+    "kind": "missing_evidence",
+    "title": "Kimi K2.6 SWE-bench Verified: 80.2 self-reported vs 75.7 in NVIDIA's evaluation",
+    "description": "Moonshot's card reports 80.2 on SWE-bench Verified for Kimi K2.6; NVIDIA's Nemotron 3 Ultra comparison table lists 75.7 for the same model. Neither run publishes trajectories in the card, so the 4.5-point gap cannot be attributed to harness, sampling or task fixes.",
+    "evidence_urls": [
+      "https://huggingface.co/moonshotai/Kimi-K2.6/raw/main/README.md",
+      "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16/raw/main/README.md"
+    ]
+  },
+  {
+    "id": "g_vendor_harness",
+    "layer": "evals",
+    "kind": "missing_evidence",
+    "title": "Headline agentic scores use each vendor's own (or a closed) harness, so cross-model tables are not like-for-like",
+    "description": "Kimi K3 is scored with Kimi Code, DeepSeek-V4.1-Flash with DeepSeek Harness, Qwen3.8-27B's SWE-bench Pro with the closed Claude Code harness, while competitor columns use \"best reported harness\". GLM-5.3's comparison table does not state the harness at all.",
+    "evidence_urls": [
+      "https://huggingface.co/moonshotai/Kimi-K3/raw/main/README.md",
+      "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+      "https://huggingface.co/Qwen/Qwen3.8-27B/raw/main/README.md",
+      "https://huggingface.co/zai-org/GLM-5.3/raw/main/README.md"
+    ]
+  },
+  {
+    "id": "g_modified_tasks",
+    "layer": "evals",
+    "kind": "missing_evidence",
+    "title": "SWE-bench Pro results reported on a vendor-corrected task set",
+    "description": "The Qwen3.8-27B card states that problematic SWE-bench Pro tasks were corrected and all baselines re-evaluated on the refined benchmark, and it also reports an in-house QwenSWEBench. Such numbers are not comparable with the official set unless the corrected task list is published.",
+    "evidence_urls": [
+      "https://huggingface.co/Qwen/Qwen3.8-27B/raw/main/README.md"
+    ]
+  },
+  {
+    "id": "g_version_ambiguity",
+    "layer": "evals",
+    "kind": "missing_evidence",
+    "title": "Benchmark version/subset often missing from reported open-model claims",
+    "description": "Claims cite \"Terminal Bench 2\" (Devstral Small 2), \"DeepSWE\" without version (GLM-5.2), \"SWE-Bench (OpenHands)\" without naming Verified (Nemotron 3 Super table), and HLE full vs text-only subsets interchangeably (DeepSeek marks text-only with a dagger). With TB 2.0/2.1/3.0/4.0 and DeepSWE v1/v1.1 coexisting, unversioned claims cannot be placed on the map reliably.",
+    "evidence_urls": [
+      "https://huggingface.co/mistralai/Devstral-Small-2-24B-Instruct-2512/raw/main/README.md",
+      "https://huggingface.co/zai-org/GLM-5.2/raw/main/README.md",
+      "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16/raw/main/README.md",
+      "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md"
+    ]
+  },
+  {
+    "id": "g_tb34_open",
+    "layer": "evals",
+    "kind": "missing_evidence",
+    "title": "Terminal-Bench 3.0/4.0 results for open models exist only as vendor self-reports",
+    "description": "Terminal-Bench v3.0.0 (Jul 2026) and v4.0.0 (Aug 2026) are released, but the only open-model numbers found are self-reported in the DeepSeek-V4.1-Flash and GLM-5.3 cards; the tbench.ai leaderboard renders client-side and could not be checked mechanically. No open harness has a TB 3.0/4.0 result on an open model from a neutral party.",
+    "evidence_urls": [
+      "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+      "https://huggingface.co/zai-org/GLM-5.3/raw/main/README.md",
+      "https://www.tbench.ai/leaderboard",
+      "https://api.github.com/repos/harbor-framework/terminal-bench/releases"
+    ]
+  },
+  {
+    "id": "g_tb21_closed",
+    "layer": "evals",
+    "kind": "missing_capability",
+    "title": "Terminal-Bench 2.1 leaderboard is closed to community submissions",
+    "description": "The TB 2.1 README states community submissions are currently closed and only maintainer-run results are added, so community runs of open harnesses × open models have no official venue. A verified community result channel (like this project's T3 tier) is missing.",
+    "evidence_urls": [
+      "https://github.com/harbor-framework/terminal-bench-2-1/blob/main/README.md"
+    ]
+  },
+  {
+    "id": "g_aider_stale",
+    "layer": "evals",
+    "kind": "stale",
+    "title": "Aider polyglot leaderboard has no entries after 2025-10-03",
+    "description": "The leaderboard data file's latest entries are dated 2025-10-03 (DeepSeek-V3.2-Exp) and the latest aider release is v0.86.0 (Aug 2025), so none of the 2026 open-weight models (DeepSeek V4.x, GLM-5.x, Kimi K3, Qwen3.8) appear.",
+    "evidence_urls": [
+      "https://raw.githubusercontent.com/Aider-AI/aider/main/aider/website/_data/polyglot_leaderboard.yml",
+      "https://api.github.com/repos/Aider-AI/aider/releases?per_page=1"
+    ]
+  },
+  {
+    "id": "g_leaderboards_uncheckable",
+    "layer": "evals",
+    "kind": "missing_capability",
+    "title": "Official SWE-bench and Terminal-Bench leaderboards are not mechanically quote-checkable",
+    "description": "swebench.com and tbench.ai render scores client-side (fetched HTML text contains no result rows), and the SWE-bench leaderboards.json data file is ~4 MB, above a 3 MB fetch cap. Leaderboard-sourced claims therefore cannot reach T1 without a dedicated data-file adapter.",
+    "evidence_urls": [
+      "https://www.swebench.com/",
+      "https://www.tbench.ai/leaderboard",
+      "https://github.com/SWE-bench/swe-bench.github.io"
+    ]
+  },
+  {
+    "id": "g_results_in_images",
+    "layer": "models",
+    "kind": "missing_evidence",
+    "title": "Key open-model results published only as images",
+    "description": "Leanstral 1.5 (Lean 4 proof agent) and most of Mistral Medium 3.5's benchmark comparisons appear only as chart images on their model cards, so they cannot be quoted or source-checked; only two numbers (91.4% tau3-Telecom, 77.6% SWE-bench Verified) for Mistral Medium 3.5 are in text.",
+    "evidence_urls": [
+      "https://huggingface.co/mistralai/Leanstral-1.5-119B-A6B/raw/main/README.md",
+      "https://huggingface.co/mistralai/Mistral-Medium-3.5-128B/raw/main/README.md"
+    ]
+  },
+  {
+    "id": "g_safety_unreported",
+    "layer": "safety",
+    "kind": "missing_evidence",
+    "title": "Flagship open-weight model cards report no standardized safety/jailbreak benchmark",
+    "description": "The fetched cards for DeepSeek-V4.1-Flash, GLM-5.3, Qwen3.8-27B and Nemotron 3 Ultra list dozens of capability benchmarks but no HarmBench/StrongREJECT-style jailbreak or refusal results, while GLM-5.3 highlights rising cyber-offense capability (CyberGym, ExploitGym).",
+    "evidence_urls": [
+      "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+      "https://huggingface.co/zai-org/GLM-5.3/raw/main/README.md",
+      "https://huggingface.co/Qwen/Qwen3.8-27B/raw/main/README.md",
+      "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16/raw/main/README.md",
+      "https://github.com/centerforaisafety/HarmBench"
+    ]
+  },
+  {
+    "id": "g_training_data",
+    "layer": "data",
+    "kind": "missing_evidence",
+    "title": "Training data undisclosed for most frontier open-weight models",
+    "description": "NVIDIA's Nemotron 3 cards enumerate pre- and post-training datasets (including benchmark-adjacent sets such as SWE-Gym and SWE-bench_Verified listed in post-training data), but the DeepSeek-V4.1-Flash, GLM-5.3, Kimi K3 and Qwen3.8-27B cards contain no dataset disclosure, so contamination of benchmarks like SWE-bench Verified cannot be assessed.",
+    "evidence_urls": [
+      "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16/raw/main/README.md",
+      "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+      "https://huggingface.co/zai-org/GLM-5.3/raw/main/README.md",
+      "https://huggingface.co/moonshotai/Kimi-K3/raw/main/README.md",
+      "https://huggingface.co/Qwen/Qwen3.8-27B/raw/main/README.md"
+    ]
+  },
+  {
+    "id": "g_harness_no_evals",
+    "layer": "harnesses",
+    "kind": "missing_evidence",
+    "title": "Popular open harnesses publish no benchmark results with open models",
+    "description": "The READMEs of Goose, Gemini CLI, OpenClaw, Cline and OpenCode contain no benchmark scores; numbers for OpenCode exist only inside model vendors' cards. By contrast Qwen Code publishes a per-version SWE-bench Verified table, but only for a Qwen model.",
+    "evidence_urls": [
+      "https://github.com/aaif-goose/goose/blob/main/README.md",
+      "https://github.com/google-gemini/gemini-cli/blob/main/README.md",
+      "https://github.com/openclaw/openclaw/blob/main/README.md",
+      "https://github.com/cline/cline/blob/main/README.md",
+      "https://github.com/anomalyco/opencode/blob/dev/README.md",
+      "https://github.com/QwenLM/qwen-code/blob/main/README.md"
+    ]
+  },
+  {
+    "id": "g_env_transfer",
+    "layer": "environments",
+    "kind": "missing_evidence",
+    "title": "No published evidence linking environment-hub environments to agentic benchmark gains",
+    "description": "verifiers, OpenEnv and NeMo Gym READMEs describe environment APIs and hubs but report no results showing which environments improve SWE/terminal benchmarks; the closest public data point is Ai2's tmax-27b (\"roughly 43%\" on TB 2.0 after RL), which does not attribute gains to specific environments.",
+    "evidence_urls": [
+      "https://github.com/PrimeIntellect-ai/verifiers/blob/main/README.md",
+      "https://github.com/huggingface/OpenEnv/blob/main/README.md",
+      "https://github.com/NVIDIA-NeMo/Gym",
+      "https://huggingface.co/allenai/tmax-27b/raw/main/README.md"
+    ]
+  },
+  {
+    "id": "g_llama_stale",
+    "layer": "models",
+    "kind": "stale",
+    "title": "No new Meta Llama LLM weights since Llama 4 (April 2025)",
+    "description": "The most recent meta-llama Hugging Face uploads are Llama 4 and Llama Guard 4 / Prompt Guard 2 (April 2025); Llama evidence on the map is therefore 18 months old and absent from all 2026 comparison tables fetched.",
+    "evidence_urls": [
+      "https://huggingface.co/api/models?author=meta-llama&sort=createdAt&direction=-1&limit=8",
+      "https://github.com/meta-llama/llama-models/blob/main/models/llama4/MODEL_CARD.md"
+    ]
+  },
+  {
+    "id": "g_kimi_code_vs_mini",
+    "layer": "harnesses",
+    "kind": "missing_evidence",
+    "title": "Self-reported vs leaderboard DeepSWE for Kimi K3 and GLM-5.3 diverge by harness",
+    "description": "Kimi K3 reports 67.5 on DeepSWE with its own Kimi Code harness and 67.3 with mini-SWE-agent; the DeepSWE leaderboard page currently shows 69% for kimi-k3 [max] and 69% for glm-5.3 [max] (GLM self-reports 66.9). Which number the map should prefer, and under which version/date, is unresolved.",
+    "evidence_urls": [
+      "https://huggingface.co/moonshotai/Kimi-K3/raw/main/README.md",
+      "https://huggingface.co/zai-org/GLM-5.3/raw/main/README.md",
+      "https://deepswe.datacurve.ai/"
+    ]
+  }
+]

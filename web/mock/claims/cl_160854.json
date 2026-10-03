@@ -1,0 +1,57 @@
+{
+ "id": "cl_160854",
+ "artifact_id": "llama-3-3-70b",
+ "artifact_name": "Llama 3.3 70B",
+ "layer": "models",
+ "benchmark_id": "humaneval",
+ "benchmark_name": "HumanEval",
+ "metric": "pass@1",
+ "value": 31.6,
+ "unit": "pass@1",
+ "higher_is_better": true,
+ "conditions": {
+  "date": "2026-06-24",
+  "notes": "Illustrative example value from mock fixtures, not a real result.",
+  "attempts": 1,
+  "scaffold": "zero-shot"
+ },
+ "source_url": "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct",
+ "quote": "[Illustrative example quote] Llama 3.3 70B reaches 31.6 on HumanEval under the stated setup.",
+ "reported_by": "artifact-authors",
+ "tier": "source-checked",
+ "special_status": null,
+ "display_status": "source-checked",
+ "created_at": "2026-03-28T19:04:00Z",
+ "tier_changed_at": "2026-03-30T19:04:00Z",
+ "expires_at": "2026-09-26T19:04:00Z",
+ "seed": 0,
+ "check_result": {
+  "passed": true,
+  "reason": "quote_found_value_present",
+  "fetched_url": "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct",
+  "http_status": 200,
+  "fetched_at": "2026-03-30T19:04:00Z",
+  "content_sha256": "b60df687fe533297571c0780310b99d7bceafa06d825b7f3e31138033066c9b6"
+ },
+ "trail": [
+  {
+   "ts": "2026-03-28T19:04:00Z",
+   "kind": "submitted",
+   "actor": "ozan",
+   "summary": "map.extract submission included this claim",
+   "detail": {
+    "model_family": "claude"
+   }
+  },
+  {
+   "ts": "2026-03-30T19:04:00Z",
+   "kind": "quote_check",
+   "actor": "referee",
+   "summary": "Source fetched; quote found verbatim; value present in quote → T1 source-checked",
+   "detail": {
+    "http_status": 200,
+    "fetched_url": "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct"
+   }
+  }
+ ]
+}

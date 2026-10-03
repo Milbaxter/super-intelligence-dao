@@ -1,0 +1,49 @@
+{
+ "id": "helm",
+ "name": "HELM",
+ "layer": "evals",
+ "kind": "framework",
+ "url": "https://github.com/stanford-crfm/helm",
+ "repo_url": "https://github.com/stanford-crfm/helm",
+ "license": "Apache-2.0",
+ "open_weights": null,
+ "description": "Holistic evaluation of language models.",
+ "latest_version": null,
+ "latest_release_date": null,
+ "created_at": "2026-08-04T06:04:00Z",
+ "updated_at": "2026-10-01T06:04:00Z",
+ "source": "seed",
+ "claim_count": 0,
+ "verified_claim_count": 0,
+ "best_tier": null,
+ "claims": [],
+ "gaps": [
+  {
+   "id": "g_2da4cd",
+   "layer": "evals",
+   "kind": "missing_artifact",
+   "title": "Shared result format adoption",
+   "description": "Which eval harnesses export to a common result schema is undocumented.",
+   "evidence_urls": [],
+   "status": "accepted",
+   "created_at": "2026-09-21T06:04:00Z",
+   "task_ids": []
+  }
+ ],
+ "tasks": [
+  {
+   "id": "t_e4424d",
+   "type": "map.extract",
+   "track_id": "map-extract",
+   "title": "Find published benchmark results for HELM",
+   "status": "open",
+   "priority": 5.03,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 45,
+   "attempts": 2,
+   "created_at": "2026-09-24T07:04:00Z"
+  }
+ ]
+}

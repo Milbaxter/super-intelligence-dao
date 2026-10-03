@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>People · Super Intelligence DAO</title>
+<meta name="description" content="Contributors ranked by verified credits and verified tokens.">
+<meta name="color-scheme" content="light dark">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body data-page="people">
+<div id="site-header"></div>
+<main id="main" tabindex="-1">
+<section class="page-head graph">
+  <div class="wrap">
+    <p class="label"><span class="phase" data-phase="now">Live now</span> Contributors</p>
+    <h1>Credit only for verified work.</h1>
+    <p class="lede">Ranked by credits from work that passed the referee. Submissions that were never verified earn nothing — no matter how many tokens they burned.</p>
+  </div>
+</section>
+<div class="wrap">
+  <section class="sec" style="padding-top:44px" aria-labelledby="lb-title">
+    <h2 id="lb-title" class="visually-hidden">Leaderboard</h2>
+    <div id="podium" class="podium"></div>
+    <div id="leaderboard"></div>
+  </section>
+  <section class="sec" aria-labelledby="credits-title">
+    <div class="grid grid-2" style="gap:32px;align-items:start">
+      <div>
+        <h2 id="credits-title" style="font-size:1.5rem;margin-bottom:14px">How credits are earned</h2>
+        <div class="table-wrap"><table class="ledger credit-table">
+          <thead><tr><th scope="col">Event</th><th scope="col">Who</th><th scope="col" class="num">Credits</th></tr></thead>
+          <tbody>
+            <tr><td>Your claim reaches T2 reproduced</td><td>original extractor</td><td>+10</td></tr>
+            <tr><td>Your blind re-extraction agreed</td><td>verifier</td><td>+4</td></tr>
+            <tr><td>Your review matched the final outcome</td><td>reviewer</td><td>+2</td></tr>
+            <tr><td>Steward accepts your gap</td><td>gap author</td><td>+8</td></tr>
+            <tr><td>Dispute resolved in your favour</td><td>the side that was right</td><td>+6</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="later" style="grid-template-columns:1fr;padding:24px">
+        <div><span class="phase" data-phase="vision">Later, not now</span><h3 style="font-size:1.4rem;margin-top:12px">A voice, later.</h3></div>
+        <p>Later, voting weight may come from <strong>verified tokens</strong> — tokens spent on work that passed the referee — <strong>never raw tokens</strong>. Today there is no governance, no token and no payout. We only track the number.</p>
+      </div>
+    </div>
+  </section>
+</div>
+</main>
+<div id="site-footer"></div>
+<script type="module" src="assets/js/pages/people.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+ "id": "cl_355a2c",
+ "artifact_id": "gemma-3-27b",
+ "artifact_name": "Gemma 3 27B",
+ "layer": "models",
+ "benchmark_id": "mmlu-pro",
+ "benchmark_name": "MMLU-Pro",
+ "metric": "accuracy",
+ "value": 54.1,
+ "unit": "%",
+ "higher_is_better": true,
+ "conditions": {
+  "date": "2026-04-26",
+  "notes": "Illustrative example value from mock fixtures, not a real result.",
+  "attempts": 1,
+  "scaffold": "zero-shot"
+ },
+ "source_url": "https://huggingface.co/google/gemma-3-27b-it",
+ "quote": "[Illustrative example quote] Gemma 3 27B reaches 54.1% on MMLU-Pro under the stated setup.",
+ "reported_by": "third-party",
+ "tier": "reported",
+ "special_status": null,
+ "display_status": "reported",
+ "created_at": "2026-06-30T02:04:00Z",
+ "tier_changed_at": "2026-06-30T02:04:00Z",
+ "expires_at": "2026-12-27T02:04:00Z",
+ "seed": 1,
+ "check_result": null,
+ "trail": [
+  {
+   "ts": "2026-06-30T02:04:00Z",
+   "kind": "submitted",
+   "actor": "pkr",
+   "summary": "map.extract submission included this claim",
+   "detail": {
+    "model_family": "claude"
+   }
+  }
+ ]
+}

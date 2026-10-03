@@ -1,0 +1,49 @@
+{
+ "id": "megatron-lm",
+ "name": "Megatron-LM",
+ "layer": "pretraining",
+ "kind": "framework",
+ "url": "https://github.com/NVIDIA/Megatron-LM",
+ "repo_url": "https://github.com/NVIDIA/Megatron-LM",
+ "license": null,
+ "open_weights": null,
+ "description": "GPU-optimized library for training transformer models at scale.",
+ "latest_version": null,
+ "latest_release_date": null,
+ "created_at": "2026-08-04T06:04:00Z",
+ "updated_at": "2026-10-01T06:04:00Z",
+ "source": "seed",
+ "claim_count": 0,
+ "verified_claim_count": 0,
+ "best_tier": null,
+ "claims": [],
+ "gaps": [
+  {
+   "id": "g_11d94b",
+   "layer": "pretraining",
+   "kind": "missing_evidence",
+   "title": "MFU claims rarely include hardware details",
+   "description": "Model FLOPs utilisation numbers are reported without full conditions.",
+   "evidence_urls": [],
+   "status": "accepted",
+   "created_at": "2026-09-16T06:04:00Z",
+   "task_ids": []
+  }
+ ],
+ "tasks": [
+  {
+   "id": "t_296cab",
+   "type": "map.profile",
+   "track_id": "map-profile",
+   "title": "Profile Megatron-LM: licence, latest release, repo",
+   "status": "leased",
+   "priority": 4.74,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 20,
+   "attempts": 1,
+   "created_at": "2026-09-27T14:04:00Z"
+  }
+ ]
+}

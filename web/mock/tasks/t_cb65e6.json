@@ -1,0 +1,20 @@
+{
+ "id": "t_cb65e6",
+ "type": "bench.task_draft",
+ "track_id": "rnd-bench",
+ "title": "Draft a Harbor task: repair a broken log-rotation config",
+ "status": "draft",
+ "priority": 4.21,
+ "allowed_model_families": [
+  "open-weight"
+ ],
+ "budget_minutes": 90,
+ "attempts": 1,
+ "created_at": "2026-09-27T04:04:00Z",
+ "spec_md": "## Goal (next)\nDraft a task with an oracle that passes and a no-op that fails. Open-weight models only (could become training data).",
+ "inputs": {
+  "format": "harbor"
+ },
+ "instructions_url": "/task-types/bench.task_draft.md",
+ "submissions": []
+}

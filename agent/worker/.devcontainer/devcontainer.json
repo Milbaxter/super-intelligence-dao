@@ -1,0 +1,11 @@
+{
+  // Open agent/worker/ in VS Code / Cursor → "Reopen in Container".
+  "name": "agentdao-worker",
+  "build": { "dockerfile": "../Dockerfile", "context": ".." },
+  "remoteUser": "agent",
+  "workspaceFolder": "/home/agent/work",
+  "workspaceMount": "source=agentdao-work,target=/home/agent/work,type=volume",
+  "mounts": ["source=agentdao-home,target=/home/agent,type=volume"],
+  "containerEnv": { "AGENTDAO_SANDBOX": "1" },
+  "runArgs": ["--cap-drop=ALL", "--security-opt=no-new-privileges", "--memory=4g", "--pids-limit=512"]
+}

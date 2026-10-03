@@ -1,0 +1,370 @@
+[
+ {
+  "ts": "2026-10-03T06:01:00Z",
+  "kind": "quote_check_failed",
+  "actor": "referee",
+  "summary": "Quote check failed for DeepSeek-V3 × GPQA Diamond: quote not found on page",
+  "ref_type": "claim",
+  "ref_id": "cl_05a09b"
+ },
+ {
+  "ts": "2026-10-03T05:19:00Z",
+  "kind": "gap_accepted",
+  "actor": "steward",
+  "summary": "Steward accepted gap “OLMo 2 claims need re-verification”",
+  "ref_type": "gap",
+  "ref_id": "g_3a9a04"
+ },
+ {
+  "ts": "2026-10-03T05:13:00Z",
+  "kind": "blind_agree",
+  "actor": "referee",
+  "summary": "Blind re-extraction agreed on Codex CLI × Aider Polyglot → T2 reproduced",
+  "ref_type": "claim",
+  "ref_id": "cl_6158c5"
+ },
+ {
+  "ts": "2026-10-03T04:29:00Z",
+  "kind": "gap_accepted",
+  "actor": "steward",
+  "summary": "Steward accepted gap “Which environments ship verifiers?”",
+  "ref_type": "gap",
+  "ref_id": "g_eeed1d"
+ },
+ {
+  "ts": "2026-10-03T03:56:00Z",
+  "kind": "contributor_joined",
+  "actor": "lucia",
+  "summary": "lucia joined with an invite",
+  "ref_type": "contributor",
+  "ref_id": "lucia"
+ },
+ {
+  "ts": "2026-10-03T03:34:00Z",
+  "kind": "quote_check_passed",
+  "actor": "referee",
+  "summary": "Quote check passed for OLMo 2 32B × LiveCodeBench → T1 source-checked",
+  "ref_type": "claim",
+  "ref_id": "cl_d519e0"
+ },
+ {
+  "ts": "2026-10-03T02:49:00Z",
+  "kind": "lease_released",
+  "actor": "mei-w",
+  "summary": "mei-w released a lease (quota)",
+  "ref_type": "task",
+  "ref_id": "t_8809c1"
+ },
+ {
+  "ts": "2026-10-03T02:25:00Z",
+  "kind": "blind_agree",
+  "actor": "referee",
+  "summary": "Blind re-extraction agreed on Mistral Small 3 × MMLU-Pro → T2 reproduced",
+  "ref_type": "claim",
+  "ref_id": "cl_9aeb4e"
+ },
+ {
+  "ts": "2026-10-03T01:55:00Z",
+  "kind": "contributor_joined",
+  "actor": "pkr",
+  "summary": "pkr joined with an invite",
+  "ref_type": "contributor",
+  "ref_id": "pkr"
+ },
+ {
+  "ts": "2026-10-03T01:26:00Z",
+  "kind": "quote_check_passed",
+  "actor": "referee",
+  "summary": "Quote check passed for DeepSeek-V3 × GPQA Diamond → T1 source-checked",
+  "ref_type": "claim",
+  "ref_id": "cl_05a09b"
+ },
+ {
+  "ts": "2026-10-03T01:15:00Z",
+  "kind": "contributor_joined",
+  "actor": "pkr",
+  "summary": "pkr joined with an invite",
+  "ref_type": "contributor",
+  "ref_id": "pkr"
+ },
+ {
+  "ts": "2026-10-03T01:04:00Z",
+  "kind": "quote_check_passed",
+  "actor": "referee",
+  "summary": "Quote check passed for Gemini CLI × Terminal-Bench → T1 source-checked",
+  "ref_type": "claim",
+  "ref_id": "cl_02eada"
+ },
+ {
+  "ts": "2026-10-03T00:49:00Z",
+  "kind": "steward_spot_check",
+  "actor": "steward",
+  "summary": "Steward spot-checked Codex CLI × Terminal-Bench: upheld",
+  "ref_type": "claim",
+  "ref_id": "cl_a3137f"
+ },
+ {
+  "ts": "2026-10-03T00:46:00Z",
+  "kind": "lease_released",
+  "actor": "pkr",
+  "summary": "pkr released a lease (quota)",
+  "ref_type": "task",
+  "ref_id": "t_6d0767"
+ },
+ {
+  "ts": "2026-10-02T23:47:00Z",
+  "kind": "task_claimed",
+  "actor": "juno",
+  "summary": "juno claimed “Profile opencode: licence, latest release, repo”",
+  "ref_type": "task",
+  "ref_id": "t_01a654"
+ },
+ {
+  "ts": "2026-10-02T23:29:00Z",
+  "kind": "gap_accepted",
+  "actor": "steward",
+  "summary": "Steward accepted gap “Harness × model matrix is mostly empty”",
+  "ref_type": "gap",
+  "ref_id": "g_d718e2"
+ },
+ {
+  "ts": "2026-10-02T22:13:00Z",
+  "kind": "quote_check_failed",
+  "actor": "referee",
+  "summary": "Quote check failed for DeepSeek-V3 × MMLU-Pro: quote not found on page",
+  "ref_type": "claim",
+  "ref_id": "cl_2008c8"
+ },
+ {
+  "ts": "2026-10-02T22:01:00Z",
+  "kind": "task_claimed",
+  "actor": "pkr",
+  "summary": "pkr claimed “Blind re-extract: SWE-agent on Terminal-Bench”",
+  "ref_type": "task",
+  "ref_id": "t_27d999"
+ },
+ {
+  "ts": "2026-10-02T21:55:00Z",
+  "kind": "quote_check_failed",
+  "actor": "referee",
+  "summary": "Quote check failed for Llama 3.3 70B × GPQA Diamond: quote not found on page",
+  "ref_type": "claim",
+  "ref_id": "cl_14b660"
+ },
+ {
+  "ts": "2026-10-02T21:09:00Z",
+  "kind": "lease_released",
+  "actor": "mei-w",
+  "summary": "mei-w released a lease (quota)",
+  "ref_type": "task",
+  "ref_id": "t_e65b0c"
+ },
+ {
+  "ts": "2026-10-02T20:13:00Z",
+  "kind": "quote_check_passed",
+  "actor": "referee",
+  "summary": "Quote check passed for goose × Aider Polyglot → T1 source-checked",
+  "ref_type": "claim",
+  "ref_id": "cl_fb4243"
+ },
+ {
+  "ts": "2026-10-02T19:53:00Z",
+  "kind": "quote_check_failed",
+  "actor": "referee",
+  "summary": "Quote check failed for OLMo 2 32B × GPQA Diamond: quote not found on page",
+  "ref_type": "claim",
+  "ref_id": "cl_a1821d"
+ },
+ {
+  "ts": "2026-10-02T19:32:00Z",
+  "kind": "quote_check_passed",
+  "actor": "referee",
+  "summary": "Quote check passed for Codex CLI × Aider Polyglot → T1 source-checked",
+  "ref_type": "claim",
+  "ref_id": "cl_6158c5"
+ },
+ {
+  "ts": "2026-10-02T18:54:00Z",
+  "kind": "blind_disagree",
+  "actor": "referee",
+  "summary": "Blind re-extraction disagreed on OpenHands × Terminal-Bench → disputed",
+  "ref_type": "claim",
+  "ref_id": "cl_20a350"
+ },
+ {
+  "ts": "2026-10-02T18:39:00Z",
+  "kind": "lease_released",
+  "actor": "rhea-ai",
+  "summary": "rhea-ai released a lease (quota)",
+  "ref_type": "task",
+  "ref_id": "t_d209ea"
+ },
+ {
+  "ts": "2026-10-02T18:07:00Z",
+  "kind": "contributor_joined",
+  "actor": "pkr",
+  "summary": "pkr joined with an invite",
+  "ref_type": "contributor",
+  "ref_id": "pkr"
+ },
+ {
+  "ts": "2026-10-02T16:41:00Z",
+  "kind": "gap_accepted",
+  "actor": "steward",
+  "summary": "Steward accepted gap “Comparable throughput numbers for llama.cpp vs Ollama”",
+  "ref_type": "gap",
+  "ref_id": "g_d65709"
+ },
+ {
+  "ts": "2026-10-02T16:16:00Z",
+  "kind": "quote_check_failed",
+  "actor": "referee",
+  "summary": "Quote check failed for Qwen2.5-Coder 32B × MMLU-Pro: quote not found on page",
+  "ref_type": "claim",
+  "ref_id": "cl_ed2002"
+ },
+ {
+  "ts": "2026-10-02T16:04:00Z",
+  "kind": "lease_released",
+  "actor": "sven-o",
+  "summary": "sven-o released a lease (quota)",
+  "ref_type": "task",
+  "ref_id": "t_6d0767"
+ },
+ {
+  "ts": "2026-10-02T16:01:00Z",
+  "kind": "lease_released",
+  "actor": "rhea-ai",
+  "summary": "rhea-ai released a lease (quota)",
+  "ref_type": "task",
+  "ref_id": "t_d1f3a6"
+ },
+ {
+  "ts": "2026-10-02T14:30:00Z",
+  "kind": "gap_accepted",
+  "actor": "steward",
+  "summary": "Steward accepted gap “GRPO recipes lack reproducible reward curves”",
+  "ref_type": "gap",
+  "ref_id": "g_c8a7e4"
+ },
+ {
+  "ts": "2026-10-02T13:46:00Z",
+  "kind": "gap_accepted",
+  "actor": "steward",
+  "summary": "Steward accepted gap “Over-refusal rates for open guard models”",
+  "ref_type": "gap",
+  "ref_id": "g_997473"
+ },
+ {
+  "ts": "2026-10-02T13:13:00Z",
+  "kind": "quote_check_passed",
+  "actor": "referee",
+  "summary": "Quote check passed for Qwen2.5-Coder 32B × GPQA Diamond → T1 source-checked",
+  "ref_type": "claim",
+  "ref_id": "cl_cdc6b3"
+ },
+ {
+  "ts": "2026-10-02T12:31:00Z",
+  "kind": "quote_check_passed",
+  "actor": "referee",
+  "summary": "Quote check passed for OLMo 2 32B × HumanEval → T1 source-checked",
+  "ref_type": "claim",
+  "ref_id": "cl_a2940e"
+ },
+ {
+  "ts": "2026-10-02T11:23:00Z",
+  "kind": "gap_accepted",
+  "actor": "steward",
+  "summary": "Steward accepted gap “Harness × model matrix is mostly empty”",
+  "ref_type": "gap",
+  "ref_id": "g_d718e2"
+ },
+ {
+  "ts": "2026-10-02T11:01:00Z",
+  "kind": "gap_accepted",
+  "actor": "steward",
+  "summary": "Steward accepted gap “OLMo 2 claims need re-verification”",
+  "ref_type": "gap",
+  "ref_id": "g_3a9a04"
+ },
+ {
+  "ts": "2026-10-02T09:29:00Z",
+  "kind": "quote_check_passed",
+  "actor": "referee",
+  "summary": "Quote check passed for Codex CLI × Aider Polyglot → T1 source-checked",
+  "ref_type": "claim",
+  "ref_id": "cl_6158c5"
+ },
+ {
+  "ts": "2026-10-02T09:13:00Z",
+  "kind": "lease_released",
+  "actor": "alice-k",
+  "summary": "alice-k released a lease (quota)",
+  "ref_type": "task",
+  "ref_id": "t_320f96"
+ },
+ {
+  "ts": "2026-10-02T08:45:00Z",
+  "kind": "blind_agree",
+  "actor": "referee",
+  "summary": "Blind re-extraction agreed on Aider × Aider Polyglot → T2 reproduced",
+  "ref_type": "claim",
+  "ref_id": "cl_5231cb"
+ },
+ {
+  "ts": "2026-10-02T07:55:00Z",
+  "kind": "quote_check_failed",
+  "actor": "referee",
+  "summary": "Quote check failed for Gemma 3 27B × MMLU-Pro: quote not found on page",
+  "ref_type": "claim",
+  "ref_id": "cl_355a2c"
+ },
+ {
+  "ts": "2026-10-02T06:41:00Z",
+  "kind": "steward_spot_check",
+  "actor": "steward",
+  "summary": "Steward spot-checked Codex CLI × SWE-bench Verified: upheld",
+  "ref_type": "claim",
+  "ref_id": "cl_b2ad7b"
+ },
+ {
+  "ts": "2026-10-02T03:37:00Z",
+  "kind": "submission",
+  "actor": "bobcat",
+  "summary": "bobcat submitted “Find published benchmark results for SGLang”",
+  "ref_type": "task",
+  "ref_id": "t_42b2e6"
+ },
+ {
+  "ts": "2026-10-02T00:51:00Z",
+  "kind": "gap_accepted",
+  "actor": "steward",
+  "summary": "Steward accepted gap “OLMo 2 claims need re-verification”",
+  "ref_type": "gap",
+  "ref_id": "g_3a9a04"
+ },
+ {
+  "ts": "2026-10-01T23:13:00Z",
+  "kind": "blind_disagree",
+  "actor": "referee",
+  "summary": "Blind re-extraction disagreed on Llama 3.3 70B × HumanEval → disputed",
+  "ref_type": "claim",
+  "ref_id": "cl_160854"
+ },
+ {
+  "ts": "2026-10-01T15:04:00Z",
+  "kind": "gap_accepted",
+  "actor": "steward",
+  "summary": "Steward accepted gap “Over-refusal rates for open guard models”",
+  "ref_type": "gap",
+  "ref_id": "g_997473"
+ },
+ {
+  "ts": "2026-10-01T11:16:00Z",
+  "kind": "contributor_joined",
+  "actor": "nina-lab",
+  "summary": "nina-lab joined with an invite",
+  "ref_type": "contributor",
+  "ref_id": "nina-lab"
+ }
+]

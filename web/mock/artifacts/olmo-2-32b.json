@@ -1,0 +1,180 @@
+{
+ "id": "olmo-2-32b",
+ "name": "OLMo 2 32B",
+ "layer": "models",
+ "kind": "model",
+ "url": "https://huggingface.co/allenai/OLMo-2-0325-32B-Instruct",
+ "repo_url": null,
+ "license": "Apache-2.0",
+ "open_weights": 1,
+ "description": "Fully open model: weights, data and code.",
+ "latest_version": null,
+ "latest_release_date": null,
+ "created_at": "2026-08-04T06:04:00Z",
+ "updated_at": "2026-10-01T06:04:00Z",
+ "source": "seed",
+ "claim_count": 4,
+ "verified_claim_count": 1,
+ "best_tier": "reproduced",
+ "claims": [
+  {
+   "id": "cl_99ef54",
+   "artifact_id": "olmo-2-32b",
+   "artifact_name": "OLMo 2 32B",
+   "layer": "models",
+   "benchmark_id": "mmlu-pro",
+   "benchmark_name": "MMLU-Pro",
+   "metric": "accuracy",
+   "value": 63.3,
+   "unit": "%",
+   "higher_is_better": true,
+   "conditions": {
+    "date": "2026-08-19",
+    "notes": "Illustrative example value from mock fixtures, not a real result.",
+    "attempts": 1,
+    "scaffold": "zero-shot"
+   },
+   "source_url": "https://huggingface.co/allenai/OLMo-2-0325-32B-Instruct",
+   "quote": "[Illustrative example quote] OLMo 2 32B reaches 63.3% on MMLU-Pro under the stated setup.",
+   "reported_by": "artifact-authors",
+   "tier": "reproduced",
+   "special_status": null,
+   "display_status": "reproduced",
+   "created_at": "2026-03-30T18:04:00Z",
+   "tier_changed_at": "2026-04-01T18:04:00Z",
+   "expires_at": "2026-09-28T18:04:00Z",
+   "seed": 1,
+   "check_result": {
+    "passed": true,
+    "reason": "quote_found_value_present",
+    "fetched_url": "https://huggingface.co/allenai/OLMo-2-0325-32B-Instruct",
+    "http_status": 200,
+    "fetched_at": "2026-04-01T18:04:00Z",
+    "content_sha256": "2e521a3a7f09657c8a0e64fb5a67653dceaa86871b2ff10f9e2cd75d472e8c3d"
+   }
+  },
+  {
+   "id": "cl_a1821d",
+   "artifact_id": "olmo-2-32b",
+   "artifact_name": "OLMo 2 32B",
+   "layer": "models",
+   "benchmark_id": "gpqa-diamond",
+   "benchmark_name": "GPQA Diamond",
+   "metric": "accuracy",
+   "value": 83.8,
+   "unit": "%",
+   "higher_is_better": true,
+   "conditions": {
+    "date": "2026-06-15",
+    "notes": "Illustrative example value from mock fixtures, not a real result.",
+    "attempts": 1,
+    "scaffold": "zero-shot"
+   },
+   "source_url": "https://huggingface.co/allenai/OLMo-2-0325-32B-Instruct",
+   "quote": "[Illustrative example quote] OLMo 2 32B reaches 83.8% on GPQA Diamond under the stated setup.",
+   "reported_by": "artifact-authors",
+   "tier": "reported",
+   "special_status": null,
+   "display_status": "reported",
+   "created_at": "2026-04-27T03:04:00Z",
+   "tier_changed_at": "2026-04-30T03:04:00Z",
+   "expires_at": "2026-10-27T03:04:00Z",
+   "seed": 0,
+   "check_result": null
+  },
+  {
+   "id": "cl_d519e0",
+   "artifact_id": "olmo-2-32b",
+   "artifact_name": "OLMo 2 32B",
+   "layer": "models",
+   "benchmark_id": "livecodebench",
+   "benchmark_name": "LiveCodeBench",
+   "metric": "pass@1",
+   "value": 33.3,
+   "unit": "pass@1",
+   "higher_is_better": true,
+   "conditions": {
+    "date": "2026-05-14",
+    "notes": "Illustrative example value from mock fixtures, not a real result.",
+    "attempts": 1,
+    "scaffold": "zero-shot"
+   },
+   "source_url": "https://huggingface.co/allenai/OLMo-2-0325-32B-Instruct",
+   "quote": "[Illustrative example quote] OLMo 2 32B reaches 33.3 on LiveCodeBench under the stated setup.",
+   "reported_by": "leaderboard",
+   "tier": "source-checked",
+   "special_status": null,
+   "display_status": "source-checked",
+   "created_at": "2026-03-24T23:04:00Z",
+   "tier_changed_at": "2026-03-27T23:04:00Z",
+   "expires_at": "2026-09-23T23:04:00Z",
+   "seed": 0,
+   "check_result": {
+    "passed": true,
+    "reason": "quote_found_value_present",
+    "fetched_url": "https://huggingface.co/allenai/OLMo-2-0325-32B-Instruct",
+    "http_status": 200,
+    "fetched_at": "2026-03-27T23:04:00Z",
+    "content_sha256": "2f77aa1e008de0ca002eacda0dd65caa097ad9a1793afd468191f3219619bca5"
+   }
+  },
+  {
+   "id": "cl_a2940e",
+   "artifact_id": "olmo-2-32b",
+   "artifact_name": "OLMo 2 32B",
+   "layer": "models",
+   "benchmark_id": "humaneval",
+   "benchmark_name": "HumanEval",
+   "metric": "pass@1",
+   "value": 82.2,
+   "unit": "pass@1",
+   "higher_is_better": true,
+   "conditions": {
+    "date": "2026-08-12",
+    "notes": "Illustrative example value from mock fixtures, not a real result.",
+    "attempts": 1,
+    "scaffold": "zero-shot"
+   },
+   "source_url": "https://huggingface.co/allenai/OLMo-2-0325-32B-Instruct",
+   "quote": "[Illustrative example quote] OLMo 2 32B reaches 82.2 on HumanEval under the stated setup.",
+   "reported_by": "third-party",
+   "tier": "reported",
+   "special_status": null,
+   "display_status": "reported",
+   "created_at": "2026-08-18T16:04:00Z",
+   "tier_changed_at": "2026-08-21T16:04:00Z",
+   "expires_at": "2027-02-17T16:04:00Z",
+   "seed": 1,
+   "check_result": null
+  }
+ ],
+ "gaps": [
+  {
+   "id": "g_3a9a04",
+   "layer": "models",
+   "kind": "stale",
+   "title": "OLMo 2 claims need re-verification",
+   "description": "Several claims are close to their 180-day expiry.",
+   "evidence_urls": [],
+   "status": "accepted",
+   "created_at": "2026-09-26T06:04:00Z",
+   "task_ids": []
+  }
+ ],
+ "tasks": [
+  {
+   "id": "t_a670e9",
+   "type": "verify.blind_extract",
+   "track_id": "referee",
+   "title": "Blind re-extract: OLMo 2 32B on LiveCodeBench",
+   "status": "verifying",
+   "priority": 11.98,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 15,
+   "attempts": 1,
+   "created_at": "2026-10-02T10:04:00Z"
+  }
+ ]
+}

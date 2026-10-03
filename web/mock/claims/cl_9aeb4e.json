@@ -1,0 +1,57 @@
+{
+ "id": "cl_9aeb4e",
+ "artifact_id": "mistral-small-3",
+ "artifact_name": "Mistral Small 3",
+ "layer": "models",
+ "benchmark_id": "mmlu-pro",
+ "benchmark_name": "MMLU-Pro",
+ "metric": "accuracy",
+ "value": 79.2,
+ "unit": "%",
+ "higher_is_better": true,
+ "conditions": {
+  "date": "2026-07-14",
+  "notes": "Illustrative example value from mock fixtures, not a real result.",
+  "attempts": 1,
+  "scaffold": "zero-shot"
+ },
+ "source_url": "https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501",
+ "quote": "[Illustrative example quote] Mistral Small 3 reaches 79.2% on MMLU-Pro under the stated setup.",
+ "reported_by": "third-party",
+ "tier": "source-checked",
+ "special_status": null,
+ "display_status": "source-checked",
+ "created_at": "2026-04-20T22:04:00Z",
+ "tier_changed_at": "2026-04-22T22:04:00Z",
+ "expires_at": "2026-10-19T22:04:00Z",
+ "seed": 1,
+ "check_result": {
+  "passed": true,
+  "reason": "quote_found_value_present",
+  "fetched_url": "https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501",
+  "http_status": 200,
+  "fetched_at": "2026-04-22T22:04:00Z",
+  "content_sha256": "ae2e0783f83394d146062e5d9e6e1ae16c3d06e56ab53d55547206e4a75567f2"
+ },
+ "trail": [
+  {
+   "ts": "2026-04-20T22:04:00Z",
+   "kind": "submitted",
+   "actor": "dev-hari",
+   "summary": "map.extract submission included this claim",
+   "detail": {
+    "model_family": "claude"
+   }
+  },
+  {
+   "ts": "2026-04-22T22:04:00Z",
+   "kind": "quote_check",
+   "actor": "referee",
+   "summary": "Source fetched; quote found verbatim; value present in quote → T1 source-checked",
+   "detail": {
+    "http_status": 200,
+    "fetched_url": "https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501"
+   }
+  }
+ ]
+}

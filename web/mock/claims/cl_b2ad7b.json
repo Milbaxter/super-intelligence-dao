@@ -1,0 +1,57 @@
+{
+ "id": "cl_b2ad7b",
+ "artifact_id": "codex-cli",
+ "artifact_name": "Codex CLI",
+ "layer": "harnesses",
+ "benchmark_id": "swe-bench-verified",
+ "benchmark_name": "SWE-bench Verified",
+ "metric": "% resolved",
+ "value": 71.5,
+ "unit": "%",
+ "higher_is_better": true,
+ "conditions": {
+  "date": "2026-06-18",
+  "notes": "Illustrative example value from mock fixtures, not a real result.",
+  "model": "Llama 3.3 70B",
+  "attempts": 1
+ },
+ "source_url": "https://github.com/openai/codex",
+ "quote": "[Illustrative example quote] Codex CLI reaches 71.5% on SWE-bench Verified under the stated setup.",
+ "reported_by": "third-party",
+ "tier": "source-checked",
+ "special_status": null,
+ "display_status": "source-checked",
+ "created_at": "2026-06-15T02:04:00Z",
+ "tier_changed_at": "2026-06-15T02:04:00Z",
+ "expires_at": "2026-12-12T02:04:00Z",
+ "seed": 0,
+ "check_result": {
+  "passed": true,
+  "reason": "quote_found_value_present",
+  "fetched_url": "https://github.com/openai/codex",
+  "http_status": 200,
+  "fetched_at": "2026-06-15T02:04:00Z",
+  "content_sha256": "6c06f5014e2ef09537a17949a06092c2d5b696207132705f5fd03931369ed3ef"
+ },
+ "trail": [
+  {
+   "ts": "2026-06-15T02:04:00Z",
+   "kind": "submitted",
+   "actor": "mei-w",
+   "summary": "map.extract submission included this claim",
+   "detail": {
+    "model_family": "claude"
+   }
+  },
+  {
+   "ts": "2026-06-15T02:04:00Z",
+   "kind": "quote_check",
+   "actor": "referee",
+   "summary": "Source fetched; quote found verbatim; value present in quote → T1 source-checked",
+   "detail": {
+    "http_status": 200,
+    "fetched_url": "https://github.com/openai/codex"
+   }
+  }
+ ]
+}

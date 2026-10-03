@@ -1,0 +1,1284 @@
+[
+  {
+    "artifact_id": "deepseek-v4-1-flash",
+    "benchmark_id": "terminal-bench-2-1",
+    "metric": "pass@1",
+    "value": 90.6,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4.1-Flash",
+      "budget": "reasoning_effort=100 (max), temperature=1.0, top_p=0.95",
+      "date": "2026-09",
+      "attempts": "pass@1",
+      "notes": "Self-reported by DeepSeek; value is the DS-V4.1-Flash column (last) of the frontier-comparison table.",
+      "harness": "DeepSeek Harness (Minimal mode), 1M context"
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+    "quote": "| Terminal-Bench 2.1 (Pass@1) | 89.1 | 88.8 | 88.3 | 88.2 | 87.9 | 82.7 | **90.6** |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "deepseek-v4-1-flash",
+    "benchmark_id": "terminal-bench-3-0",
+    "metric": "pass@1",
+    "value": 30.0,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4.1-Flash",
+      "budget": "reasoning_effort=100 (max), temperature=1.0, top_p=0.95",
+      "date": "2026-09",
+      "attempts": "pass@1",
+      "notes": "Self-reported by DeepSeek; value is the DS-V4.1-Flash column (last) of the frontier-comparison table.",
+      "harness": "DeepSeek Harness (Minimal mode), 1M context"
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+    "quote": "| Terminal-Bench 3.0 (Pass@1) | **43.3** | 34.4 | 17.7 | 28.3 | 11.8 | 7.6 | 30.0 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "deepseek-v4-1-flash",
+    "benchmark_id": "terminal-bench-4-0",
+    "metric": "pass@1",
+    "value": 31.2,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4.1-Flash",
+      "budget": "reasoning_effort=100 (max), temperature=1.0, top_p=0.95",
+      "date": "2026-09",
+      "attempts": "pass@1",
+      "notes": "Self-reported by DeepSeek; value is the DS-V4.1-Flash column (last) of the frontier-comparison table.",
+      "harness": "DeepSeek Harness (Minimal mode), 1M context"
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+    "quote": "| Terminal-Bench 4.0 (Pass@1) | **51.8** | 39.9 | 12.6 | 37.9 | 12.4 | 7.0 | 31.2 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "deepseek-v4-1-flash",
+    "benchmark_id": "deepswe",
+    "metric": "resolved rate",
+    "value": 74.2,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4.1-Flash",
+      "budget": "reasoning_effort=100 (max), temperature=1.0, top_p=0.95",
+      "date": "2026-09",
+      "attempts": "pass@1",
+      "notes": "Self-reported by DeepSeek; value is the DS-V4.1-Flash column (last) of the frontier-comparison table.",
+      "harness": "mini-SWE-agent (per card, to align with official setup)"
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+    "quote": "| DeepSWE v1.1 (Resolved) | 74.0 | 73.0 | 67.5 | 66.9 | 62.7 | 54.4 | **74.2** |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "deepseek-v4-1-flash",
+    "benchmark_id": "gpqa-diamond",
+    "metric": "pass@1",
+    "value": 90.9,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4.1-Flash",
+      "budget": "reasoning_effort=100 (max), temperature=1.0, top_p=0.95",
+      "date": "2026-09",
+      "attempts": "pass@1",
+      "notes": "Self-reported by DeepSeek; value is the DS-V4.1-Flash column (last) of the frontier-comparison table."
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+    "quote": "| GPQA Diamond (Pass@1) | 93.4 | **94.1** | 92.9 | 88.1 | 92.4 | 89.9 | 90.9 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "deepseek-v4-1-flash",
+    "benchmark_id": "hle",
+    "metric": "pass@1",
+    "value": 36.8,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4.1-Flash",
+      "budget": "reasoning_effort=100 (max), temperature=1.0, top_p=0.95",
+      "date": "2026-09",
+      "attempts": "pass@1",
+      "notes": "Self-reported by DeepSeek; value is the DS-V4.1-Flash column (last) of the frontier-comparison table. HLE full set; 39.1 on text-only subset."
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+    "quote": "| HLE (Pass@1) | **56.3** | 44.5 | 43.5 | 42.0† | 42.7† | 37.8† | 36.8 (39.1†) |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "mini-swe-agent",
+    "benchmark_id": "deepswe",
+    "metric": "resolved rate",
+    "value": 74.2,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4.1-Flash (max effort)",
+      "harness": "mini-SWE",
+      "attempts": "mean over 8 samples/task",
+      "date": "2026-09",
+      "notes": "Self-reported by DeepSeek (model authors, not harness authors). Columns: Claude Code | Codex | OpenCode | Pi | mini-SWE | DSH Minimal | DSH Standard | DSH PTC. N=8 samples/task on DeepSWE, N=3 on TB2.1, max_steps=500, 1M context, TB2.1 without network."
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+    "quote": "| DeepSWE v1.1 (Resolved) | 69.8 | 65.6 | 65.5 | 66.2 | 74.2 | 72.6 | 70.5 | 67.6 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "mini-swe-agent",
+    "benchmark_id": "terminal-bench-2-1",
+    "metric": "pass@1",
+    "value": 90.3,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4.1-Flash (max effort)",
+      "harness": "mini-SWE",
+      "attempts": "mean over 3 samples/task",
+      "date": "2026-09",
+      "notes": "Self-reported by DeepSeek (model authors, not harness authors). Columns: Claude Code | Codex | OpenCode | Pi | mini-SWE | DSH Minimal | DSH Standard | DSH PTC. N=8 samples/task on DeepSWE, N=3 on TB2.1, max_steps=500, 1M context, TB2.1 without network."
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+    "quote": "| Terminal-Bench 2.1 (Pass@1) | 88.0 | 84.1 | 85.0 | 86.1 | 90.3 | 90.6 | 85.8 | 85.8 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "opencode",
+    "benchmark_id": "deepswe",
+    "metric": "resolved rate",
+    "value": 65.5,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4.1-Flash (max effort)",
+      "harness": "OpenCode",
+      "attempts": "mean over 8 samples/task",
+      "date": "2026-09",
+      "notes": "Self-reported by DeepSeek (model authors, not harness authors). Columns: Claude Code | Codex | OpenCode | Pi | mini-SWE | DSH Minimal | DSH Standard | DSH PTC. N=8 samples/task on DeepSWE, N=3 on TB2.1, max_steps=500, 1M context, TB2.1 without network."
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+    "quote": "| DeepSWE v1.1 (Resolved) | 69.8 | 65.6 | 65.5 | 66.2 | 74.2 | 72.6 | 70.5 | 67.6 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "opencode",
+    "benchmark_id": "terminal-bench-2-1",
+    "metric": "pass@1",
+    "value": 85.0,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4.1-Flash (max effort)",
+      "harness": "OpenCode",
+      "attempts": "mean over 3 samples/task",
+      "date": "2026-09",
+      "notes": "Self-reported by DeepSeek (model authors, not harness authors). Columns: Claude Code | Codex | OpenCode | Pi | mini-SWE | DSH Minimal | DSH Standard | DSH PTC. N=8 samples/task on DeepSWE, N=3 on TB2.1, max_steps=500, 1M context, TB2.1 without network."
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+    "quote": "| Terminal-Bench 2.1 (Pass@1) | 88.0 | 84.1 | 85.0 | 86.1 | 90.3 | 90.6 | 85.8 | 85.8 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "codex-cli",
+    "benchmark_id": "deepswe",
+    "metric": "resolved rate",
+    "value": 65.6,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4.1-Flash (max effort)",
+      "harness": "Codex",
+      "attempts": "mean over 8 samples/task",
+      "date": "2026-09",
+      "notes": "Self-reported by DeepSeek (model authors, not harness authors). Columns: Claude Code | Codex | OpenCode | Pi | mini-SWE | DSH Minimal | DSH Standard | DSH PTC. N=8 samples/task on DeepSWE, N=3 on TB2.1, max_steps=500, 1M context, TB2.1 without network."
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+    "quote": "| DeepSWE v1.1 (Resolved) | 69.8 | 65.6 | 65.5 | 66.2 | 74.2 | 72.6 | 70.5 | 67.6 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "codex-cli",
+    "benchmark_id": "terminal-bench-2-1",
+    "metric": "pass@1",
+    "value": 84.1,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4.1-Flash (max effort)",
+      "harness": "Codex",
+      "attempts": "mean over 3 samples/task",
+      "date": "2026-09",
+      "notes": "Self-reported by DeepSeek (model authors, not harness authors). Columns: Claude Code | Codex | OpenCode | Pi | mini-SWE | DSH Minimal | DSH Standard | DSH PTC. N=8 samples/task on DeepSWE, N=3 on TB2.1, max_steps=500, 1M context, TB2.1 without network."
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+    "quote": "| Terminal-Bench 2.1 (Pass@1) | 88.0 | 84.1 | 85.0 | 86.1 | 90.3 | 90.6 | 85.8 | 85.8 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "pi",
+    "benchmark_id": "deepswe",
+    "metric": "resolved rate",
+    "value": 66.2,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4.1-Flash (max effort)",
+      "harness": "Pi",
+      "attempts": "mean over 8 samples/task",
+      "date": "2026-09",
+      "notes": "Self-reported by DeepSeek (model authors, not harness authors). Columns: Claude Code | Codex | OpenCode | Pi | mini-SWE | DSH Minimal | DSH Standard | DSH PTC. N=8 samples/task on DeepSWE, N=3 on TB2.1, max_steps=500, 1M context, TB2.1 without network."
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+    "quote": "| DeepSWE v1.1 (Resolved) | 69.8 | 65.6 | 65.5 | 66.2 | 74.2 | 72.6 | 70.5 | 67.6 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "deepseek-v4-pro",
+    "benchmark_id": "swe-bench-verified",
+    "metric": "resolved rate",
+    "value": 80.6,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4-Pro (preview), Think Max mode",
+      "date": "2026-04",
+      "notes": "Self-reported by DeepSeek in the V4 preview release card; value is the DS-V4-Pro Max column (last). Preview checkpoint (April 2026), not V4-Pro-0813."
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/raw/main/README.md",
+    "quote": "| SWE Verified (Resolved) | **80.8** | - | 80.6 | 80.2 | - | 80.6 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "deepseek-v4-pro",
+    "benchmark_id": "terminal-bench-2-0",
+    "metric": "accuracy",
+    "value": 67.9,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4-Pro (preview), Think Max mode",
+      "date": "2026-04",
+      "notes": "Self-reported by DeepSeek in the V4 preview release card; value is the DS-V4-Pro Max column (last). Preview checkpoint (April 2026), not V4-Pro-0813."
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/raw/main/README.md",
+    "quote": "| Terminal Bench 2.0 (Acc) | 65.4 | **75.1** | 68.5 | 66.7 | 63.5 | 67.9 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "deepseek-v4-pro",
+    "benchmark_id": "swe-bench-pro",
+    "metric": "resolved rate",
+    "value": 55.4,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4-Pro (preview), Think Max mode",
+      "date": "2026-04",
+      "notes": "Self-reported by DeepSeek in the V4 preview release card; value is the DS-V4-Pro Max column (last). Preview checkpoint (April 2026), not V4-Pro-0813."
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/raw/main/README.md",
+    "quote": "| SWE Pro (Resolved) | 57.3 | 57.7 | 54.2 | **58.6** | 58.4 | 55.4 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "deepseek-v4-pro",
+    "benchmark_id": "browsecomp",
+    "metric": "pass@1",
+    "value": 83.4,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4-Pro (preview), Think Max mode",
+      "date": "2026-04",
+      "notes": "Self-reported by DeepSeek in the V4 preview release card; value is the DS-V4-Pro Max column (last). Preview checkpoint (April 2026), not V4-Pro-0813."
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/raw/main/README.md",
+    "quote": "| BrowseComp (Pass@1) | 83.7 | 82.7 | **85.9** | 83.2 | 79.3 | 83.4 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "deepseek-v4-pro",
+    "benchmark_id": "livecodebench",
+    "metric": "pass@1",
+    "value": 93.5,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4-Pro (preview), Think Max mode",
+      "date": "2026-04",
+      "notes": "Self-reported by DeepSeek in the V4 preview release card; value is the DS-V4-Pro Max column (last). Preview checkpoint (April 2026), not V4-Pro-0813."
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/raw/main/README.md",
+    "quote": "| LiveCodeBench (Pass@1) | 88.8 | - | 91.7 | 89.6 | - | **93.5** |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "deepseek-v4-pro",
+    "benchmark_id": "terminal-bench-2-1",
+    "metric": "pass@1",
+    "value": 87.9,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4-Pro-0813",
+      "date": "2026-08",
+      "notes": "Self-reported by DeepSeek; first column. Same row reports 72.1 for the April V4-Pro preview."
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813/raw/main/README.md",
+    "quote": "| Terminal Bench 2.1 | 87.9 | 82.7 | 72.1 | 61.8 | 81.0 | 88.3 | 85.0 | 88.0 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "deepseek-v4-flash",
+    "benchmark_id": "terminal-bench-2-1",
+    "metric": "pass@1",
+    "value": 82.7,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4-Flash-0731",
+      "date": "2026-08",
+      "notes": "Self-reported by DeepSeek in the V4-Pro-0813 card; second column."
+    },
+    "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813/raw/main/README.md",
+    "quote": "| Terminal Bench 2.1 | 87.9 | 82.7 | 72.1 | 61.8 | 81.0 | 88.3 | 85.0 | 88.0 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "nemotron-3-ultra",
+    "benchmark_id": "terminal-bench-2-1",
+    "metric": "pass@1",
+    "value": 56.4,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "NVIDIA-Nemotron-3-Ultra-550B-A55B",
+      "harness": "Harbor (via NeMo Evaluator)",
+      "date": "2026-06",
+      "notes": "Self-reported by NVIDIA; first column. Evaluated by NVIDIA via NeMo Evaluator SDK (NeMo Gym / NeMo Skills / Harbor). Columns: N-3-Ultra | MiniMax-2.7 | GLM-5.1 | Kimi-K2.6 | Qwen-3.5 | DS-v4-Pro | DS-v4-Flash."
+    },
+    "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16/raw/main/README.md",
+    "quote": "| Terminal Bench 2.1 | 56.4 | 55.5 | 59.3 | 67.2 | 49.9 | 49.2 | 54.2 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "nemotron-3-ultra",
+    "benchmark_id": "swe-bench-verified",
+    "metric": "resolved rate",
+    "value": 70.7,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "NVIDIA-Nemotron-3-Ultra-550B-A55B",
+      "date": "2026-06",
+      "notes": "Self-reported by NVIDIA; first column. Evaluated by NVIDIA via NeMo Evaluator SDK (NeMo Gym / NeMo Skills / Harbor). Columns: N-3-Ultra | MiniMax-2.7 | GLM-5.1 | Kimi-K2.6 | Qwen-3.5 | DS-v4-Pro | DS-v4-Flash."
+    },
+    "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16/raw/main/README.md",
+    "quote": "| SWE-Bench Verified | 70.7 | 75.3 | 76.2 | 75.7 | 73.6 | 74.5 | 73.5 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "nemotron-3-ultra",
+    "benchmark_id": "gpqa-diamond",
+    "metric": "accuracy",
+    "value": 87.0,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "NVIDIA-Nemotron-3-Ultra-550B-A55B",
+      "date": "2026-06",
+      "notes": "Self-reported by NVIDIA; row labelled \"GPQA (no tools)\"; first column. Evaluated by NVIDIA via NeMo Evaluator SDK (NeMo Gym / NeMo Skills / Harbor). Columns: N-3-Ultra | MiniMax-2.7 | GLM-5.1 | Kimi-K2.6 | Qwen-3.5 | DS-v4-Pro | DS-v4-Flash."
+    },
+    "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16/raw/main/README.md",
+    "quote": "| GPQA (no tools) | 87.0 | 86.6 | 86.1 | 91.0 | 87.1 | 87.8 | 88.5 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "deepseek-v4-pro",
+    "benchmark_id": "terminal-bench-2-1",
+    "metric": "pass@1",
+    "value": 49.2,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4-Pro (version not stated)",
+      "harness": "NVIDIA eval stack (Harbor via NeMo Evaluator)",
+      "date": "2026-06",
+      "notes": "Third-party (NVIDIA) number from a competitor model card; DS-v4-Pro column (6th value). Compare DeepSeek self-reports 72.1 (preview) / 87.9 (0813)."
+    },
+    "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16/raw/main/README.md",
+    "quote": "| Terminal Bench 2.1 | 56.4 | 55.5 | 59.3 | 67.2 | 49.9 | 49.2 | 54.2 |",
+    "reported_by": "third-party",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "deepseek-v4-pro",
+    "benchmark_id": "swe-bench-verified",
+    "metric": "resolved rate",
+    "value": 74.5,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "DeepSeek-V4-Pro (version not stated)",
+      "date": "2026-06",
+      "notes": "Third-party (NVIDIA) number; DS-v4-Pro column (6th value). DeepSeek self-reports 80.6."
+    },
+    "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16/raw/main/README.md",
+    "quote": "| SWE-Bench Verified | 70.7 | 75.3 | 76.2 | 75.7 | 73.6 | 74.5 | 73.5 |",
+    "reported_by": "third-party",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "kimi-k2-6",
+    "benchmark_id": "swe-bench-verified",
+    "metric": "resolved rate",
+    "value": 75.7,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Kimi-K2.6",
+      "date": "2026-06",
+      "notes": "Third-party (NVIDIA) number; Kimi-K2.6 column (4th value). Moonshot self-reports 80.2."
+    },
+    "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16/raw/main/README.md",
+    "quote": "| SWE-Bench Verified | 70.7 | 75.3 | 76.2 | 75.7 | 73.6 | 74.5 | 73.5 |",
+    "reported_by": "third-party",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "kimi-k2-6",
+    "benchmark_id": "swe-bench-verified",
+    "metric": "resolved rate",
+    "value": 80.2,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Kimi-K2.6 (thinking)",
+      "date": "2026-04",
+      "notes": "Self-reported by Moonshot AI; first value after the benchmark name is Kimi K2.6 (thinking mode), then GPT-5.4, Claude Opus 4.6, Gemini 3.1 Pro, Kimi K2.5. temperature=1.0, top-p=1.0, 262,144 context."
+    },
+    "source_url": "https://huggingface.co/moonshotai/Kimi-K2.6/raw/main/README.md",
+    "quote": "SWE-Bench Verified 80.2 - 80.8 80.6 76.8",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "kimi-k2-6",
+    "benchmark_id": "terminal-bench-2-0",
+    "metric": "accuracy",
+    "value": 66.7,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Kimi-K2.6 (thinking)",
+      "harness": "Terminus-2",
+      "date": "2026-04",
+      "notes": "Self-reported by Moonshot AI; first value after the benchmark name is Kimi K2.6 (thinking mode), then GPT-5.4, Claude Opus 4.6, Gemini 3.1 Pro, Kimi K2.5. temperature=1.0, top-p=1.0, 262,144 context."
+    },
+    "source_url": "https://huggingface.co/moonshotai/Kimi-K2.6/raw/main/README.md",
+    "quote": "Terminal-Bench 2.0 (Terminus-2) 66.7 65.4* 65.4 68.5 50.8",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "kimi-k3",
+    "benchmark_id": "terminal-bench-2-1",
+    "metric": "pass@1",
+    "value": 88.3,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Kimi K3 (max)",
+      "harness": "Kimi Code",
+      "date": "2026-06",
+      "notes": "Self-reported by Moonshot AI; first value is Kimi K3 (max effort), followed by Claude Fable 5, GPT-5.6 Sol, Claude Opus 4.8, GPT-5.5, GLM-5.2. Other models reported with their best harness."
+    },
+    "source_url": "https://huggingface.co/moonshotai/Kimi-K3/raw/main/README.md",
+    "quote": "Terminal-Bench 2.1 88.3 88.0 88.8 84.6 83.4 82.7",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "kimi-k3",
+    "benchmark_id": "deepswe",
+    "metric": "resolved rate",
+    "value": 67.3,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Kimi K3 (max)",
+      "harness": "mini-SWE-agent",
+      "date": "2026-06",
+      "notes": "Footnote in Moonshot card citing the official DeepSWE leaderboard (v1.1 tasks). Headline 67.5 uses Kimi Code harness."
+    },
+    "source_url": "https://huggingface.co/moonshotai/Kimi-K3/raw/main/README.md",
+    "quote": "all remaining scores are from the official [DeepSWE leaderboard](https://deepswe.datacurve.ai/), under which Kimi K3 attains 67.3 with the mini-SWE-agent harness.",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "kimi-k3",
+    "benchmark_id": "gpqa-diamond",
+    "metric": "accuracy",
+    "value": 93.5,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Kimi K3 (max)",
+      "budget": "temperature=1.0, top-p=0.95",
+      "date": "2026-06",
+      "notes": "Self-reported by Moonshot AI; first value is Kimi K3 (max effort), followed by Claude Fable 5, GPT-5.6 Sol, Claude Opus 4.8, GPT-5.5, GLM-5.2."
+    },
+    "source_url": "https://huggingface.co/moonshotai/Kimi-K3/raw/main/README.md",
+    "quote": "GPQA Diamond 93.5 92.6 94.1 91.0 93.5 91.2",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "glm-5-3",
+    "benchmark_id": "terminal-bench-2-1",
+    "metric": "pass@1",
+    "value": 88.2,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "GLM-5.3",
+      "date": "2026-08",
+      "notes": "Self-reported by Z.ai; first column is GLM-5.3 (then GLM-5.2, Kimi K3, DeepSeek-V4 Pro-0813, Qwen3.8-Max, Opus 4.8, Fable 5, GPT-5.6 Sol). Harness not stated in card table."
+    },
+    "source_url": "https://huggingface.co/zai-org/GLM-5.3/raw/main/README.md",
+    "quote": "| Terminal Bench 2.1           | 88.2      | 81.0    | 88.3     | 87.9                 | 86.6        | 85.0     | 88.0                  | **88.8**      |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "glm-5-3",
+    "benchmark_id": "terminal-bench-3-0",
+    "metric": "pass@1",
+    "value": 28.3,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "GLM-5.3",
+      "date": "2026-08",
+      "notes": "Self-reported by Z.ai; first column is GLM-5.3 (then GLM-5.2, Kimi K3, DeepSeek-V4 Pro-0813, Qwen3.8-Max, Opus 4.8, Fable 5, GPT-5.6 Sol). Harness not stated in card table."
+    },
+    "source_url": "https://huggingface.co/zai-org/GLM-5.3/raw/main/README.md",
+    "quote": "| Terminal Bench 3.0           | 28.3      | 4.6     | 17.4     | –                    | –           | 21.1     | 33.7                  | **34.6**      |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "glm-5-3",
+    "benchmark_id": "deepswe",
+    "metric": "pass@1",
+    "value": 66.9,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "GLM-5.3",
+      "date": "2026-08",
+      "notes": "Self-reported by Z.ai; first column is GLM-5.3 (then GLM-5.2, Kimi K3, DeepSeek-V4 Pro-0813, Qwen3.8-Max, Opus 4.8, Fable 5, GPT-5.6 Sol). Harness not stated in card table."
+    },
+    "source_url": "https://huggingface.co/zai-org/GLM-5.3/raw/main/README.md",
+    "quote": "| DeepSWE (v1.1)               | 66.9      | 46.2    | 67.5     | 62.7                 | 56.6        | 58.0     | 69.7                  | **72.7**      |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "glm-5-3",
+    "benchmark_id": "posttrainbench",
+    "metric": "score",
+    "value": 39.8,
+    "unit": "score",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "GLM-5.3",
+      "date": "2026-08",
+      "notes": "Self-reported by Z.ai; first column is GLM-5.3 (then GLM-5.2, Kimi K3, DeepSeek-V4 Pro-0813, Qwen3.8-Max, Opus 4.8, Fable 5, GPT-5.6 Sol). Harness not stated in card table."
+    },
+    "source_url": "https://huggingface.co/zai-org/GLM-5.3/raw/main/README.md",
+    "quote": "| PostTrainBench               | 39.8      | 31.7    | 32.0     | –                    | –           | 32.9     | **41.8**              | 36.2          |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "glm-5-2",
+    "benchmark_id": "swe-bench-pro",
+    "metric": "resolved rate",
+    "value": 62.1,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "GLM-5.2",
+      "date": "2026-06",
+      "notes": "Self-reported by Z.ai; first column is GLM-5.2."
+    },
+    "source_url": "https://huggingface.co/zai-org/GLM-5.2/raw/main/README.md",
+    "quote": "|SWE-bench Pro|62.1|58.4|60.6|59|55.4|69.2|58.6|54.2|",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "glm-5-2",
+    "benchmark_id": "terminal-bench-2-1",
+    "metric": "pass@1",
+    "value": 81.0,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "GLM-5.2",
+      "harness": "Terminus-2",
+      "date": "2026-06",
+      "notes": "Self-reported by Z.ai; first column is GLM-5.2. Same card reports 82.7 with best reported harness."
+    },
+    "source_url": "https://huggingface.co/zai-org/GLM-5.2/raw/main/README.md",
+    "quote": "|Terminal Bench 2.1 (Terminus-2)|81.0|63.5|75|65|64| 85|84|74|",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "glm-5-2",
+    "benchmark_id": "aime-2026",
+    "metric": "accuracy",
+    "value": 99.2,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "GLM-5.2",
+      "date": "2026-06",
+      "notes": "Self-reported by Z.ai; first column is GLM-5.2."
+    },
+    "source_url": "https://huggingface.co/zai-org/GLM-5.2/raw/main/README.md",
+    "quote": "|AIME 2026|99.2|95.3|97|-|94.6|95.7|98.3|98.2|",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "glm-5-2",
+    "benchmark_id": "gpqa-diamond",
+    "metric": "accuracy",
+    "value": 91.2,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "GLM-5.2",
+      "date": "2026-06",
+      "notes": "Self-reported by Z.ai; first column is GLM-5.2."
+    },
+    "source_url": "https://huggingface.co/zai-org/GLM-5.2/raw/main/README.md",
+    "quote": "|GPQA-Diamond|91.2|86.2|90|93|90.1|93.6|93.6|94.3|",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "glm-5-3",
+    "benchmark_id": "deepswe",
+    "metric": "pass@1",
+    "value": 69,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "harness": "mini-swe-agent",
+      "budget": "max effort; avg cost/task $3.99",
+      "date": "2026-09-22",
+      "notes": "Official DeepSWE leaderboard (v1.1, 113 tasks, page states \"updated September 22, 2026\"); page states all models run on mini-swe-agent. Includes avg cost per task. Value is first Pass@1 shown for the model row."
+    },
+    "source_url": "https://deepswe.datacurve.ai/",
+    "quote": "glm-5.3 [ max ] 69 % ± 3 % Avg cost $3.99 Out tok 80k Steps 124",
+    "reported_by": "leaderboard",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "kimi-k3",
+    "benchmark_id": "deepswe",
+    "metric": "pass@1",
+    "value": 69,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "harness": "mini-swe-agent",
+      "budget": "max effort; avg cost/task $4.65",
+      "date": "2026-09-22",
+      "notes": "Official DeepSWE leaderboard (v1.1, 113 tasks, page states \"updated September 22, 2026\"); page states all models run on mini-swe-agent. Includes avg cost per task. Value is first Pass@1 shown for the model row."
+    },
+    "source_url": "https://deepswe.datacurve.ai/",
+    "quote": "kimi-k3 [ max ] 69 % ± 5 % Avg cost $4.65 Out tok 81k Steps 98",
+    "reported_by": "leaderboard",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "deepseek-v4-pro",
+    "benchmark_id": "deepswe",
+    "metric": "pass@1",
+    "value": 63,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "harness": "mini-swe-agent",
+      "budget": "max effort; avg cost/task $1.67",
+      "date": "2026-09-22",
+      "notes": "Official DeepSWE leaderboard (v1.1, 113 tasks, page states \"updated September 22, 2026\"); page states all models run on mini-swe-agent. Includes avg cost per task. Value is first Pass@1 shown for the model row."
+    },
+    "source_url": "https://deepswe.datacurve.ai/",
+    "quote": "deepseek-v4-pro [ max ] 63 % ± 6 % Avg cost $1.67 Out tok 106k Steps 155",
+    "reported_by": "leaderboard",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "deepseek-v4-flash",
+    "benchmark_id": "deepswe",
+    "metric": "pass@1",
+    "value": 53,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "harness": "mini-swe-agent",
+      "budget": "max effort; avg cost/task $0.46",
+      "date": "2026-09-22",
+      "notes": "Official DeepSWE leaderboard (v1.1, 113 tasks, page states \"updated September 22, 2026\"); page states all models run on mini-swe-agent. Includes avg cost per task. Value is first Pass@1 shown for the model row."
+    },
+    "source_url": "https://deepswe.datacurve.ai/",
+    "quote": "deepseek-v4-flash [ max ] 53 % ± 4 % Avg cost $0.46 Out tok 108k Steps 153",
+    "reported_by": "leaderboard",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "qwen3-8-27b",
+    "benchmark_id": "terminal-bench-2-1",
+    "metric": "pass@1",
+    "value": 73.0,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Qwen3.8-27B",
+      "harness": "Terminus",
+      "date": "2026-08",
+      "notes": "Self-reported by Qwen; first value is Qwen3.8-27B (then Qwen3.6-27B, Qwen3.7-Plus, Muse Glimmer-30B, Opus4.6 Max)."
+    },
+    "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B/raw/main/README.md",
+    "quote": "Terminal Bench 2.1 (Terminus) 73.0 63.4 64.0 51.7 78.2",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "qwen3-8-27b",
+    "benchmark_id": "swe-bench-pro",
+    "metric": "resolved rate",
+    "value": 61.7,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Qwen3.8-27B",
+      "harness": "Claude Code",
+      "budget": "temp=1.0, top_p=0.95, 256K context",
+      "date": "2026-08",
+      "notes": "Self-reported by Qwen; first value is Qwen3.8-27B (then Qwen3.6-27B, Qwen3.7-Plus, Muse Glimmer-30B, Opus4.6 Max). Card says problematic tasks were corrected and baselines re-evaluated on the refined benchmark (modified benchmark)."
+    },
+    "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B/raw/main/README.md",
+    "quote": "SWE-bench Pro 61.7 53.5 57.6 51.2 53.4",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "qwen3-8-27b",
+    "benchmark_id": "gpqa-diamond",
+    "metric": "accuracy",
+    "value": 89.2,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Qwen3.8-27B",
+      "date": "2026-08",
+      "notes": "Self-reported by Qwen; first value is Qwen3.8-27B (then Qwen3.6-27B, Qwen3.7-Plus, Muse Glimmer-30B, Opus4.6 Max)."
+    },
+    "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B/raw/main/README.md",
+    "quote": "GPQA Diamond 89.2 87.8 90.3 83.5 91.3",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "qwen3-8-27b",
+    "benchmark_id": "livecodebench",
+    "metric": "pass@1",
+    "value": 90.3,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Qwen3.8-27B",
+      "date": "2026-08",
+      "notes": "Self-reported by Qwen; first value is Qwen3.8-27B (then Qwen3.6-27B, Qwen3.7-Plus, Muse Glimmer-30B, Opus4.6 Max). LiveCodeBench v6."
+    },
+    "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B/raw/main/README.md",
+    "quote": "LiveCodeBench v6 90.3 83.9 89.6 -- 88.8",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "gemma-4-31b",
+    "benchmark_id": "aime-2026",
+    "metric": "accuracy",
+    "value": 89.2,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "gemma-4-31B-it",
+      "date": "2026-03",
+      "notes": "Self-reported by Google; first column is Gemma 4 31B (instruction-tuned)."
+    },
+    "source_url": "https://huggingface.co/google/gemma-4-31B-it/raw/main/README.md",
+    "quote": "| AIME 2026 no tools | 89.2% | 88.3% | 77.5% | 42.5% | 37.5% | 20.8% |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "gemma-4-31b",
+    "benchmark_id": "livecodebench",
+    "metric": "accuracy",
+    "value": 80.0,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "gemma-4-31B-it",
+      "date": "2026-03",
+      "notes": "Self-reported by Google; first column is Gemma 4 31B (instruction-tuned)."
+    },
+    "source_url": "https://huggingface.co/google/gemma-4-31B-it/raw/main/README.md",
+    "quote": "| LiveCodeBench v6 | 80.0% | 77.1% | 72.0% | 52.0% | 44.0% | 29.1% |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "gemma-4-31b",
+    "benchmark_id": "gpqa-diamond",
+    "metric": "accuracy",
+    "value": 84.3,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "gemma-4-31B-it",
+      "date": "2026-03",
+      "notes": "Self-reported by Google; first column is Gemma 4 31B (instruction-tuned)."
+    },
+    "source_url": "https://huggingface.co/google/gemma-4-31B-it/raw/main/README.md",
+    "quote": "| GPQA Diamond | 84.3% | 82.3% | 78.8% | 58.6% | 43.4% | 42.4% |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "gemma-4-31b",
+    "benchmark_id": "tau2-bench",
+    "metric": "accuracy",
+    "value": 76.9,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "gemma-4-31B-it",
+      "date": "2026-03",
+      "notes": "Self-reported by Google; first column is Gemma 4 31B (instruction-tuned). Average over 3 tau2 domains."
+    },
+    "source_url": "https://huggingface.co/google/gemma-4-31B-it/raw/main/README.md",
+    "quote": "| Tau2 (average over 3) | 76.9% | 68.2% | 69.0% | 42.2% | 24.5% | 16.2% |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "gemma-4-31b",
+    "benchmark_id": "mmlu-pro",
+    "metric": "accuracy",
+    "value": 85.2,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "gemma-4-31B-it",
+      "date": "2026-03",
+      "notes": "Self-reported by Google; first column is Gemma 4 31B (instruction-tuned)."
+    },
+    "source_url": "https://huggingface.co/google/gemma-4-31B-it/raw/main/README.md",
+    "quote": "| MMLU Pro | 85.2% | 82.6% | 77.2% | 69.4% | 60.0% | 67.6% |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "openhands",
+    "benchmark_id": "swe-bench-verified",
+    "metric": "resolved rate",
+    "value": 60.47,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "NVIDIA-Nemotron-3-Super-120B-A12B",
+      "harness": "OpenHands",
+      "date": "2026-03",
+      "notes": "Self-reported by NVIDIA (model authors). Columns: Nemotron 3 Super | Qwen3.5-122B-A10B | GPT-OSS-120B. Card notes SWE Bench Verified (OpenHands) used official/internal scaffolding. Row labelled \"SWE-Bench (OpenHands)\"."
+    },
+    "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16/raw/main/README.md",
+    "quote": "| SWE-Bench (OpenHands) | 60.47 | 66.40 | 41.9 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "opencode",
+    "benchmark_id": "swe-bench-verified",
+    "metric": "resolved rate",
+    "value": 59.2,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "NVIDIA-Nemotron-3-Super-120B-A12B",
+      "harness": "OpenCode",
+      "date": "2026-03",
+      "notes": "Self-reported by NVIDIA (model authors). Columns: Nemotron 3 Super | Qwen3.5-122B-A10B | GPT-OSS-120B. Card notes SWE Bench Verified (OpenHands) used official/internal scaffolding. Row labelled \"SWE-Bench (OpenCode)\"."
+    },
+    "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16/raw/main/README.md",
+    "quote": "| SWE-Bench (OpenCode) | 59.20 | 67.40 | — |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "codex-cli",
+    "benchmark_id": "swe-bench-verified",
+    "metric": "resolved rate",
+    "value": 53.73,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "NVIDIA-Nemotron-3-Super-120B-A12B",
+      "harness": "Codex",
+      "date": "2026-03",
+      "notes": "Self-reported by NVIDIA (model authors). Columns: Nemotron 3 Super | Qwen3.5-122B-A10B | GPT-OSS-120B. Card notes SWE Bench Verified (OpenHands) used official/internal scaffolding. Row labelled \"SWE-Bench (Codex)\"."
+    },
+    "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16/raw/main/README.md",
+    "quote": "| SWE-Bench (Codex) | 53.73 | 61.20 | — |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "nemotron-3-super",
+    "benchmark_id": "terminal-bench-2-0",
+    "metric": "accuracy",
+    "value": 31.0,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "NVIDIA-Nemotron-3-Super-120B-A12B",
+      "harness": "Harbor",
+      "date": "2026-03",
+      "notes": "Self-reported by NVIDIA (model authors). Columns: Nemotron 3 Super | Qwen3.5-122B-A10B | GPT-OSS-120B. Card notes SWE Bench Verified (OpenHands) used official/internal scaffolding."
+    },
+    "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16/raw/main/README.md",
+    "quote": "| Terminal Bench Core 2.0 | 31.00 | 37.50 | 18.70 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "gpt-oss-120b",
+    "benchmark_id": "swe-bench-verified",
+    "metric": "resolved rate",
+    "value": 41.9,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "gpt-oss-120b",
+      "harness": "OpenHands",
+      "date": "2026-03",
+      "notes": "Third-party (NVIDIA) value, GPT-OSS-120B column (3rd)."
+    },
+    "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16/raw/main/README.md",
+    "quote": "| SWE-Bench (OpenHands) | 60.47 | 66.40 | 41.9 |",
+    "reported_by": "third-party",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "gpt-oss-120b",
+    "benchmark_id": "terminal-bench-2-0",
+    "metric": "accuracy",
+    "value": 18.7,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "gpt-oss-120b",
+      "date": "2026-03",
+      "notes": "Third-party (NVIDIA) value, GPT-OSS-120B column (3rd)."
+    },
+    "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16/raw/main/README.md",
+    "quote": "| Terminal Bench Core 2.0 | 31.00 | 37.50 | 18.70 |",
+    "reported_by": "third-party",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "mistral-medium-3-5",
+    "benchmark_id": "swe-bench-verified",
+    "metric": "resolved rate",
+    "value": 77.6,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Mistral-Medium-3.5-128B",
+      "date": "2026-03",
+      "notes": "Self-reported by Mistral; harness not stated in card text. Most other results are only in images."
+    },
+    "source_url": "https://huggingface.co/mistralai/Mistral-Medium-3.5-128B/raw/main/README.md",
+    "quote": "It scores **91.4%** on τ³-Telecom and **77.6%** on SWE-Bench Verified.",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "devstral-small-2",
+    "benchmark_id": "swe-bench-verified",
+    "metric": "resolved rate",
+    "value": 68.0,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Devstral-Small-2-24B-Instruct-2512",
+      "date": "2025-12",
+      "notes": "Self-reported by Mistral."
+    },
+    "source_url": "https://huggingface.co/mistralai/Devstral-Small-2-24B-Instruct-2512/raw/main/README.md",
+    "quote": "| **Devstral Small 2**          | 24              | 68.0%              | 55.7%                  | 22.5%            |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "devstral-small-2",
+    "benchmark_id": "terminal-bench-2-0",
+    "metric": "accuracy",
+    "value": 22.5,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Devstral-Small-2-24B-Instruct-2512",
+      "date": "2025-12",
+      "notes": "Self-reported by Mistral; column \"Terminal Bench 2\"."
+    },
+    "source_url": "https://huggingface.co/mistralai/Devstral-Small-2-24B-Instruct-2512/raw/main/README.md",
+    "quote": "| **Devstral Small 2**          | 24              | 68.0%              | 55.7%                  | 22.5%            |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "llama-4-maverick",
+    "benchmark_id": "gpqa-diamond",
+    "metric": "accuracy",
+    "value": 69.8,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Llama-4-Maverick-17B-128E-Instruct",
+      "attempts": "0-shot",
+      "date": "2025-04",
+      "notes": "Self-reported by Meta; instruction-tuned table, columns Llama 3.3 70B | Llama 3.1 405B | Llama 4 Scout | Llama 4 Maverick (last value)."
+    },
+    "source_url": "https://github.com/meta-llama/llama-models/blob/main/models/llama4/MODEL_CARD.md",
+    "quote": "GPQA Diamond 0 accuracy 50.5 49.0 57.2 69.8",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "llama-4-maverick",
+    "benchmark_id": "mmlu-pro",
+    "metric": "accuracy",
+    "value": 80.5,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Llama-4-Maverick-17B-128E-Instruct",
+      "attempts": "0-shot",
+      "date": "2025-04",
+      "notes": "Self-reported by Meta; instruction-tuned table, columns Llama 3.3 70B | Llama 3.1 405B | Llama 4 Scout | Llama 4 Maverick (last value)."
+    },
+    "source_url": "https://github.com/meta-llama/llama-models/blob/main/models/llama4/MODEL_CARD.md",
+    "quote": "MMLU Pro 0 macro_avg/acc 68.9 73.4 74.3 80.5",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "llama-4-maverick",
+    "benchmark_id": "livecodebench",
+    "metric": "pass@1",
+    "value": 43.4,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Llama-4-Maverick-17B-128E-Instruct",
+      "attempts": "0-shot",
+      "date": "2025-04",
+      "notes": "Self-reported by Meta; instruction-tuned table, columns Llama 3.3 70B | Llama 3.1 405B | Llama 4 Scout | Llama 4 Maverick (last value). LCB window 10/01/2024-02/01/2025."
+    },
+    "source_url": "https://github.com/meta-llama/llama-models/blob/main/models/llama4/MODEL_CARD.md",
+    "quote": "LiveCodeBench (10/01/2024-02/01/2025) 0 pass@1 33.3 27.7 32.8 43.4",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "olmo-3-1-32b-think",
+    "benchmark_id": "aime-2025",
+    "metric": "accuracy",
+    "value": 78.1,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Olmo-3.1-32B-Think",
+      "date": "2025-12",
+      "notes": "Self-reported by Ai2; first column is Olmo 3.1 32B Think."
+    },
+    "source_url": "https://huggingface.co/allenai/Olmo-3.1-32B-Think/raw/main/README.md",
+    "quote": "| AIME 2025 | 78.1 | 66.2 | 70.7 | 72.5 | 70.9 | 78.8 | 13.4 | 22.9 | 0.9 | 0.9 | 56.3 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "olmo-3-1-32b-think",
+    "benchmark_id": "gpqa-diamond",
+    "metric": "accuracy",
+    "value": 57.5,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Olmo-3.1-32B-Think",
+      "date": "2025-12",
+      "notes": "Self-reported by Ai2; first column is Olmo 3.1 32B Think. Row labelled \"GPQA\" (variant not specified in row)."
+    },
+    "source_url": "https://huggingface.co/allenai/Olmo-3.1-32B-Think/raw/main/README.md",
+    "quote": "| GPQA | 57.5 | 55.7 | 57.6 | 58.1 | 67.3 | 67.4 | 44.6 | 45.0 | 39.9 | 36.4 | 61.8 |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "smollm3-3b",
+    "benchmark_id": "aime-2025",
+    "metric": "accuracy",
+    "value": 36.7,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "SmolLM3-3B",
+      "budget": "extended thinking mode",
+      "date": "2025-07",
+      "notes": "Self-reported by Hugging Face; extended-thinking table, first column SmolLM3-3B."
+    },
+    "source_url": "https://huggingface.co/HuggingFaceTB/SmolLM3-3B/raw/main/README.md",
+    "quote": "| High school math competition | AIME 2025 | <u>36.7</u> | 30.7 | **58.8** |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "gpt-oss-120b",
+    "benchmark_id": "aider-polyglot",
+    "metric": "pass_rate_2",
+    "value": 41.8,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "gpt-oss-120b (reasoning high)",
+      "harness": "aider (diff edit format)",
+      "attempts": "2 tries (pass_rate_2)",
+      "date": "2025-08-06",
+      "notes": "Aider polyglot leaderboard data file; 225 cases; via OpenRouter."
+    },
+    "source_url": "https://raw.githubusercontent.com/Aider-AI/aider/main/aider/website/_data/polyglot_leaderboard.yml",
+    "quote": "model: gpt-oss-120b (high)\n  edit_format: diff\n  commit_hash: 1af0e59\n  pass_rate_1: 13.8\n  pass_rate_2: 41.8",
+    "reported_by": "leaderboard",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "aider",
+    "benchmark_id": "aider-polyglot",
+    "metric": "pass_rate_2",
+    "value": 41.8,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "gpt-oss-120b (reasoning high)",
+      "harness": "aider 0.85.3.dev",
+      "attempts": "2 tries",
+      "date": "2025-08-06",
+      "notes": "Same run as gpt-oss-120b claim; recorded against the harness."
+    },
+    "source_url": "https://raw.githubusercontent.com/Aider-AI/aider/main/aider/website/_data/polyglot_leaderboard.yml",
+    "quote": "model: gpt-oss-120b (high)\n  edit_format: diff\n  commit_hash: 1af0e59\n  pass_rate_1: 13.8\n  pass_rate_2: 41.8",
+    "reported_by": "leaderboard",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "qwen-code",
+    "benchmark_id": "swe-bench-verified",
+    "metric": "avg score",
+    "value": 77.33,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "Qwen 3.7 Max",
+      "harness": "Qwen Code 0.22.0",
+      "attempts": "avg over 3 trials (pass@3 84.4%, pass^3 68.0%)",
+      "budget": "max_iterations=500, 1M context",
+      "date": "2026",
+      "notes": "Self-reported by Qwen Code authors in README; 500 cases."
+    },
+    "source_url": "https://github.com/QwenLM/qwen-code/blob/main/README.md",
+    "quote": "| 0.22.0  | **77.33%** |     84.4% |  84.4% |  68.0% |",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "mini-swe-agent",
+    "benchmark_id": "swe-bench-verified",
+    "metric": "resolved rate (lower bound)",
+    "value": 74,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "harness": "mini-swe-agent",
+      "notes": "Self-reported by authors as \">74%\"; model not stated in this sentence."
+    },
+    "source_url": "https://github.com/SWE-agent/mini-swe-agent/blob/main/README.md",
+    "quote": "- **Performant:** Scores >74% on the [SWE-bench verified benchmark](https://www.swebench.com/); starts much faster than Claude Code",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  },
+  {
+    "artifact_id": "tmax-27b",
+    "benchmark_id": "terminal-bench-2-0",
+    "metric": "accuracy (approx.)",
+    "value": 43,
+    "unit": "%",
+    "higher_is_better": true,
+    "conditions": {
+      "model": "tmax-27b (DPPO on Qwen 3.6 27B)",
+      "notes": "Self-reported by Ai2 as \"roughly 43%\" after 160 RL steps."
+    },
+    "source_url": "https://huggingface.co/allenai/tmax-27b/raw/main/README.md",
+    "quote": "It achieves roughly 43% on Terminal Bench 2.0 after 160 steps of RL training.",
+    "reported_by": "artifact-authors",
+    "retrieved_at": "2026-10-03"
+  }
+]

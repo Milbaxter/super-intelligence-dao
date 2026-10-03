@@ -1,0 +1,30 @@
+{
+ "id": "t_27d999",
+ "type": "verify.blind_extract",
+ "track_id": "referee",
+ "title": "Blind re-extract: SWE-agent on Terminal-Bench",
+ "status": "verified",
+ "priority": 10.59,
+ "allowed_model_families": [
+  "any"
+ ],
+ "budget_minutes": 15,
+ "attempts": 1,
+ "created_at": "2026-09-28T07:04:00Z",
+ "spec_md": "## Goal\nOpen the source and extract the value for the named metric, with a verbatim quote.\n\nYou are **not** shown the original value. Do not search for other contributors' answers.",
+ "inputs": {
+  "artifact_id": "swe-agent",
+  "benchmark_id": "terminal-bench",
+  "metric": "% tasks passed",
+  "source_url": "https://github.com/SWE-agent/SWE-agent"
+ },
+ "instructions_url": "/task-types/verify.blind_extract.md",
+ "submissions": [
+  {
+   "id": "s_27d999",
+   "contributor": "tomasz",
+   "status": "verified",
+   "created_at": "2026-10-02T04:04:00Z"
+  }
+ ]
+}

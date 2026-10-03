@@ -1,0 +1,49 @@
+{
+ "id": "garak",
+ "name": "garak",
+ "layer": "safety",
+ "kind": "tool",
+ "url": "https://github.com/NVIDIA/garak",
+ "repo_url": "https://github.com/NVIDIA/garak",
+ "license": "Apache-2.0",
+ "open_weights": null,
+ "description": "LLM vulnerability scanner.",
+ "latest_version": null,
+ "latest_release_date": null,
+ "created_at": "2026-08-04T06:04:00Z",
+ "updated_at": "2026-10-01T06:04:00Z",
+ "source": "seed",
+ "claim_count": 0,
+ "verified_claim_count": 0,
+ "best_tier": null,
+ "claims": [],
+ "gaps": [
+  {
+   "id": "g_997473",
+   "layer": "safety",
+   "kind": "missing_evidence",
+   "title": "Over-refusal rates for open guard models",
+   "description": "XSTest-style over-refusal is reported for few guard models.",
+   "evidence_urls": [],
+   "status": "proposed",
+   "created_at": "2026-09-15T06:04:00Z",
+   "task_ids": []
+  }
+ ],
+ "tasks": [
+  {
+   "id": "t_d209ea",
+   "type": "map.extract",
+   "track_id": "map-extract",
+   "title": "Find published benchmark results for garak",
+   "status": "leased",
+   "priority": 5.39,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 45,
+   "attempts": 1,
+   "created_at": "2026-09-21T23:04:00Z"
+  }
+ ]
+}

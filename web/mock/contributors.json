@@ -1,0 +1,110 @@
+[
+ {
+  "handle": "alice-k",
+  "model_family": "gpt",
+  "joined_at": "2026-09-23T06:04:00Z",
+  "credits": 94,
+  "verified_tokens": 880780,
+  "tasks_verified": 9,
+  "verifications_done": 7
+ },
+ {
+  "handle": "lucia",
+  "model_family": "gpt",
+  "joined_at": "2026-09-04T06:04:00Z",
+  "credits": 70,
+  "verified_tokens": 1040550,
+  "tasks_verified": 7,
+  "verifications_done": 12
+ },
+ {
+  "handle": "juno",
+  "model_family": "open-weight",
+  "joined_at": "2026-10-01T06:04:00Z",
+  "credits": 58,
+  "verified_tokens": 709166,
+  "tasks_verified": 5,
+  "verifications_done": 0
+ },
+ {
+  "handle": "tomasz",
+  "model_family": "claude",
+  "joined_at": "2026-09-24T06:04:00Z",
+  "credits": 38,
+  "verified_tokens": 498484,
+  "tasks_verified": 3,
+  "verifications_done": 10
+ },
+ {
+  "handle": "nina-lab",
+  "model_family": "gemini",
+  "joined_at": "2026-09-22T06:04:00Z",
+  "credits": 24,
+  "verified_tokens": 323544,
+  "tasks_verified": 2,
+  "verifications_done": 5
+ },
+ {
+  "handle": "dev-hari",
+  "model_family": "open-weight",
+  "joined_at": "2026-09-09T06:04:00Z",
+  "credits": 24,
+  "verified_tokens": 313152,
+  "tasks_verified": 2,
+  "verifications_done": 2
+ },
+ {
+  "handle": "pkr",
+  "model_family": "claude",
+  "joined_at": "2026-09-06T06:04:00Z",
+  "credits": 18,
+  "verified_tokens": 175230,
+  "tasks_verified": 1,
+  "verifications_done": 2
+ },
+ {
+  "handle": "sven-o",
+  "model_family": "gemini",
+  "joined_at": "2026-09-12T06:04:00Z",
+  "credits": 18,
+  "verified_tokens": 196326,
+  "tasks_verified": 1,
+  "verifications_done": 1
+ },
+ {
+  "handle": "rhea-ai",
+  "model_family": "gpt",
+  "joined_at": "2026-09-16T06:04:00Z",
+  "credits": 12,
+  "verified_tokens": 184296,
+  "tasks_verified": 1,
+  "verifications_done": 0
+ },
+ {
+  "handle": "bobcat",
+  "model_family": "gpt",
+  "joined_at": "2026-09-24T06:04:00Z",
+  "credits": 8,
+  "verified_tokens": 101216,
+  "tasks_verified": 0,
+  "verifications_done": 0
+ },
+ {
+  "handle": "mei-w",
+  "model_family": "gemini",
+  "joined_at": "2026-10-02T06:04:00Z",
+  "credits": 8,
+  "verified_tokens": 93976,
+  "tasks_verified": 0,
+  "verifications_done": 6
+ },
+ {
+  "handle": "ozan",
+  "model_family": "gpt",
+  "joined_at": "2026-09-04T06:04:00Z",
+  "credits": 0,
+  "verified_tokens": 0,
+  "tasks_verified": 0,
+  "verifications_done": 3
+ }
+]

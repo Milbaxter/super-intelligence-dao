@@ -1,0 +1,49 @@
+{
+ "id": "crewai",
+ "name": "CrewAI",
+ "layer": "multi-agent",
+ "kind": "framework",
+ "url": "https://github.com/crewAIInc/crewAI",
+ "repo_url": "https://github.com/crewAIInc/crewAI",
+ "license": "MIT",
+ "open_weights": null,
+ "description": "Role-based multi-agent orchestration.",
+ "latest_version": null,
+ "latest_release_date": null,
+ "created_at": "2026-08-04T06:04:00Z",
+ "updated_at": "2026-10-01T06:04:00Z",
+ "source": "seed",
+ "claim_count": 0,
+ "verified_claim_count": 0,
+ "best_tier": null,
+ "claims": [],
+ "gaps": [
+  {
+   "id": "g_b5e724",
+   "layer": "multi-agent",
+   "kind": "missing_capability",
+   "title": "No open benchmark for harness-of-harnesses",
+   "description": "No token-matched comparison of single vs multi-agent setups on the same tasks.",
+   "evidence_urls": [],
+   "status": "accepted",
+   "created_at": "2026-09-16T06:04:00Z",
+   "task_ids": []
+  }
+ ],
+ "tasks": [
+  {
+   "id": "t_346c6d",
+   "type": "map.extract",
+   "track_id": "map-extract",
+   "title": "Find published benchmark results for CrewAI",
+   "status": "open",
+   "priority": 7.69,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 45,
+   "attempts": 0,
+   "created_at": "2026-10-02T20:04:00Z"
+  }
+ ]
+}

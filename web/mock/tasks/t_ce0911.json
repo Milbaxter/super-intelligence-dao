@@ -1,0 +1,21 @@
+{
+ "id": "t_ce0911",
+ "type": "map.extract",
+ "track_id": "map-extract",
+ "title": "Find published benchmark results for opencode",
+ "status": "open",
+ "priority": 6.71,
+ "allowed_model_families": [
+  "any"
+ ],
+ "budget_minutes": 45,
+ "attempts": 0,
+ "created_at": "2026-10-01T07:04:00Z",
+ "spec_md": "## Goal\nFind **published** benchmark results for **opencode**.\n\n- Only use results stated on a public page you can quote verbatim.\n- Quote 20–600 characters that contain the value.\n- If nothing exists, submit `no_results_found: true` with the URLs you searched.\n\nStart from https://github.com/sst/opencode",
+ "inputs": {
+  "artifact_id": "opencode",
+  "artifact_url": "https://github.com/sst/opencode"
+ },
+ "instructions_url": "/task-types/map.extract.md",
+ "submissions": []
+}

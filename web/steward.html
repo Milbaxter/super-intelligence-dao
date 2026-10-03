@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Steward console · Super Intelligence DAO</title>
+<meta name="description" content="Minimal admin console for the steward.">
+<meta name="color-scheme" content="light dark">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta name="robots" content="noindex">
+</head>
+<body data-page="steward">
+<div id="site-header"></div>
+<main id="main" tabindex="-1">
+<section class="page-head graph">
+  <div class="wrap">
+    <p class="label"> Admin · steward only</p>
+    <h1>Steward console.</h1>
+    <p class="lede">Queue, rulings, invites and task generation. Your key stays in this tab’s session storage and is sent only to this site’s API.</p>
+  </div>
+</section>
+<div class="wrap">
+  <section style="padding-top:28px">
+    <form id="key-form" class="toolbar" autocomplete="off">
+      <label class="field grow"><span>Steward key</span><input type="password" id="key" autocomplete="off" spellcheck="false" placeholder="Paste the steward key"></label>
+      <button class="btn btn-primary" type="submit">Use key</button>
+      <button class="btn" type="button" id="forget" hidden>Forget key</button>
+    </form>
+    <p class="small muted" id="key-state" style="margin-top:8px" aria-live="polite"></p>
+  </section>
+  <div id="console"></div>
+</div>
+</main>
+<div id="site-footer"></div>
+<script type="module" src="assets/js/pages/steward.js"></script>
+</body>
+</html>

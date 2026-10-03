@@ -1,0 +1,34 @@
+{
+ "id": "continue",
+ "name": "Continue",
+ "layer": "ux",
+ "kind": "app",
+ "url": "https://github.com/continuedev/continue",
+ "repo_url": "https://github.com/continuedev/continue",
+ "license": "Apache-2.0",
+ "open_weights": null,
+ "description": "Open-source IDE assistant.",
+ "latest_version": null,
+ "latest_release_date": null,
+ "created_at": "2026-08-04T06:04:00Z",
+ "updated_at": "2026-10-01T06:04:00Z",
+ "source": "seed",
+ "claim_count": 0,
+ "verified_claim_count": 0,
+ "best_tier": null,
+ "claims": [],
+ "gaps": [
+  {
+   "id": "g_de83b3",
+   "layer": "ux",
+   "kind": "missing_evidence",
+   "title": "No usability evidence for local chat UIs",
+   "description": "No published task-success comparisons exist for open chat front-ends.",
+   "evidence_urls": [],
+   "status": "accepted",
+   "created_at": "2026-09-15T06:04:00Z",
+   "task_ids": []
+  }
+ ],
+ "tasks": []
+}

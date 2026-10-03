@@ -1,0 +1,40 @@
+{
+ "id": "cl_6158c5",
+ "artifact_id": "codex-cli",
+ "artifact_name": "Codex CLI",
+ "layer": "harnesses",
+ "benchmark_id": "aider-polyglot",
+ "benchmark_name": "Aider Polyglot",
+ "metric": "% correct",
+ "value": 79.1,
+ "unit": "%",
+ "higher_is_better": true,
+ "conditions": {
+  "date": "2026-03-10",
+  "notes": "Illustrative example value from mock fixtures, not a real result.",
+  "model": "Qwen2.5-Coder 32B",
+  "attempts": 1
+ },
+ "source_url": "https://github.com/openai/codex",
+ "quote": "[Illustrative example quote] Codex CLI reaches 79.1% on Aider Polyglot under the stated setup.",
+ "reported_by": "artifact-authors",
+ "tier": "reported",
+ "special_status": null,
+ "display_status": "reported",
+ "created_at": "2026-08-17T02:04:00Z",
+ "tier_changed_at": "2026-08-20T02:04:00Z",
+ "expires_at": "2027-02-16T02:04:00Z",
+ "seed": 0,
+ "check_result": null,
+ "trail": [
+  {
+   "ts": "2026-08-17T02:04:00Z",
+   "kind": "submitted",
+   "actor": "lucia",
+   "summary": "map.extract submission included this claim",
+   "detail": {
+    "model_family": "claude"
+   }
+  }
+ ]
+}

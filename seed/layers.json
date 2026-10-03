@@ -1,0 +1,68 @@
+[
+  {
+    "id": "data",
+    "name": "Data",
+    "description": "Pretraining corpora, post-training/SFT/RL datasets and the curation tooling that builds them.",
+    "sort": 1
+  },
+  {
+    "id": "pretraining",
+    "name": "Pretraining",
+    "description": "Frameworks and codebases for training base models at scale (parallelism, kernels, recipes).",
+    "sort": 2
+  },
+  {
+    "id": "post-training",
+    "name": "Post-training",
+    "description": "Fine-tuning, preference optimization and reinforcement-learning libraries that turn base models into assistants and agents.",
+    "sort": 3
+  },
+  {
+    "id": "environments",
+    "name": "Environments",
+    "description": "RL and agent environments, environment libraries and hubs that supply tasks plus verifiable rewards.",
+    "sort": 4
+  },
+  {
+    "id": "evals",
+    "name": "Evals & benchmarks",
+    "description": "Evaluation frameworks and the benchmarks used to compare models, harnesses and systems.",
+    "sort": 5
+  },
+  {
+    "id": "inference",
+    "name": "Inference",
+    "description": "Serving engines and local runtimes that execute open-weight models efficiently.",
+    "sort": 6
+  },
+  {
+    "id": "models",
+    "name": "Open-weight models",
+    "description": "Model families whose weights are publicly downloadable, with their licenses and reported results.",
+    "sort": 7
+  },
+  {
+    "id": "harnesses",
+    "name": "Agent harnesses",
+    "description": "Coding and general agent scaffolds/CLIs that wrap a model with tools, memory and a control loop.",
+    "sort": 8
+  },
+  {
+    "id": "multi-agent",
+    "name": "Multi-agent & orchestration",
+    "description": "Frameworks and protocols for composing several agents or tools into larger systems.",
+    "sort": 9
+  },
+  {
+    "id": "ux",
+    "name": "Apps & UX",
+    "description": "End-user chat apps and desktop/web front-ends for running and using open models.",
+    "sort": 10
+  },
+  {
+    "id": "safety",
+    "name": "Safety & security",
+    "description": "Guardrails, safety classifiers, red-teaming scanners and security evaluation tools.",
+    "sort": 11
+  }
+]

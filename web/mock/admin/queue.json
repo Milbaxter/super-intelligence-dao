@@ -1,0 +1,203 @@
+{
+ "needs_steward": [
+  {
+   "kind": "task",
+   "id": "t_a70d58",
+   "task_id": "t_a70d58",
+   "task_type": "map.gap_scan",
+   "title": "Gap scan: evals layer",
+   "attempts": 1,
+   "created_at": "2026-09-25T19:04:00Z"
+  },
+  {
+   "kind": "task",
+   "id": "t_6d0767",
+   "task_id": "t_6d0767",
+   "task_type": "map.gap_scan",
+   "title": "Gap scan: environments layer",
+   "attempts": 1,
+   "created_at": "2026-09-19T20:04:00Z"
+  }
+ ],
+ "disputed_claims": [
+  {
+   "id": "cl_b053cf",
+   "artifact_id": "deepseek-v3",
+   "artifact_name": "DeepSeek-V3",
+   "layer": "models",
+   "benchmark_id": "livecodebench",
+   "benchmark_name": "LiveCodeBench",
+   "metric": "pass@1",
+   "value": 22.7,
+   "unit": "pass@1",
+   "higher_is_better": true,
+   "conditions": {
+    "date": "2026-04-24",
+    "notes": "Illustrative example value from mock fixtures, not a real result.",
+    "attempts": 1,
+    "scaffold": "zero-shot"
+   },
+   "source_url": "https://huggingface.co/deepseek-ai/DeepSeek-V3",
+   "quote": "[Illustrative example quote] DeepSeek-V3 reaches 22.7 on LiveCodeBench under the stated setup.",
+   "reported_by": "artifact-authors",
+   "tier": "source-checked",
+   "special_status": "disputed",
+   "display_status": "disputed",
+   "created_at": "2026-09-01T20:04:00Z",
+   "tier_changed_at": "2026-09-01T20:04:00Z",
+   "expires_at": "2027-02-28T20:04:00Z",
+   "seed": 0,
+   "check_result": {
+    "passed": true,
+    "reason": "quote_found_value_present",
+    "fetched_url": "https://huggingface.co/deepseek-ai/DeepSeek-V3",
+    "http_status": 200,
+    "fetched_at": "2026-09-01T20:04:00Z",
+    "content_sha256": "910e7a55ce7988591f7b04c4ad7e8fc71126cb106670f28b09b2356c0bcbc34d"
+   },
+   "verifications": []
+  },
+  {
+   "id": "cl_756fab",
+   "artifact_id": "aider",
+   "artifact_name": "Aider",
+   "layer": "harnesses",
+   "benchmark_id": "terminal-bench",
+   "benchmark_name": "Terminal-Bench",
+   "metric": "% tasks passed",
+   "value": 64.0,
+   "unit": "%",
+   "higher_is_better": true,
+   "conditions": {
+    "date": "2026-06-14",
+    "notes": "Illustrative example value from mock fixtures, not a real result.",
+    "model": "Llama 3.3 70B",
+    "attempts": 1
+   },
+   "source_url": "https://github.com/Aider-AI/aider",
+   "quote": "[Illustrative example quote] Aider reaches 64% on Terminal-Bench under the stated setup.",
+   "reported_by": "artifact-authors",
+   "tier": "source-checked",
+   "special_status": "disputed",
+   "display_status": "disputed",
+   "created_at": "2026-09-25T06:04:00Z",
+   "tier_changed_at": "2026-09-25T06:04:00Z",
+   "expires_at": "2027-03-24T06:04:00Z",
+   "seed": 1,
+   "check_result": {
+    "passed": true,
+    "reason": "quote_found_value_present",
+    "fetched_url": "https://github.com/Aider-AI/aider",
+    "http_status": 200,
+    "fetched_at": "2026-09-25T06:04:00Z",
+    "content_sha256": "acbb3d4fce6e9964c395eae032e21f4ce789ae83161d7e28ceb1b4e4dbb7dfd9"
+   },
+   "verifications": []
+  },
+  {
+   "id": "cl_eb4a10",
+   "artifact_id": "vllm",
+   "artifact_name": "vLLM",
+   "layer": "inference",
+   "benchmark_id": "mlperf-inference",
+   "benchmark_name": "MLPerf Inference",
+   "metric": "tokens/s",
+   "value": 2611.0,
+   "unit": "tokens/s",
+   "higher_is_better": true,
+   "conditions": {
+    "date": "2026-08-24",
+    "notes": "Illustrative example value from mock fixtures, not a real result."
+   },
+   "source_url": "https://github.com/vllm-project/vllm",
+   "quote": "[Illustrative example quote] vLLM reaches 2611 on MLPerf Inference under the stated setup.",
+   "reported_by": "artifact-authors",
+   "tier": "source-checked",
+   "special_status": "disputed",
+   "display_status": "disputed",
+   "created_at": "2026-06-23T20:04:00Z",
+   "tier_changed_at": "2026-06-25T20:04:00Z",
+   "expires_at": "2026-12-22T20:04:00Z",
+   "seed": 0,
+   "check_result": {
+    "passed": true,
+    "reason": "quote_found_value_present",
+    "fetched_url": "https://github.com/vllm-project/vllm",
+    "http_status": 200,
+    "fetched_at": "2026-06-25T20:04:00Z",
+    "content_sha256": "5c4dccb556c2ed391a58be9795b6e7c98bf651e31798f3d314a74efcc7b6c664"
+   },
+   "verifications": []
+  }
+ ],
+ "proposed_gaps": [
+  {
+   "id": "g_1fc39d",
+   "layer": "harnesses",
+   "kind": "missing_evidence",
+   "title": "No Terminal-Bench results for goose",
+   "description": "No published Terminal-Bench run found for goose under any model.",
+   "evidence_urls": [],
+   "status": "proposed",
+   "created_at": "2026-09-25T06:04:00Z",
+   "task_ids": []
+  },
+  {
+   "id": "g_997473",
+   "layer": "safety",
+   "kind": "missing_evidence",
+   "title": "Over-refusal rates for open guard models",
+   "description": "XSTest-style over-refusal is reported for few guard models.",
+   "evidence_urls": [],
+   "status": "proposed",
+   "created_at": "2026-09-15T06:04:00Z",
+   "task_ids": []
+  },
+  {
+   "id": "g_eeed1d",
+   "layer": "environments",
+   "kind": "missing_artifact",
+   "title": "Which environments ship verifiers?",
+   "description": "Unclear which open environments include machine-checkable verifiers.",
+   "evidence_urls": [],
+   "status": "proposed",
+   "created_at": "2026-09-05T06:04:00Z",
+   "task_ids": []
+  }
+ ],
+ "spot_check_sample": [
+  {
+   "submission_id": "s_exef54",
+   "task_id": "t_exef54",
+   "task_type": "map.extract",
+   "contributor": "example-contributor",
+   "created_at": "2026-03-30T18:04:00Z",
+   "resolved_at": "2026-04-01T18:04:00Z",
+   "claim_ids": [
+    "cl_99ef54"
+   ]
+  },
+  {
+   "submission_id": "s_ex0934",
+   "task_id": "t_ex0934",
+   "task_type": "map.extract",
+   "contributor": "example-contributor",
+   "created_at": "2026-05-28T12:04:00Z",
+   "resolved_at": "2026-05-29T12:04:00Z",
+   "claim_ids": [
+    "cl_400934"
+   ]
+  },
+  {
+   "submission_id": "s_ex08c8",
+   "task_id": "t_ex08c8",
+   "task_type": "map.extract",
+   "contributor": "example-contributor",
+   "created_at": "2026-06-05T09:04:00Z",
+   "resolved_at": "2026-06-08T09:04:00Z",
+   "claim_ids": [
+    "cl_2008c8"
+   ]
+  }
+ ]
+}

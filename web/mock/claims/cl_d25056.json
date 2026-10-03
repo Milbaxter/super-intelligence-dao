@@ -1,0 +1,65 @@
+{
+ "id": "cl_d25056",
+ "artifact_id": "langgraph",
+ "artifact_name": "LangGraph",
+ "layer": "multi-agent",
+ "benchmark_id": "gaia",
+ "benchmark_name": "GAIA",
+ "metric": "% correct",
+ "value": 35.7,
+ "unit": "%",
+ "higher_is_better": true,
+ "conditions": {
+  "date": "2026-03-24",
+  "notes": "Illustrative example value from mock fixtures, not a real result."
+ },
+ "source_url": "https://github.com/langchain-ai/langgraph",
+ "quote": "[Illustrative example quote] LangGraph reaches 35.7% on GAIA under the stated setup.",
+ "reported_by": "leaderboard",
+ "tier": "reproduced",
+ "special_status": null,
+ "display_status": "reproduced",
+ "created_at": "2026-08-04T07:04:00Z",
+ "tier_changed_at": "2026-08-04T07:04:00Z",
+ "expires_at": "2027-01-31T07:04:00Z",
+ "seed": 0,
+ "check_result": {
+  "passed": true,
+  "reason": "quote_found_value_present",
+  "fetched_url": "https://github.com/langchain-ai/langgraph",
+  "http_status": 200,
+  "fetched_at": "2026-08-04T07:04:00Z",
+  "content_sha256": "35c0aab6ad8b026ffc5d4b121b1329890cba797142e9528cae01dd57ffb3123b"
+ },
+ "trail": [
+  {
+   "ts": "2026-08-04T07:04:00Z",
+   "kind": "submitted",
+   "actor": "sven-o",
+   "summary": "map.extract submission included this claim",
+   "detail": {
+    "model_family": "claude"
+   }
+  },
+  {
+   "ts": "2026-08-04T07:04:00Z",
+   "kind": "quote_check",
+   "actor": "referee",
+   "summary": "Source fetched; quote found verbatim; value present in quote → T1 source-checked",
+   "detail": {
+    "http_status": 200,
+    "fetched_url": "https://github.com/langchain-ai/langgraph"
+   }
+  },
+  {
+   "ts": "2026-08-04T07:04:00Z",
+   "kind": "blind_agree",
+   "actor": "ozan",
+   "summary": "Blind re-extraction by a different contributor (different model family) matched within tolerance → T2 reproduced",
+   "detail": {
+    "model_family": "gemini",
+    "tolerance": "abs ≤ 0.1 or rel ≤ 0.5%"
+   }
+  }
+ ]
+}

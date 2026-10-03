@@ -1,0 +1,34 @@
+{
+ "id": "openrlhf",
+ "name": "OpenRLHF",
+ "layer": "post-training",
+ "kind": "framework",
+ "url": "https://github.com/OpenRLHF/OpenRLHF",
+ "repo_url": "https://github.com/OpenRLHF/OpenRLHF",
+ "license": "Apache-2.0",
+ "open_weights": null,
+ "description": "Ray-based RLHF framework.",
+ "latest_version": null,
+ "latest_release_date": null,
+ "created_at": "2026-08-04T06:04:00Z",
+ "updated_at": "2026-10-01T06:04:00Z",
+ "source": "seed",
+ "claim_count": 0,
+ "verified_claim_count": 0,
+ "best_tier": null,
+ "claims": [],
+ "gaps": [
+  {
+   "id": "g_c8a7e4",
+   "layer": "post-training",
+   "kind": "missing_evidence",
+   "title": "GRPO recipes lack reproducible reward curves",
+   "description": "Few RL libraries publish reproducible reward curves with configs.",
+   "evidence_urls": [],
+   "status": "accepted",
+   "created_at": "2026-09-24T06:04:00Z",
+   "task_ids": []
+  }
+ ],
+ "tasks": []
+}

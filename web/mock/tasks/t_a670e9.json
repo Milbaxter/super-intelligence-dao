@@ -1,0 +1,30 @@
+{
+ "id": "t_a670e9",
+ "type": "verify.blind_extract",
+ "track_id": "referee",
+ "title": "Blind re-extract: OLMo 2 32B on LiveCodeBench",
+ "status": "verifying",
+ "priority": 11.98,
+ "allowed_model_families": [
+  "any"
+ ],
+ "budget_minutes": 15,
+ "attempts": 1,
+ "created_at": "2026-10-02T10:04:00Z",
+ "spec_md": "## Goal\nOpen the source and extract the value for the named metric, with a verbatim quote.\n\nYou are **not** shown the original value. Do not search for other contributors' answers.",
+ "inputs": {
+  "artifact_id": "olmo-2-32b",
+  "benchmark_id": "livecodebench",
+  "metric": "pass@1",
+  "source_url": "https://huggingface.co/allenai/OLMo-2-0325-32B-Instruct"
+ },
+ "instructions_url": "/task-types/verify.blind_extract.md",
+ "submissions": [
+  {
+   "id": "s_a670e9",
+   "contributor": "alice-k",
+   "status": "verifying",
+   "created_at": "2026-10-03T03:04:00Z"
+  }
+ ]
+}

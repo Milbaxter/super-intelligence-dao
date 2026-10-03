@@ -1,0 +1,134 @@
+[
+  {
+    "id": "map-models",
+    "name": "Map: open models",
+    "workstream": "map",
+    "phase": "now",
+    "summary": "Sourced, conditional claims for open-weight models (Qwen, DeepSeek, Llama, gpt-oss, Kimi, GLM, OLMo, Mistral...): which benchmark, which harness, which budget, what score, from which source.",
+    "why": "Open models are the base of the open stack. Today their scores are scattered across model cards, papers and leaderboards, with conditions left out. A model's score without its harness, attempts and date is not comparable. Knowing exactly where open models stand, and under which conditions, is the first input to deciding what to improve next.",
+    "verification": "Phase 0: every claim needs a verbatim quote from a fetchable source. The server fetches the page and checks the quote and the value are really there (T1). A different contributor's agent, ideally a different model family, then re-extracts the value blind (T2 if it agrees, disputed if not). The steward audits a random 10% sample weekly and all disputes. No scores are re-run in Phase 0.",
+    "weight": 5,
+    "sort": 10
+  },
+  {
+    "id": "map-harnesses",
+    "name": "Map: harnesses, agents & multi-agent",
+    "workstream": "map",
+    "phase": "now",
+    "summary": "Claims and profiles for open agent harnesses and orchestration frameworks (OpenHands, SWE-agent, mini-SWE-agent, Aider, OpenCode, Goose, Codex CLI, Gemini CLI...), and which model + harness pairs score what on agentic benchmarks.",
+    "why": "The same model can move several points on agentic benchmarks depending on the harness. Harness effects now rival gaps between model generations, and harnesses are the cheapest layer to improve. The map has to show model x harness pairs, not just models, or it hides the best lever open-source has.",
+    "verification": "Same as all Map tracks in Phase 0: mechanical quote check (T1) + blind re-extraction by an independent contributor (T2) + steward spot checks. Claims must record the harness and its version in conditions; claims without a harness are accepted but flagged as unconditioned.",
+    "weight": 5,
+    "sort": 20
+  },
+  {
+    "id": "map-inference",
+    "name": "Map: inference & serving",
+    "workstream": "map",
+    "phase": "now",
+    "summary": "Profiles and published performance claims for open inference engines (vLLM, SGLang, llama.cpp, Ollama, TensorRT-LLM...): supported models, hardware, throughput and latency under stated conditions.",
+    "why": "An open model nobody can serve cheaply is not really available. Inference cost decides who can run open AI at all, and how many agent rollouts the open ecosystem can afford. Throughput claims are especially condition-dependent (GPU, batch, sequence length), so they need conditions attached.",
+    "verification": "Phase 0: quote check + blind re-extraction, as for other Map tracks. Throughput/latency claims must carry hardware, model and batch/sequence settings in conditions, or the reviewer rejects them. No benchmarks are re-run in Phase 0.",
+    "weight": 3,
+    "sort": 30
+  },
+  {
+    "id": "map-training",
+    "name": "Map: data, pretraining & post-training",
+    "workstream": "map",
+    "phase": "now",
+    "summary": "Open datasets (FineWeb, Dolma...), open training recipes and post-training/RL frameworks (TRL, verl, OpenRLHF, Tulu/open-instruct...): licenses, what they enable, and the published results that trace back to them.",
+    "why": "Fully open models need open data and open recipes, not just open weights. This is where the open stack is thinnest. Mapping which recipes and RL frameworks produced which verified results tells contributors where the missing pieces are.",
+    "verification": "Phase 0: profiles are checked field by field (each field needs a quoted source the server can find) + a second-opinion review. Result claims follow the standard quote check + blind re-extraction path. Gap lists need a review and steward acceptance.",
+    "weight": 3,
+    "sort": 40
+  },
+  {
+    "id": "map-evals",
+    "name": "Map: evals, environments & safety",
+    "workstream": "map",
+    "phase": "now",
+    "summary": "The benchmarks and environments themselves (Terminal-Bench, SWE-bench variants, Harbor, Inspect, RL environment hubs, safety evals): what they measure, whether they are saturated, contaminated or known to be hackable, and their licenses.",
+    "why": "Every other claim on the map is only as good as the benchmark under it. Many agent benchmarks have been gamed or broken after release. Recording which benchmarks are saturated, which have known exploits, and which have fresh held-out splits keeps the map honest and tells the R&D tracks which measuring sticks they can trust.",
+    "verification": "Phase 0: profile fields and benchmark facts need quoted sources (T1) + second-opinion review; claims about known exploits or fixes need a source such as a paper, changelog or issue. Steward accepts gap entries.",
+    "weight": 4,
+    "sort": 50
+  },
+  {
+    "id": "referee-agreement",
+    "name": "Referee: blind agreement & review",
+    "workstream": "referee",
+    "phase": "now",
+    "summary": "The verification work itself: blind re-extraction of claims, second-opinion reviews, re-checking stale claims, and surfacing disputes for the steward.",
+    "why": "Verification is the scarce resource, not tokens. Unverified work is worth nothing under the house rule, so verify tasks are prioritised above new work. A map that nobody independently checked is just another scraped leaderboard.",
+    "verification": "Agreement is mechanical: the server compares the blind value with the original (abs diff <= 0.1 or relative <= 0.5%). Reviews are scored against the steward's final outcome. The steward audits a random 10% of last week's verified items and every dispute. Verifiers who repeatedly disagree with the steward lose priority.",
+    "weight": 5,
+    "sort": 60
+  },
+  {
+    "id": "rnd-harness-layers",
+    "name": "R&D: harness layers for official CLIs",
+    "workstream": "rnd",
+    "phase": "next",
+    "summary": "Skills, plugins, hooks and instruction files (AGENTS.md / CLAUDE.md / GEMINI.md style) that make unmodified official agent CLIs measurably better on open task sets. Tiny pilot only in Phase 0.",
+    "why": "Harness structure (tools, memory, middleware, instructions) moves agent scores by several points, and the gains often transfer across model families. Harness layers are open text and code anyone can adopt, so a verified improvement here helps every open agent user immediately. Proposing edits works with any model, so donated tokens fit.",
+    "verification": "Phase 0 pilot: contributor reports with/without runs on a named public task set; a second contributor reviews and, where cheap, re-runs a sample on their own subscription. This is treated as T0/T1 evidence only, never as a verified improvement. From Phase 1: org-run re-runs on held-out tasks split by task id, k >= 3 seeds, paired statistics, no regression on out-of-family suites.",
+    "weight": 3,
+    "sort": 70
+  },
+  {
+    "id": "rnd-bench-construction",
+    "name": "R&D: benchmark & RL-environment construction",
+    "workstream": "rnd",
+    "phase": "next",
+    "summary": "Harbor-format task packages (instruction, Docker environment, tests, oracle solution) that refresh held-out sets and measure real capabilities. Open-weight models only, because tasks may become training data.",
+    "why": "Every R&D claim needs fresh tasks the claimant never saw. Public benchmarks leak and saturate. A steady supply of new, checked tasks is what lets the DAO verify improvements honestly, and good tasks are also reusable RL environments for open models.",
+    "verification": "Mechanical first: the oracle solution must pass and a no-op agent must fail, both re-run by the reviewer in docker on CPU. Then a second-opinion review for under-specification and shortcuts. Later: calibration runs across several agent/model pairs and credit only for tasks that survive release.",
+    "weight": 3,
+    "sort": 80
+  },
+  {
+    "id": "rnd-harness-of-harnesses",
+    "name": "R&D: harness of harnesses (multi-agent emergence)",
+    "workstream": "rnd",
+    "phase": "vision",
+    "summary": "How coordination architectures (single agent, best-of-N, shared queue, lead + subagents, mixed-vendor fleets) compare at equal total tokens and wall-clock. The DAO's own fleet logs (claims, leases, agreements, disputes) are the first dataset.",
+    "why": "Multi-agent gains are often just more token spend, and same-model swarms tend to converge on the same answers. Whether a heterogeneous fleet (Claude, GPT, Gemini, open-weight) avoids that conformity is an open question only a mixed volunteer fleet can measure. The DAO itself is the testbed: every blind agreement and dispute is a data point about cross-model independence.",
+    "verification": "Phase 0: none beyond logging. The fleet's anonymised event logs are collected now so analyses are possible later. Phase 2+: pre-registered, token-matched comparisons re-run by the org on two task families, with best-of-N independent agents as the baseline.",
+    "weight": 2,
+    "sort": 90
+  },
+  {
+    "id": "rnd-lean",
+    "name": "R&D: Lean formal math",
+    "workstream": "rnd",
+    "phase": "vision",
+    "summary": "Formal proofs in Lean 4 / Mathlib for blueprint-style projects, split into small claimable lemmas.",
+    "why": "Formal math is the cleanest case of verifiable progress: the proof checker is the referee. It is a zero-ambiguity way to grow open reasoning data and to test whether donated agents can contribute to long-horizon research.",
+    "verification": "Mechanical: the Lean kernel checks the proof; CI rejects sorry/axioms. Humans still check that the formal statement matches the informal one, so statements come from existing vetted blueprints only.",
+    "weight": 2,
+    "sort": 100
+  },
+  {
+    "id": "referee-repro-desk",
+    "name": "Referee: reproduction desk",
+    "workstream": "referee",
+    "phase": "next",
+    "summary": "Independent re-runs of published benchmark results (T3): open model + open harness + pinned config, run by trusted runners, compared against the reported number with error bars.",
+    "why": "Reported scores vary widely between evaluators for the same model. A map of reproduced, conditional results is the niche nobody fills, and it is what turns 'reported' into evidence. It needs compute or API budget, which Phase 0 does not have.",
+    "verification": "Trusted runners only (steward-controlled machines or vetted contributors running open-weight models locally) with pinned harness SHA, resources and seeds; k >= 3 runs; result recorded with CI. Contributor runs on closed APIs never count as T3 because the served model cannot be proven.",
+    "weight": 3,
+    "sort": 110
+  },
+  {
+    "id": "referee-paid-reruns-governance",
+    "name": "Referee: paid re-runs & governance",
+    "workstream": "referee",
+    "phase": "vision",
+    "summary": "Funded trusted runners, sealed holdout vaults, external replication (T4), and how the DAO decides rubrics and priorities. Deferred until the loop works.",
+    "why": "An open network needs a referee it can trust and a way to change the rules without a single point of failure. One idea parked for later: voting weight from verified tokens (tokens spent on work that passed the referee), never raw tokens, so burning quota on busywork earns nothing.",
+    "verification": "Not started. Pre-condition: Phase 0 exit criteria met. Any future payout must pay for verified outputs, never per unit of subscription usage.",
+    "weight": 1,
+    "sort": 120
+  }
+]

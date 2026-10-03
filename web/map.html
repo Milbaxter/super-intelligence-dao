@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Map · Super Intelligence DAO</title>
+<meta name="description" content="The living, sourced map of the open-source AI stack. Every cell is a claim with a verification tier.">
+<meta name="color-scheme" content="light dark">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body data-page="map">
+<div id="site-header"></div>
+<main id="main" tabindex="-1">
+<section class="page-head graph">
+  <div class="wrap">
+    <p class="label"><span class="phase" data-phase="now">Live now</span> The open-source AI stack, sourced</p>
+    <h1>The living Map.</h1>
+    <p class="lede">Every cell is a <em>claim</em> — an artifact, a benchmark, its conditions, a value, a source and a verbatim quote — tagged with how far the referee has checked it. Hatched cells are gaps. Gaps are where the Board gets its work.</p>
+    <div id="map-summary" class="map-summary"></div>
+  </div>
+</section>
+<div class="wrap">
+  <section class="sec" style="padding-top:44px" aria-labelledby="stack-title">
+    <div class="block-head"><h2 id="stack-title" class="label"><strong>The stack, layer by layer</strong></h2><span class="small muted">Bars: every artifact in the layer, coloured by its best claim.</span></div>
+    <div id="stack" class="stack"></div>
+  </section>
+  <form class="toolbar map-filters" id="map-filters" role="search" aria-label="Filter the map">
+    <label class="field"><span>Layer</span><select id="f-layer"><option value="">All layers</option></select></label>
+    <label class="field"><span>Kind</span><select id="f-kind"><option value="">All kinds</option></select></label>
+    <label class="field grow"><span>Search artifacts</span><input type="search" id="f-q" placeholder="e.g. vLLM, OpenHands, OLMo" autocomplete="off"></label>
+    <div class="field" style="flex-basis:100%"><span id="tier-seg-label">Tier</span><div class="seg" id="f-tier" role="group" aria-labelledby="tier-seg-label"></div></div>
+  </form>
+  <p class="small muted" id="map-count" aria-live="polite"></p>
+  <div id="layers"></div>
+</div>
+</main>
+<div id="site-footer"></div>
+<script type="module" src="assets/js/pages/map.js"></script>
+</body>
+</html>

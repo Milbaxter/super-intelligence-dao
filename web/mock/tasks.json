@@ -1,0 +1,369 @@
+{
+ "items": [
+  {
+   "id": "t_d1f3a6",
+   "type": "map.extract",
+   "track_id": "map-extract",
+   "title": "Find published benchmark results for goose",
+   "status": "open",
+   "priority": 6.22,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 45,
+   "attempts": 2,
+   "created_at": "2026-09-22T05:04:00Z"
+  },
+  {
+   "id": "t_ce0911",
+   "type": "map.extract",
+   "track_id": "map-extract",
+   "title": "Find published benchmark results for opencode",
+   "status": "open",
+   "priority": 6.71,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 45,
+   "attempts": 0,
+   "created_at": "2026-10-01T07:04:00Z"
+  },
+  {
+   "id": "t_392d05",
+   "type": "map.extract",
+   "track_id": "map-extract",
+   "title": "Find published benchmark results for Jan",
+   "status": "open",
+   "priority": 5.84,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 45,
+   "attempts": 0,
+   "created_at": "2026-09-24T03:04:00Z"
+  },
+  {
+   "id": "t_346c6d",
+   "type": "map.extract",
+   "track_id": "map-extract",
+   "title": "Find published benchmark results for CrewAI",
+   "status": "open",
+   "priority": 7.69,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 45,
+   "attempts": 0,
+   "created_at": "2026-10-02T20:04:00Z"
+  },
+  {
+   "id": "t_b42ccd",
+   "type": "map.extract",
+   "track_id": "map-extract",
+   "title": "Find published benchmark results for The Stack v2",
+   "status": "open",
+   "priority": 6.9,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 45,
+   "attempts": 0,
+   "created_at": "2026-10-01T10:04:00Z"
+  },
+  {
+   "id": "t_42e343",
+   "type": "map.extract",
+   "track_id": "map-extract",
+   "title": "Find published benchmark results for nanotron",
+   "status": "open",
+   "priority": 6.82,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 45,
+   "attempts": 0,
+   "created_at": "2026-10-01T18:04:00Z"
+  },
+  {
+   "id": "t_42b2e6",
+   "type": "map.extract",
+   "track_id": "map-extract",
+   "title": "Find published benchmark results for SGLang",
+   "status": "open",
+   "priority": 5.79,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 45,
+   "attempts": 0,
+   "created_at": "2026-09-23T12:04:00Z"
+  },
+  {
+   "id": "t_e4424d",
+   "type": "map.extract",
+   "track_id": "map-extract",
+   "title": "Find published benchmark results for HELM",
+   "status": "open",
+   "priority": 5.03,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 45,
+   "attempts": 2,
+   "created_at": "2026-09-24T07:04:00Z"
+  },
+  {
+   "id": "t_deafe5",
+   "type": "map.extract",
+   "track_id": "map-extract",
+   "title": "Find published benchmark results for BrowserGym",
+   "status": "open",
+   "priority": 7.78,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 45,
+   "attempts": 0,
+   "created_at": "2026-09-19T22:04:00Z"
+  },
+  {
+   "id": "t_d209ea",
+   "type": "map.extract",
+   "track_id": "map-extract",
+   "title": "Find published benchmark results for garak",
+   "status": "leased",
+   "priority": 5.39,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 45,
+   "attempts": 1,
+   "created_at": "2026-09-21T23:04:00Z"
+  },
+  {
+   "id": "t_af6f2b",
+   "type": "map.profile",
+   "track_id": "map-profile",
+   "title": "Profile Open WebUI: licence, latest release, repo",
+   "status": "leased",
+   "priority": 4.28,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 20,
+   "attempts": 1,
+   "created_at": "2026-09-30T20:04:00Z"
+  },
+  {
+   "id": "t_296cab",
+   "type": "map.profile",
+   "track_id": "map-profile",
+   "title": "Profile Megatron-LM: licence, latest release, repo",
+   "status": "leased",
+   "priority": 4.74,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 20,
+   "attempts": 1,
+   "created_at": "2026-09-27T14:04:00Z"
+  },
+  {
+   "id": "t_bbf48b",
+   "type": "map.profile",
+   "track_id": "map-profile",
+   "title": "Profile Harbor: licence, latest release, repo",
+   "status": "leased",
+   "priority": 3.09,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 20,
+   "attempts": 1,
+   "created_at": "2026-09-28T21:04:00Z"
+  },
+  {
+   "id": "t_7e3d67",
+   "type": "map.profile",
+   "track_id": "map-profile",
+   "title": "Profile AutoGen: licence, latest release, repo",
+   "status": "submitted",
+   "priority": 4.68,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 20,
+   "attempts": 1,
+   "created_at": "2026-09-19T19:04:00Z"
+  },
+  {
+   "id": "t_01a654",
+   "type": "map.profile",
+   "track_id": "map-profile",
+   "title": "Profile opencode: licence, latest release, repo",
+   "status": "submitted",
+   "priority": 4.37,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 20,
+   "attempts": 1,
+   "created_at": "2026-09-27T00:04:00Z"
+  },
+  {
+   "id": "t_2c6c91",
+   "type": "map.profile",
+   "track_id": "map-profile",
+   "title": "Profile DeepSeek-V3: licence, latest release, repo",
+   "status": "verifying",
+   "priority": 4.21,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 20,
+   "attempts": 1,
+   "created_at": "2026-09-27T10:04:00Z"
+  },
+  {
+   "id": "t_a670e9",
+   "type": "verify.blind_extract",
+   "track_id": "referee",
+   "title": "Blind re-extract: OLMo 2 32B on LiveCodeBench",
+   "status": "verifying",
+   "priority": 11.98,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 15,
+   "attempts": 1,
+   "created_at": "2026-10-02T10:04:00Z"
+  },
+  {
+   "id": "t_320f96",
+   "type": "verify.blind_extract",
+   "track_id": "referee",
+   "title": "Blind re-extract: Qwen2.5-Coder 32B on HumanEval",
+   "status": "verified",
+   "priority": 10.8,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 15,
+   "attempts": 1,
+   "created_at": "2026-09-21T10:04:00Z"
+  },
+  {
+   "id": "t_e47e9c",
+   "type": "verify.blind_extract",
+   "track_id": "referee",
+   "title": "Blind re-extract: DeepSeek-V3 on HumanEval",
+   "status": "verified",
+   "priority": 9.64,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 15,
+   "attempts": 1,
+   "created_at": "2026-09-23T16:04:00Z"
+  },
+  {
+   "id": "t_79341a",
+   "type": "verify.blind_extract",
+   "track_id": "referee",
+   "title": "Blind re-extract: Mistral Small 3 on MMLU-Pro",
+   "status": "verified",
+   "priority": 11.19,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 15,
+   "attempts": 1,
+   "created_at": "2026-09-23T23:04:00Z"
+  },
+  {
+   "id": "t_461de9",
+   "type": "verify.blind_extract",
+   "track_id": "referee",
+   "title": "Blind re-extract: Llama 3.3 70B on HumanEval",
+   "status": "verified",
+   "priority": 9.96,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 15,
+   "attempts": 1,
+   "created_at": "2026-09-24T19:04:00Z"
+  },
+  {
+   "id": "t_27d999",
+   "type": "verify.blind_extract",
+   "track_id": "referee",
+   "title": "Blind re-extract: SWE-agent on Terminal-Bench",
+   "status": "verified",
+   "priority": 10.59,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 15,
+   "attempts": 1,
+   "created_at": "2026-09-28T07:04:00Z"
+  },
+  {
+   "id": "t_e65b0c",
+   "type": "map.gap_scan",
+   "track_id": "map-gaps",
+   "title": "Gap scan: ux layer",
+   "status": "verified",
+   "priority": 4.5,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 40,
+   "attempts": 1,
+   "created_at": "2026-09-18T03:04:00Z"
+  },
+  {
+   "id": "t_a70d58",
+   "type": "map.gap_scan",
+   "track_id": "map-gaps",
+   "title": "Gap scan: evals layer",
+   "status": "needs_steward",
+   "priority": 3.25,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 40,
+   "attempts": 1,
+   "created_at": "2026-09-25T19:04:00Z"
+  },
+  {
+   "id": "t_6d0767",
+   "type": "map.gap_scan",
+   "track_id": "map-gaps",
+   "title": "Gap scan: environments layer",
+   "status": "needs_steward",
+   "priority": 3.03,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 40,
+   "attempts": 1,
+   "created_at": "2026-09-19T20:04:00Z"
+  },
+  {
+   "id": "t_8809c1",
+   "type": "verify.review",
+   "track_id": "referee",
+   "title": "Review: gap scan for the safety layer",
+   "status": "disputed",
+   "priority": 9.44,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 15,
+   "attempts": 1,
+   "created_at": "2026-10-02T00:04:00Z"
+  }
+ ],
+ "total": 26
+}

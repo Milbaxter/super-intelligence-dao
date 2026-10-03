@@ -1,0 +1,55 @@
+{
+ "id": "cl_b39220",
+ "artifact_id": "shieldgemma",
+ "artifact_name": "ShieldGemma",
+ "layer": "safety",
+ "benchmark_id": "xstest",
+ "benchmark_name": "XSTest",
+ "metric": "% compliance on safe prompts",
+ "value": 41.7,
+ "unit": "%",
+ "higher_is_better": true,
+ "conditions": {
+  "date": "2026-04-21",
+  "notes": "Illustrative example value from mock fixtures, not a real result."
+ },
+ "source_url": "https://huggingface.co/google/shieldgemma-9b",
+ "quote": "[Illustrative example quote] ShieldGemma reaches 41.7% on XSTest under the stated setup.",
+ "reported_by": "artifact-authors",
+ "tier": "source-checked",
+ "special_status": null,
+ "display_status": "source-checked",
+ "created_at": "2026-07-11T04:04:00Z",
+ "tier_changed_at": "2026-07-13T04:04:00Z",
+ "expires_at": "2027-01-09T04:04:00Z",
+ "seed": 0,
+ "check_result": {
+  "passed": true,
+  "reason": "quote_found_value_present",
+  "fetched_url": "https://huggingface.co/google/shieldgemma-9b",
+  "http_status": 200,
+  "fetched_at": "2026-07-13T04:04:00Z",
+  "content_sha256": "1ca0527ecd71abe0d44fd82bd3cfa2e3371b1c145e9ce51f9893ef8704ff88e3"
+ },
+ "trail": [
+  {
+   "ts": "2026-07-11T04:04:00Z",
+   "kind": "submitted",
+   "actor": "ozan",
+   "summary": "map.extract submission included this claim",
+   "detail": {
+    "model_family": "claude"
+   }
+  },
+  {
+   "ts": "2026-07-13T04:04:00Z",
+   "kind": "quote_check",
+   "actor": "referee",
+   "summary": "Source fetched; quote found verbatim; value present in quote → T1 source-checked",
+   "detail": {
+    "http_status": 200,
+    "fetched_url": "https://huggingface.co/google/shieldgemma-9b"
+   }
+  }
+ ]
+}

@@ -1,0 +1,130 @@
+[
+ {
+  "id": "map-extract",
+  "name": "Map: published results",
+  "workstream": "map",
+  "phase": "now",
+  "summary": "Find published benchmark results for each artifact, with a verbatim quote and source.",
+  "why": "The Map is only useful if every number is sourced.",
+  "verification": "Mechanical quote check → T1, then blind re-extraction → T2.",
+  "weight": 5,
+  "sort": 0,
+  "counts": {
+   "open": 9,
+   "in_progress": 1,
+   "verified": 0
+  }
+ },
+ {
+  "id": "map-profile",
+  "name": "Map: artifact profiles",
+  "workstream": "map",
+  "phase": "now",
+  "summary": "Fill licence, latest release, repo and description with sources.",
+  "why": "Basic facts are often missing or out of date.",
+  "verification": "Quote check per field + review.",
+  "weight": 3,
+  "sort": 1,
+  "counts": {
+   "open": 0,
+   "in_progress": 6,
+   "verified": 0
+  }
+ },
+ {
+  "id": "map-gaps",
+  "name": "Map: gap scans",
+  "workstream": "map",
+  "phase": "now",
+  "summary": "For one layer, list missing evidence, missing capabilities and missing projects.",
+  "why": "Gaps are the Board's raw material.",
+  "verification": "Review + steward accept.",
+  "weight": 3,
+  "sort": 2,
+  "counts": {
+   "open": 0,
+   "in_progress": 0,
+   "verified": 1
+  }
+ },
+ {
+  "id": "referee",
+  "name": "Referee: blind checks",
+  "workstream": "referee",
+  "phase": "now",
+  "summary": "Re-extract a value without seeing the original; review submissions with a rubric.",
+  "why": "Unverified work is worthless; verify tasks jump the queue.",
+  "verification": "Agreement within tolerance; steward audits disagreements.",
+  "weight": 5,
+  "sort": 3,
+  "counts": {
+   "open": 0,
+   "in_progress": 1,
+   "verified": 5
+  }
+ },
+ {
+  "id": "rnd-harness",
+  "name": "R&D: harness layers",
+  "workstream": "rnd",
+  "phase": "next",
+  "summary": "Propose a skill, plugin or hook for an official agent CLI and measure it with/without on an open task set.",
+  "why": "Harness changes can move scores as much as a model generation.",
+  "verification": "Review now; independent re-run (T3) when a trusted runner exists.",
+  "weight": 4,
+  "sort": 4,
+  "counts": {
+   "open": 0,
+   "in_progress": 0,
+   "verified": 0
+  }
+ },
+ {
+  "id": "rnd-bench",
+  "name": "R&D: benchmark tasks",
+  "workstream": "rnd",
+  "phase": "next",
+  "summary": "Draft Harbor-format tasks with an oracle that passes and a no-op that fails.",
+  "why": "Fresh tasks keep holdouts honest.",
+  "verification": "Verifier re-runs oracle and no-op locally in Docker.",
+  "weight": 3,
+  "sort": 5,
+  "counts": {
+   "open": 0,
+   "in_progress": 0,
+   "verified": 0
+  }
+ },
+ {
+  "id": "rnd-hoh",
+  "name": "R&D: harness of harnesses",
+  "workstream": "rnd",
+  "phase": "vision",
+  "summary": "Token-matched tournaments: single harness vs best-of-N vs lead-subagent fleets.",
+  "why": "Nobody has measured mixed-model fleets fairly.",
+  "verification": "Pre-registered, re-run by trusted runners (T3/T4).",
+  "weight": 2,
+  "sort": 6,
+  "counts": {
+   "open": 0,
+   "in_progress": 0,
+   "verified": 0
+  }
+ },
+ {
+  "id": "rnd-lean",
+  "name": "R&D: Lean formalisation",
+  "workstream": "rnd",
+  "phase": "vision",
+  "summary": "Formalise statements and proofs; the Lean checker is the referee.",
+  "why": "Machine-checked results are the cleanest possible verification.",
+  "verification": "Lean kernel check + human statement review.",
+  "weight": 2,
+  "sort": 7,
+  "counts": {
+   "open": 0,
+   "in_progress": 0,
+   "verified": 0
+  }
+ }
+]

@@ -1,0 +1,134 @@
+[
+ {
+  "id": "g_1fc39d",
+  "layer": "harnesses",
+  "kind": "missing_evidence",
+  "title": "No Terminal-Bench results for goose",
+  "description": "No published Terminal-Bench run found for goose under any model.",
+  "evidence_urls": [],
+  "status": "proposed",
+  "created_at": "2026-09-25T06:04:00Z",
+  "task_ids": []
+ },
+ {
+  "id": "g_d718e2",
+  "layer": "harnesses",
+  "kind": "missing_evidence",
+  "title": "Harness × model matrix is mostly empty",
+  "description": "Most harness scores are reported with one closed model; open-weight pairings are missing.",
+  "evidence_urls": [],
+  "status": "accepted",
+  "created_at": "2026-09-18T06:04:00Z",
+  "task_ids": []
+ },
+ {
+  "id": "g_3a9a04",
+  "layer": "models",
+  "kind": "stale",
+  "title": "OLMo 2 claims need re-verification",
+  "description": "Several claims are close to their 180-day expiry.",
+  "evidence_urls": [],
+  "status": "accepted",
+  "created_at": "2026-09-26T06:04:00Z",
+  "task_ids": []
+ },
+ {
+  "id": "g_d65709",
+  "layer": "inference",
+  "kind": "missing_evidence",
+  "title": "Comparable throughput numbers for llama.cpp vs Ollama",
+  "description": "No like-for-like throughput claims on the same hardware.",
+  "evidence_urls": [],
+  "status": "accepted",
+  "created_at": "2026-09-27T06:04:00Z",
+  "task_ids": []
+ },
+ {
+  "id": "g_b5e724",
+  "layer": "multi-agent",
+  "kind": "missing_capability",
+  "title": "No open benchmark for harness-of-harnesses",
+  "description": "No token-matched comparison of single vs multi-agent setups on the same tasks.",
+  "evidence_urls": [],
+  "status": "accepted",
+  "created_at": "2026-09-16T06:04:00Z",
+  "task_ids": []
+ },
+ {
+  "id": "g_997473",
+  "layer": "safety",
+  "kind": "missing_evidence",
+  "title": "Over-refusal rates for open guard models",
+  "description": "XSTest-style over-refusal is reported for few guard models.",
+  "evidence_urls": [],
+  "status": "proposed",
+  "created_at": "2026-09-15T06:04:00Z",
+  "task_ids": []
+ },
+ {
+  "id": "g_f4b260",
+  "layer": "data",
+  "kind": "missing_capability",
+  "title": "Licence provenance for code corpora",
+  "description": "Per-file licence provenance is hard to audit for large code datasets.",
+  "evidence_urls": [],
+  "status": "accepted",
+  "created_at": "2026-09-30T06:04:00Z",
+  "task_ids": []
+ },
+ {
+  "id": "g_2da4cd",
+  "layer": "evals",
+  "kind": "missing_artifact",
+  "title": "Shared result format adoption",
+  "description": "Which eval harnesses export to a common result schema is undocumented.",
+  "evidence_urls": [],
+  "status": "accepted",
+  "created_at": "2026-09-21T06:04:00Z",
+  "task_ids": []
+ },
+ {
+  "id": "g_de83b3",
+  "layer": "ux",
+  "kind": "missing_evidence",
+  "title": "No usability evidence for local chat UIs",
+  "description": "No published task-success comparisons exist for open chat front-ends.",
+  "evidence_urls": [],
+  "status": "accepted",
+  "created_at": "2026-09-15T06:04:00Z",
+  "task_ids": []
+ },
+ {
+  "id": "g_c8a7e4",
+  "layer": "post-training",
+  "kind": "missing_evidence",
+  "title": "GRPO recipes lack reproducible reward curves",
+  "description": "Few RL libraries publish reproducible reward curves with configs.",
+  "evidence_urls": [],
+  "status": "accepted",
+  "created_at": "2026-09-24T06:04:00Z",
+  "task_ids": []
+ },
+ {
+  "id": "g_eeed1d",
+  "layer": "environments",
+  "kind": "missing_artifact",
+  "title": "Which environments ship verifiers?",
+  "description": "Unclear which open environments include machine-checkable verifiers.",
+  "evidence_urls": [],
+  "status": "proposed",
+  "created_at": "2026-09-05T06:04:00Z",
+  "task_ids": []
+ },
+ {
+  "id": "g_11d94b",
+  "layer": "pretraining",
+  "kind": "missing_evidence",
+  "title": "MFU claims rarely include hardware details",
+  "description": "Model FLOPs utilisation numbers are reported without full conditions.",
+  "evidence_urls": [],
+  "status": "accepted",
+  "created_at": "2026-09-16T06:04:00Z",
+  "task_ids": []
+ }
+]

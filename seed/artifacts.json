@@ -1,0 +1,968 @@
+[
+  {
+    "id": "fineweb",
+    "name": "FineWeb",
+    "layer": "data",
+    "kind": "dataset",
+    "url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+    "license": "ODC-By",
+    "description": "~15T-token deduplicated, filtered English web corpus from Common Crawl."
+  },
+  {
+    "id": "fineweb-edu",
+    "name": "FineWeb-Edu",
+    "layer": "data",
+    "kind": "dataset",
+    "url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu",
+    "license": "ODC-By",
+    "description": "~1.3T-token educational-quality subset of FineWeb selected by a classifier."
+  },
+  {
+    "id": "dclm-baseline",
+    "name": "DCLM-baseline 1.0",
+    "layer": "data",
+    "kind": "dataset",
+    "url": "https://huggingface.co/datasets/mlfoundations/dclm-baseline-1.0",
+    "repo_url": "https://github.com/mlfoundations/dclm",
+    "license": "CC-BY-4.0",
+    "description": "4T-token / 3B-document pretraining set produced by the DataComp-LM filtering pipeline."
+  },
+  {
+    "id": "dolma",
+    "name": "Dolma",
+    "layer": "data",
+    "kind": "dataset",
+    "url": "https://huggingface.co/datasets/allenai/dolma",
+    "repo_url": "https://github.com/allenai/dolma",
+    "license": "ODC-By",
+    "description": "Ai2's open pretraining corpus and toolkit behind the OLMo models."
+  },
+  {
+    "id": "common-pile",
+    "name": "Common Pile (Comma v0.1 training set)",
+    "layer": "data",
+    "kind": "dataset",
+    "url": "https://huggingface.co/datasets/common-pile/comma_v0.1_training_dataset",
+    "repo_url": "https://github.com/r-three/common-pile",
+    "description": "Openly licensed / public-domain text corpus used to train the Comma v0.1 models."
+  },
+  {
+    "id": "the-stack-v2",
+    "name": "The Stack v2",
+    "layer": "data",
+    "kind": "dataset",
+    "url": "https://huggingface.co/datasets/bigcode/the-stack-v2",
+    "description": "BigCode's large permissively-sourced source-code corpus (gated, terms of use apply)."
+  },
+  {
+    "id": "nemotron-cc-v2",
+    "name": "Nemotron-CC v2",
+    "layer": "data",
+    "kind": "dataset",
+    "url": "https://huggingface.co/datasets/nvidia/Nemotron-CC-v2",
+    "description": "NVIDIA pretraining dataset release built from Common Crawl plus synthetic rephrasing (gated)."
+  },
+  {
+    "id": "openthoughts3",
+    "name": "OpenThoughts3-1.2M",
+    "layer": "data",
+    "kind": "dataset",
+    "url": "https://huggingface.co/datasets/open-thoughts/OpenThoughts3-1.2M",
+    "repo_url": "https://github.com/open-thoughts/open-thoughts",
+    "license": "Apache-2.0",
+    "description": "Open reasoning SFT dataset from the OpenThoughts data-curation project."
+  },
+  {
+    "id": "swe-smith",
+    "name": "SWE-smith",
+    "layer": "data",
+    "kind": "dataset",
+    "url": "https://huggingface.co/datasets/SWE-bench/SWE-smith",
+    "repo_url": "https://github.com/SWE-bench/SWE-smith",
+    "license": "MIT",
+    "description": "Synthetic software-engineering task instances and toolkit for training SWE agents."
+  },
+  {
+    "id": "datatrove",
+    "name": "datatrove",
+    "layer": "data",
+    "kind": "library",
+    "url": "https://github.com/huggingface/datatrove",
+    "repo_url": "https://github.com/huggingface/datatrove",
+    "license": "Apache-2.0",
+    "description": "Platform-agnostic pipeline blocks for large-scale text data processing and filtering."
+  },
+  {
+    "id": "nemo-curator",
+    "name": "NeMo Curator",
+    "layer": "data",
+    "kind": "tool",
+    "url": "https://github.com/NVIDIA-NeMo/Curator",
+    "repo_url": "https://github.com/NVIDIA-NeMo/Curator",
+    "license": "Apache-2.0",
+    "description": "GPU-accelerated data curation toolkit for LLM pretraining and post-training data."
+  },
+  {
+    "id": "megatron-lm",
+    "name": "Megatron-LM",
+    "layer": "pretraining",
+    "kind": "framework",
+    "url": "https://github.com/NVIDIA/Megatron-LM",
+    "repo_url": "https://github.com/NVIDIA/Megatron-LM",
+    "description": "NVIDIA's reference framework for training large transformers with tensor/pipeline/expert parallelism."
+  },
+  {
+    "id": "torchtitan",
+    "name": "torchtitan",
+    "layer": "pretraining",
+    "kind": "framework",
+    "url": "https://github.com/pytorch/torchtitan",
+    "repo_url": "https://github.com/pytorch/torchtitan",
+    "license": "BSD-3-Clause",
+    "description": "PyTorch-native platform for large-scale generative model training."
+  },
+  {
+    "id": "deepspeed",
+    "name": "DeepSpeed",
+    "layer": "pretraining",
+    "kind": "library",
+    "url": "https://www.deepspeed.ai/",
+    "repo_url": "https://github.com/deepspeedai/DeepSpeed",
+    "license": "Apache-2.0",
+    "description": "Distributed training/inference optimization library (ZeRO, offload, pipeline parallelism)."
+  },
+  {
+    "id": "olmo-core",
+    "name": "OLMo-core",
+    "layer": "pretraining",
+    "kind": "framework",
+    "url": "https://github.com/allenai/OLMo-core",
+    "repo_url": "https://github.com/allenai/OLMo-core",
+    "license": "Apache-2.0",
+    "description": "Ai2's PyTorch building blocks used to train the OLMo models."
+  },
+  {
+    "id": "nanochat",
+    "name": "nanochat",
+    "layer": "pretraining",
+    "kind": "framework",
+    "url": "https://github.com/karpathy/nanochat",
+    "repo_url": "https://github.com/karpathy/nanochat",
+    "license": "MIT",
+    "description": "Minimal end-to-end pipeline (tokenizer, pretraining, SFT, RL, chat UI) for small ChatGPT-style models on a budget."
+  },
+  {
+    "id": "trl",
+    "name": "TRL",
+    "layer": "post-training",
+    "kind": "library",
+    "url": "https://huggingface.co/docs/trl",
+    "repo_url": "https://github.com/huggingface/trl",
+    "license": "Apache-2.0",
+    "description": "Hugging Face library for SFT, DPO, GRPO and other RL/preference training of LLMs."
+  },
+  {
+    "id": "verl",
+    "name": "verl",
+    "layer": "post-training",
+    "kind": "framework",
+    "url": "https://verl.readthedocs.io/",
+    "repo_url": "https://github.com/verl-project/verl",
+    "license": "Apache-2.0",
+    "description": "HybridFlow-based RL post-training framework for LLMs (PPO, GRPO, agentic RL)."
+  },
+  {
+    "id": "openrlhf",
+    "name": "OpenRLHF",
+    "layer": "post-training",
+    "kind": "framework",
+    "url": "https://github.com/OpenRLHF/OpenRLHF",
+    "repo_url": "https://github.com/OpenRLHF/OpenRLHF",
+    "license": "Apache-2.0",
+    "description": "Ray + vLLM based scalable RLHF / agentic RL framework."
+  },
+  {
+    "id": "prime-rl",
+    "name": "prime-rl",
+    "layer": "post-training",
+    "kind": "framework",
+    "url": "https://github.com/PrimeIntellect-ai/prime-rl",
+    "repo_url": "https://github.com/PrimeIntellect-ai/prime-rl",
+    "license": "Apache-2.0",
+    "description": "Prime Intellect's asynchronous agentic RL training framework, integrated with verifiers environments."
+  },
+  {
+    "id": "skyrl",
+    "name": "SkyRL",
+    "layer": "post-training",
+    "kind": "framework",
+    "url": "https://github.com/NovaSky-AI/SkyRL",
+    "repo_url": "https://github.com/NovaSky-AI/SkyRL",
+    "license": "Apache-2.0",
+    "description": "Modular full-stack RL library for LLMs and long-horizon agents."
+  },
+  {
+    "id": "slime",
+    "name": "slime",
+    "layer": "post-training",
+    "kind": "framework",
+    "url": "https://github.com/THUDM/slime",
+    "repo_url": "https://github.com/THUDM/slime",
+    "license": "Apache-2.0",
+    "description": "LLM post-training framework for RL scaling (Megatron + SGLang), used for GLM models."
+  },
+  {
+    "id": "nemo-rl",
+    "name": "NeMo RL",
+    "layer": "post-training",
+    "kind": "framework",
+    "url": "https://github.com/NVIDIA-NeMo/RL",
+    "repo_url": "https://github.com/NVIDIA-NeMo/RL",
+    "license": "Apache-2.0",
+    "description": "NVIDIA's scalable toolkit for reinforcement learning of language models."
+  },
+  {
+    "id": "open-instruct",
+    "name": "open-instruct",
+    "layer": "post-training",
+    "kind": "framework",
+    "url": "https://github.com/allenai/open-instruct",
+    "repo_url": "https://github.com/allenai/open-instruct",
+    "license": "Apache-2.0",
+    "description": "Ai2's post-training codebase (Tulu / OLMo instruct and think recipes)."
+  },
+  {
+    "id": "llama-factory",
+    "name": "LLaMA-Factory",
+    "layer": "post-training",
+    "kind": "framework",
+    "url": "https://llamafactory.readthedocs.io/",
+    "repo_url": "https://github.com/hiyouga/LlamaFactory",
+    "license": "Apache-2.0",
+    "description": "Unified efficient fine-tuning toolkit for 100+ LLMs and VLMs."
+  },
+  {
+    "id": "unsloth",
+    "name": "Unsloth",
+    "layer": "post-training",
+    "kind": "library",
+    "url": "https://github.com/unslothai/unsloth",
+    "repo_url": "https://github.com/unslothai/unsloth",
+    "license": "Apache-2.0",
+    "description": "Memory-efficient fine-tuning/RL library with a local UI for training and running models."
+  },
+  {
+    "id": "axolotl",
+    "name": "Axolotl",
+    "layer": "post-training",
+    "kind": "framework",
+    "url": "https://github.com/axolotl-ai-cloud/axolotl",
+    "repo_url": "https://github.com/axolotl-ai-cloud/axolotl",
+    "license": "Apache-2.0",
+    "description": "Config-driven fine-tuning framework for open models."
+  },
+  {
+    "id": "verifiers",
+    "name": "verifiers",
+    "layer": "environments",
+    "kind": "library",
+    "url": "https://github.com/PrimeIntellect-ai/verifiers",
+    "repo_url": "https://github.com/PrimeIntellect-ai/verifiers",
+    "license": "MIT",
+    "description": "Library for building RL environments and evals, tied to the Prime Intellect Environments Hub."
+  },
+  {
+    "id": "openenv",
+    "name": "OpenEnv",
+    "layer": "environments",
+    "kind": "library",
+    "url": "https://huggingface.co/docs/openenv",
+    "repo_url": "https://github.com/huggingface/OpenEnv",
+    "license": "BSD-3-Clause",
+    "description": "Gymnasium-style interface and tooling for isolated agentic execution environments for RL post-training."
+  },
+  {
+    "id": "reasoning-gym",
+    "name": "Reasoning Gym",
+    "layer": "environments",
+    "kind": "environment",
+    "url": "https://github.com/open-thought/reasoning-gym",
+    "repo_url": "https://github.com/open-thought/reasoning-gym",
+    "license": "Apache-2.0",
+    "description": "Procedurally generated reasoning environments with verifiable rewards for RLVR."
+  },
+  {
+    "id": "nemo-gym",
+    "name": "NeMo Gym",
+    "layer": "environments",
+    "kind": "library",
+    "url": "https://github.com/NVIDIA-NeMo/Gym",
+    "repo_url": "https://github.com/NVIDIA-NeMo/Gym",
+    "license": "Apache-2.0",
+    "description": "NVIDIA library for building environments to evaluate and improve models and agents."
+  },
+  {
+    "id": "gymnasium",
+    "name": "Gymnasium",
+    "layer": "environments",
+    "kind": "library",
+    "url": "https://gymnasium.farama.org/",
+    "repo_url": "https://github.com/Farama-Foundation/Gymnasium",
+    "license": "MIT",
+    "description": "Standard single-agent RL environment API (successor to OpenAI Gym)."
+  },
+  {
+    "id": "swe-gym",
+    "name": "SWE-Gym",
+    "layer": "environments",
+    "kind": "environment",
+    "url": "https://huggingface.co/datasets/SWE-Gym/SWE-Gym",
+    "license": "MIT",
+    "description": "2,438 executable Python repository tasks for training software-engineering agents."
+  },
+  {
+    "id": "inspect-ai",
+    "name": "Inspect",
+    "layer": "evals",
+    "kind": "framework",
+    "url": "https://inspect.aisi.org.uk/",
+    "repo_url": "https://github.com/UKGovernmentBEIS/inspect_ai",
+    "license": "MIT",
+    "description": "UK AISI framework for LLM and agent evaluations."
+  },
+  {
+    "id": "lm-eval-harness",
+    "name": "lm-evaluation-harness",
+    "layer": "evals",
+    "kind": "framework",
+    "url": "https://github.com/EleutherAI/lm-evaluation-harness",
+    "repo_url": "https://github.com/EleutherAI/lm-evaluation-harness",
+    "license": "MIT",
+    "description": "EleutherAI's widely used few-shot evaluation framework for language models."
+  },
+  {
+    "id": "helm",
+    "name": "HELM",
+    "layer": "evals",
+    "kind": "framework",
+    "url": "https://crfm.stanford.edu/helm/",
+    "repo_url": "https://github.com/stanford-crfm/helm",
+    "license": "Apache-2.0",
+    "description": "Stanford CRFM's holistic, reproducible evaluation framework for foundation models."
+  },
+  {
+    "id": "harbor",
+    "name": "Harbor",
+    "layer": "evals",
+    "kind": "framework",
+    "url": "https://www.harborframework.com/",
+    "repo_url": "https://github.com/harbor-framework/harbor",
+    "license": "Apache-2.0",
+    "description": "Framework from the Terminal-Bench team for evaluating agents in containerized tasks and generating RL rollouts."
+  },
+  {
+    "id": "nemo-evaluator",
+    "name": "NeMo Evaluator",
+    "layer": "evals",
+    "kind": "framework",
+    "url": "https://github.com/NVIDIA-NeMo/Evaluator",
+    "repo_url": "https://github.com/NVIDIA-NeMo/Evaluator",
+    "license": "Apache-2.0",
+    "description": "NVIDIA library for scalable, reproducible model evaluation (used for Nemotron model cards)."
+  },
+  {
+    "id": "vllm",
+    "name": "vLLM",
+    "layer": "inference",
+    "kind": "framework",
+    "url": "https://docs.vllm.ai/",
+    "repo_url": "https://github.com/vllm-project/vllm",
+    "license": "Apache-2.0",
+    "description": "High-throughput, memory-efficient LLM serving engine (PagedAttention)."
+  },
+  {
+    "id": "sglang",
+    "name": "SGLang",
+    "layer": "inference",
+    "kind": "framework",
+    "url": "https://docs.sglang.io/",
+    "repo_url": "https://github.com/sgl-project/sglang",
+    "license": "Apache-2.0",
+    "description": "High-performance serving framework for LLMs and multimodal models."
+  },
+  {
+    "id": "llama-cpp",
+    "name": "llama.cpp",
+    "layer": "inference",
+    "kind": "library",
+    "url": "https://github.com/ggml-org/llama.cpp",
+    "repo_url": "https://github.com/ggml-org/llama.cpp",
+    "license": "MIT",
+    "description": "C/C++ LLM inference with GGUF quantization for CPUs, GPUs and edge devices."
+  },
+  {
+    "id": "ollama",
+    "name": "Ollama",
+    "layer": "inference",
+    "kind": "tool",
+    "url": "https://ollama.com/",
+    "repo_url": "https://github.com/ollama/ollama",
+    "license": "MIT",
+    "description": "Local model runner and model library with a simple CLI/API."
+  },
+  {
+    "id": "tensorrt-llm",
+    "name": "TensorRT-LLM",
+    "layer": "inference",
+    "kind": "library",
+    "url": "https://github.com/NVIDIA/TensorRT-LLM",
+    "repo_url": "https://github.com/NVIDIA/TensorRT-LLM",
+    "description": "NVIDIA's optimized LLM inference library for NVIDIA GPUs."
+  },
+  {
+    "id": "mlx-lm",
+    "name": "MLX LM",
+    "layer": "inference",
+    "kind": "library",
+    "url": "https://github.com/ml-explore/mlx-lm",
+    "repo_url": "https://github.com/ml-explore/mlx-lm",
+    "license": "MIT",
+    "description": "Run and fine-tune LLMs on Apple silicon with MLX."
+  },
+  {
+    "id": "deepseek-v4-1-flash",
+    "name": "DeepSeek-V4.1-Flash",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash",
+    "license": "MIT",
+    "description": "DeepSeek's Sept-2026 MoE model (552B base params) with controllable reasoning effort and 1M context.",
+    "open_weights": true
+  },
+  {
+    "id": "deepseek-v4-pro",
+    "name": "DeepSeek-V4-Pro",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro",
+    "license": "MIT",
+    "description": "1.6T-parameter (49B active) DeepSeek V4 flagship MoE; preview Apr 2026, updated as V4-Pro-0813.",
+    "open_weights": true
+  },
+  {
+    "id": "deepseek-v4-flash",
+    "name": "DeepSeek-V4-Flash",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash",
+    "license": "MIT",
+    "description": "284B-parameter (13B active) DeepSeek V4 MoE with 1M context; updated as V4-Flash-0731.",
+    "open_weights": true
+  },
+  {
+    "id": "qwen3-8-27b",
+    "name": "Qwen3.8-27B",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/Qwen/Qwen3.8-27B",
+    "license": "Apache-2.0",
+    "description": "Dense 27B model from Alibaba's Qwen3.8 family (Aug 2026).",
+    "open_weights": true
+  },
+  {
+    "id": "kimi-k3",
+    "name": "Kimi K3",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/moonshotai/Kimi-K3",
+    "license": "Kimi K3 License (custom)",
+    "description": "Moonshot AI's ~2.8T-parameter native multimodal agentic MoE with 1M context (Jun 2026).",
+    "open_weights": true
+  },
+  {
+    "id": "kimi-k2-6",
+    "name": "Kimi K2.6",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/moonshotai/Kimi-K2.6",
+    "license": "Modified MIT",
+    "description": "Moonshot AI's 1T-parameter agentic MoE model (Apr 2026).",
+    "open_weights": true
+  },
+  {
+    "id": "glm-5-3",
+    "name": "GLM-5.3",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/zai-org/GLM-5.3",
+    "license": "GLM-5.3 license (custom)",
+    "description": "Z.ai's Aug-2026 flagship model focused on coding, long-horizon agents and cyber tasks.",
+    "open_weights": true
+  },
+  {
+    "id": "glm-5-2",
+    "name": "GLM-5.2",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/zai-org/GLM-5.2",
+    "license": "MIT",
+    "description": "Z.ai's Jun-2026 long-horizon model with 1M context, MIT licensed.",
+    "open_weights": true
+  },
+  {
+    "id": "gpt-oss-120b",
+    "name": "gpt-oss-120b",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/openai/gpt-oss-120b",
+    "repo_url": "https://github.com/openai/gpt-oss",
+    "license": "Apache-2.0",
+    "description": "OpenAI's open-weight reasoning MoE model (Aug 2025).",
+    "open_weights": true
+  },
+  {
+    "id": "llama-4-maverick",
+    "name": "Llama 4 Maverick",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/meta-llama/Llama-4-Maverick-17B-128E-Instruct",
+    "repo_url": "https://github.com/meta-llama/llama-models",
+    "license": "Llama 4 Community License",
+    "description": "Meta's 17B-active / 128-expert multimodal MoE (Apr 2025); gated download.",
+    "open_weights": true
+  },
+  {
+    "id": "mistral-medium-3-5",
+    "name": "Mistral Medium 3.5",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/mistralai/Mistral-Medium-3.5-128B",
+    "description": "Mistral's 128B open-weight model that supersedes Devstral for coding/agentic use.",
+    "open_weights": true
+  },
+  {
+    "id": "devstral-small-2",
+    "name": "Devstral Small 2",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/mistralai/Devstral-Small-2-24B-Instruct-2512",
+    "license": "Apache-2.0",
+    "description": "24B agentic coding model from Mistral (Dec 2025).",
+    "open_weights": true
+  },
+  {
+    "id": "gemma-4-31b",
+    "name": "Gemma 4 31B",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/google/gemma-4-31B-it",
+    "repo_url": "https://github.com/google-deepmind/gemma",
+    "license": "Apache-2.0",
+    "description": "Largest dense instruction-tuned model of Google's Gemma 4 family (Mar 2026).",
+    "open_weights": true
+  },
+  {
+    "id": "olmo-3-1-32b-think",
+    "name": "Olmo 3.1 32B Think",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/allenai/Olmo-3.1-32B-Think",
+    "repo_url": "https://github.com/allenai/OLMo",
+    "license": "Apache-2.0",
+    "description": "Ai2's fully open (data, code, weights) 32B reasoning model.",
+    "open_weights": true
+  },
+  {
+    "id": "nemotron-3-super",
+    "name": "Nemotron 3 Super",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16",
+    "license": "NVIDIA Nemotron Open Model License",
+    "description": "NVIDIA 120B (12B active) hybrid Mamba-Transformer MoE with disclosed training data.",
+    "open_weights": true
+  },
+  {
+    "id": "nemotron-3-ultra",
+    "name": "Nemotron 3 Ultra",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+    "license": "OpenMDW-1.1",
+    "description": "NVIDIA 550B (55B active) LatentMoE hybrid model (Jun 2026).",
+    "open_weights": true
+  },
+  {
+    "id": "minimax-m3",
+    "name": "MiniMax-M3",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/MiniMaxAI/MiniMax-M3",
+    "license": "MiniMax Community License (custom)",
+    "description": "MiniMax's Jun-2026 open-weight agentic language model.",
+    "open_weights": true
+  },
+  {
+    "id": "smollm3-3b",
+    "name": "SmolLM3-3B",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/HuggingFaceTB/SmolLM3-3B",
+    "license": "Apache-2.0",
+    "description": "Fully open 3B model from Hugging Face with dual thinking/no-thinking modes.",
+    "open_weights": true
+  },
+  {
+    "id": "tmax-27b",
+    "name": "TMax 27B",
+    "layer": "models",
+    "kind": "model",
+    "url": "https://huggingface.co/allenai/tmax-27b",
+    "license": "Apache-2.0",
+    "description": "Ai2 terminal-agent model RL-trained with DPPO on top of Qwen 3.6 27B.",
+    "open_weights": true
+  },
+  {
+    "id": "openhands",
+    "name": "OpenHands",
+    "layer": "harnesses",
+    "kind": "harness",
+    "url": "https://openhands.dev/",
+    "repo_url": "https://github.com/OpenHands/OpenHands",
+    "license": "MIT",
+    "description": "Open platform and agent for AI-driven software development."
+  },
+  {
+    "id": "swe-agent",
+    "name": "SWE-agent",
+    "layer": "harnesses",
+    "kind": "harness",
+    "url": "https://swe-agent.com/",
+    "repo_url": "https://github.com/SWE-agent/SWE-agent",
+    "license": "MIT",
+    "description": "Princeton/Stanford agent that resolves GitHub issues with a custom agent-computer interface."
+  },
+  {
+    "id": "mini-swe-agent",
+    "name": "mini-SWE-agent",
+    "layer": "harnesses",
+    "kind": "harness",
+    "url": "https://mini-swe-agent.com/",
+    "repo_url": "https://github.com/SWE-agent/mini-swe-agent",
+    "license": "MIT",
+    "description": "~100-line bash-only agent; the reference scaffold for several leaderboards."
+  },
+  {
+    "id": "codex-cli",
+    "name": "Codex CLI",
+    "layer": "harnesses",
+    "kind": "harness",
+    "url": "https://developers.openai.com/codex/cli",
+    "repo_url": "https://github.com/openai/codex",
+    "license": "Apache-2.0",
+    "description": "OpenAI's open-source terminal coding agent."
+  },
+  {
+    "id": "gemini-cli",
+    "name": "Gemini CLI",
+    "layer": "harnesses",
+    "kind": "harness",
+    "url": "https://geminicli.com/",
+    "repo_url": "https://github.com/google-gemini/gemini-cli",
+    "license": "Apache-2.0",
+    "description": "Google's open-source terminal agent for Gemini models."
+  },
+  {
+    "id": "opencode",
+    "name": "OpenCode",
+    "layer": "harnesses",
+    "kind": "harness",
+    "url": "https://opencode.ai/",
+    "repo_url": "https://github.com/anomalyco/opencode",
+    "license": "MIT",
+    "description": "Open-source, provider-agnostic terminal coding agent."
+  },
+  {
+    "id": "goose",
+    "name": "goose",
+    "layer": "harnesses",
+    "kind": "harness",
+    "url": "https://goose-docs.ai/",
+    "repo_url": "https://github.com/aaif-goose/goose",
+    "license": "Apache-2.0",
+    "description": "Extensible open-source agent that can install, execute, edit and test with any LLM."
+  },
+  {
+    "id": "cline",
+    "name": "Cline",
+    "layer": "harnesses",
+    "kind": "harness",
+    "url": "https://cline.bot/",
+    "repo_url": "https://github.com/cline/cline",
+    "license": "Apache-2.0",
+    "description": "Autonomous coding agent available as IDE extension, CLI and SDK."
+  },
+  {
+    "id": "aider",
+    "name": "Aider",
+    "layer": "harnesses",
+    "kind": "harness",
+    "url": "https://aider.chat/",
+    "repo_url": "https://github.com/Aider-AI/aider",
+    "license": "Apache-2.0",
+    "description": "AI pair-programming tool in the terminal; maintains the Aider polyglot leaderboard."
+  },
+  {
+    "id": "openclaw",
+    "name": "OpenClaw",
+    "layer": "harnesses",
+    "kind": "harness",
+    "url": "https://openclaw.ai/",
+    "repo_url": "https://github.com/openclaw/openclaw",
+    "license": "MIT",
+    "description": "Open-source personal agent that acts across apps and platforms."
+  },
+  {
+    "id": "qwen-code",
+    "name": "Qwen Code",
+    "layer": "harnesses",
+    "kind": "harness",
+    "url": "https://qwenlm.github.io/qwen-code-docs/",
+    "repo_url": "https://github.com/QwenLM/qwen-code",
+    "license": "Apache-2.0",
+    "description": "Qwen's open-source terminal coding agent (Gemini CLI lineage)."
+  },
+  {
+    "id": "pi",
+    "name": "Pi",
+    "layer": "harnesses",
+    "kind": "harness",
+    "url": "https://pi.dev/",
+    "repo_url": "https://github.com/earendil-works/pi",
+    "license": "MIT",
+    "description": "Minimal agent toolkit and coding-agent CLI with a unified LLM API."
+  },
+  {
+    "id": "mistral-vibe",
+    "name": "Mistral Vibe",
+    "layer": "harnesses",
+    "kind": "harness",
+    "url": "https://github.com/mistralai/mistral-vibe",
+    "repo_url": "https://github.com/mistralai/mistral-vibe",
+    "license": "Apache-2.0",
+    "description": "Minimal CLI coding agent by Mistral (also hosts Leanstral)."
+  },
+  {
+    "id": "kimi-code",
+    "name": "Kimi Code CLI",
+    "layer": "harnesses",
+    "kind": "harness",
+    "url": "https://www.kimi.com/code",
+    "repo_url": "https://github.com/MoonshotAI/kimi-code",
+    "license": "MIT",
+    "description": "Moonshot AI's terminal agent, used for Kimi K3's self-reported agentic scores."
+  },
+  {
+    "id": "autogen",
+    "name": "AutoGen",
+    "layer": "multi-agent",
+    "kind": "framework",
+    "url": "https://microsoft.github.io/autogen/",
+    "repo_url": "https://github.com/microsoft/autogen",
+    "description": "Microsoft programming framework for multi-agent applications."
+  },
+  {
+    "id": "crewai",
+    "name": "CrewAI",
+    "layer": "multi-agent",
+    "kind": "framework",
+    "url": "https://docs.crewai.com/",
+    "repo_url": "https://github.com/crewAIInc/crewAI",
+    "license": "MIT",
+    "description": "Framework for orchestrating role-playing collaborating agents."
+  },
+  {
+    "id": "langgraph",
+    "name": "LangGraph",
+    "layer": "multi-agent",
+    "kind": "framework",
+    "url": "https://www.langchain.com/langgraph",
+    "repo_url": "https://github.com/langchain-ai/langgraph",
+    "license": "MIT",
+    "description": "Library for building stateful, resilient agent graphs."
+  },
+  {
+    "id": "openai-agents-sdk",
+    "name": "OpenAI Agents SDK (Python)",
+    "layer": "multi-agent",
+    "kind": "framework",
+    "url": "https://openai.github.io/openai-agents-python/",
+    "repo_url": "https://github.com/openai/openai-agents-python",
+    "license": "MIT",
+    "description": "Lightweight framework for multi-agent workflows with handoffs and guardrails."
+  },
+  {
+    "id": "camel",
+    "name": "CAMEL",
+    "layer": "multi-agent",
+    "kind": "framework",
+    "url": "https://www.camel-ai.org/",
+    "repo_url": "https://github.com/camel-ai/camel",
+    "license": "Apache-2.0",
+    "description": "Multi-agent framework for studying scaling laws of agents."
+  },
+  {
+    "id": "metagpt",
+    "name": "MetaGPT",
+    "layer": "multi-agent",
+    "kind": "framework",
+    "url": "https://github.com/FoundationAgents/MetaGPT",
+    "repo_url": "https://github.com/FoundationAgents/MetaGPT",
+    "license": "MIT",
+    "description": "Multi-agent framework that simulates a software company with role-based agents."
+  },
+  {
+    "id": "smolagents",
+    "name": "smolagents",
+    "layer": "multi-agent",
+    "kind": "library",
+    "url": "https://huggingface.co/docs/smolagents",
+    "repo_url": "https://github.com/huggingface/smolagents",
+    "license": "Apache-2.0",
+    "description": "Barebones agent library where agents act by writing code."
+  },
+  {
+    "id": "mcp",
+    "name": "Model Context Protocol",
+    "layer": "multi-agent",
+    "kind": "tool",
+    "url": "https://modelcontextprotocol.io/",
+    "repo_url": "https://github.com/modelcontextprotocol/modelcontextprotocol",
+    "description": "Open protocol and spec for connecting agents to tools and data sources."
+  },
+  {
+    "id": "open-webui",
+    "name": "Open WebUI",
+    "layer": "ux",
+    "kind": "app",
+    "url": "https://docs.openwebui.com/",
+    "repo_url": "https://github.com/open-webui/open-webui",
+    "description": "Self-hosted web UI for Ollama and OpenAI-compatible backends."
+  },
+  {
+    "id": "librechat",
+    "name": "LibreChat",
+    "layer": "ux",
+    "kind": "app",
+    "url": "https://www.librechat.ai/",
+    "repo_url": "https://github.com/LibreChat-AI/LibreChat",
+    "license": "MIT",
+    "description": "Self-hostable multi-provider chat app with agents, MCP and multi-user auth."
+  },
+  {
+    "id": "jan",
+    "name": "Jan",
+    "layer": "ux",
+    "kind": "app",
+    "url": "https://www.jan.ai/",
+    "repo_url": "https://github.com/janhq/jan",
+    "description": "Offline desktop ChatGPT alternative running local models."
+  },
+  {
+    "id": "lobehub",
+    "name": "LobeHub (Lobe Chat)",
+    "layer": "ux",
+    "kind": "app",
+    "url": "https://lobehub.com/",
+    "repo_url": "https://github.com/lobehub/lobehub",
+    "description": "Open-source agent workspace / chat UI."
+  },
+  {
+    "id": "nemo-guardrails",
+    "name": "NeMo Guardrails",
+    "layer": "safety",
+    "kind": "library",
+    "url": "https://github.com/NVIDIA-NeMo/Guardrails",
+    "repo_url": "https://github.com/NVIDIA-NeMo/Guardrails",
+    "description": "Toolkit for programmable guardrails on LLM-based conversational systems."
+  },
+  {
+    "id": "purple-llama",
+    "name": "Purple Llama",
+    "layer": "safety",
+    "kind": "tool",
+    "url": "https://github.com/meta-llama/PurpleLlama",
+    "repo_url": "https://github.com/meta-llama/PurpleLlama",
+    "description": "Meta's tools to assess and improve LLM security (CyberSecEval, Llama Guard, Prompt Guard)."
+  },
+  {
+    "id": "llama-guard-4",
+    "name": "Llama Guard 4",
+    "layer": "safety",
+    "kind": "model",
+    "url": "https://huggingface.co/meta-llama/Llama-Guard-4-12B",
+    "license": "Llama 4 Community License",
+    "description": "12B multimodal safety classifier for prompts and responses.",
+    "open_weights": true
+  },
+  {
+    "id": "gpt-oss-safeguard",
+    "name": "gpt-oss-safeguard-20b",
+    "layer": "safety",
+    "kind": "model",
+    "url": "https://huggingface.co/openai/gpt-oss-safeguard-20b",
+    "license": "Apache-2.0",
+    "description": "Open-weight policy-following safety reasoning classifier built on gpt-oss.",
+    "open_weights": true
+  },
+  {
+    "id": "wildguard",
+    "name": "WildGuard",
+    "layer": "safety",
+    "kind": "model",
+    "url": "https://huggingface.co/allenai/wildguard",
+    "license": "Apache-2.0",
+    "description": "Ai2 open moderation model for harmful prompts, responses and refusals.",
+    "open_weights": true
+  },
+  {
+    "id": "guardrails-ai",
+    "name": "Guardrails AI",
+    "layer": "safety",
+    "kind": "library",
+    "url": "https://github.com/guardrails-ai/guardrails",
+    "repo_url": "https://github.com/guardrails-ai/guardrails",
+    "license": "Apache-2.0",
+    "description": "Python framework for validating and guarding LLM inputs/outputs."
+  },
+  {
+    "id": "garak",
+    "name": "garak",
+    "layer": "safety",
+    "kind": "tool",
+    "url": "https://garak.ai/",
+    "repo_url": "https://github.com/NVIDIA/garak",
+    "license": "Apache-2.0",
+    "description": "NVIDIA's LLM vulnerability scanner (probes for jailbreaks, injection, leakage)."
+  },
+  {
+    "id": "promptfoo",
+    "name": "promptfoo",
+    "layer": "safety",
+    "kind": "tool",
+    "url": "https://www.promptfoo.dev/",
+    "repo_url": "https://github.com/promptfoo/promptfoo",
+    "license": "MIT",
+    "description": "CLI for prompt/agent testing and red teaming."
+  },
+  {
+    "id": "agentdojo",
+    "name": "AgentDojo",
+    "layer": "safety",
+    "kind": "benchmark",
+    "url": "https://github.com/ethz-spylab/agentdojo",
+    "repo_url": "https://github.com/ethz-spylab/agentdojo",
+    "license": "MIT",
+    "description": "Dynamic environment to evaluate prompt-injection attacks and defenses for LLM agents."
+  }
+]

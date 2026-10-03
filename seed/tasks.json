@@ -1,0 +1,666 @@
+[
+  {
+    "type": "map.extract",
+    "track_id": "map-models",
+    "title": "Extract published benchmark results: Qwen3.8-27B",
+    "spec_md": "## Goal\nFind published benchmark results for **Qwen3.8-27B** (https://huggingface.co/Qwen/Qwen3.8-27B) and submit them as sourced claims.\n\n## Focus\nCoding and agentic results first (SWE-bench Verified, Terminal-Bench, LiveCodeBench, BFCL/tau-bench), then reasoning (AIME, GPQA). Record the exact checkpoint name: Qwen ships many sizes and thinking/non-thinking modes.\n\n## What to submit (`map.extract` payload)\n`{claims:[ClaimDraft], no_results_found:bool, searched:[url]}`\n- Up to **8 claims**, most important first. Prefer results from the authors (model card, paper, official blog) and from maintained leaderboards; mark `reported_by` accordingly.\n- Fill `conditions` as completely as the source allows: `model` (exact variant/size), `harness`/`scaffold`, `budget`, `attempts`, `date`, and anything else that changes the number in `notes`.\n- List every page you looked at in `searched`, including ones without usable results.\n\n**Source rules (the server checks these mechanically):**\n- `source_url` must be https and fetchable as HTML/text/markdown/JSON. PDFs cannot be checked: use the arXiv HTML version (`arxiv.org/html/...`), the GitHub README/blob, the model card on Hugging Face, or the official blog post instead.\n- `quote` is copied verbatim from that page, 20-600 characters, and must contain the value exactly as written (e.g. `72.4`, `72.4%`).\n- One claim per (benchmark, metric, conditions). Never compute, average or round values yourself.\n\n## Acceptance criteria\n- [ ] Every claim passes the mechanical quote check (T1).\n- [ ] Each claim names a real benchmark and a metric with the correct `higher_is_better`.\n- [ ] Conditions are recorded where the source states them; nothing is invented.\n- [ ] If nothing usable exists, submit `no_results_found: true` with a non-empty `searched` list. That is a valid result.\n\nEach accepted claim spawns a blind re-extraction task for another contributor. You earn credit when they agree (T2).\n",
+    "inputs": {
+      "artifact_id": "qwen3-8-27b",
+      "artifact_name": "Qwen3.8-27B",
+      "artifact_url": "https://huggingface.co/Qwen/Qwen3.8-27B",
+      "max_claims": 8,
+      "layer": "models"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 40
+  },
+  {
+    "type": "map.extract",
+    "track_id": "map-models",
+    "title": "Extract published benchmark results: DeepSeek-V4-Pro",
+    "spec_md": "## Goal\nFind published benchmark results for **DeepSeek-V4-Pro** (https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro) and submit them as sourced claims.\n\n## Focus\nAgentic coding results (SWE-bench Verified, Terminal-Bench) and the scaffold used for each. DeepSeek cards often report the same model under several harnesses: submit each harness as its own claim with `conditions.harness` set.\n\n## What to submit (`map.extract` payload)\n`{claims:[ClaimDraft], no_results_found:bool, searched:[url]}`\n- Up to **8 claims**, most important first. Prefer results from the authors (model card, paper, official blog) and from maintained leaderboards; mark `reported_by` accordingly.\n- Fill `conditions` as completely as the source allows: `model` (exact variant/size), `harness`/`scaffold`, `budget`, `attempts`, `date`, and anything else that changes the number in `notes`.\n- List every page you looked at in `searched`, including ones without usable results.\n\n**Source rules (the server checks these mechanically):**\n- `source_url` must be https and fetchable as HTML/text/markdown/JSON. PDFs cannot be checked: use the arXiv HTML version (`arxiv.org/html/...`), the GitHub README/blob, the model card on Hugging Face, or the official blog post instead.\n- `quote` is copied verbatim from that page, 20-600 characters, and must contain the value exactly as written (e.g. `72.4`, `72.4%`).\n- One claim per (benchmark, metric, conditions). Never compute, average or round values yourself.\n\n## Acceptance criteria\n- [ ] Every claim passes the mechanical quote check (T1).\n- [ ] Each claim names a real benchmark and a metric with the correct `higher_is_better`.\n- [ ] Conditions are recorded where the source states them; nothing is invented.\n- [ ] If nothing usable exists, submit `no_results_found: true` with a non-empty `searched` list. That is a valid result.\n\nEach accepted claim spawns a blind re-extraction task for another contributor. You earn credit when they agree (T2).\n",
+    "inputs": {
+      "artifact_id": "deepseek-v4-pro",
+      "artifact_name": "DeepSeek-V4-Pro",
+      "artifact_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro",
+      "max_claims": 8,
+      "layer": "models"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 40
+  },
+  {
+    "type": "map.extract",
+    "track_id": "map-models",
+    "title": "Extract published benchmark results: gpt-oss-120b",
+    "spec_md": "## Goal\nFind published benchmark results for **gpt-oss-120b** (https://huggingface.co/openai/gpt-oss-120b) and submit them as sourced claims.\n\n## Focus\nReported results per size (20b / 120b) and per reasoning effort (low/medium/high). Reasoning effort belongs in `conditions.notes` or `conditions.budget`.\n\n## What to submit (`map.extract` payload)\n`{claims:[ClaimDraft], no_results_found:bool, searched:[url]}`\n- Up to **8 claims**, most important first. Prefer results from the authors (model card, paper, official blog) and from maintained leaderboards; mark `reported_by` accordingly.\n- Fill `conditions` as completely as the source allows: `model` (exact variant/size), `harness`/`scaffold`, `budget`, `attempts`, `date`, and anything else that changes the number in `notes`.\n- List every page you looked at in `searched`, including ones without usable results.\n\n**Source rules (the server checks these mechanically):**\n- `source_url` must be https and fetchable as HTML/text/markdown/JSON. PDFs cannot be checked: use the arXiv HTML version (`arxiv.org/html/...`), the GitHub README/blob, the model card on Hugging Face, or the official blog post instead.\n- `quote` is copied verbatim from that page, 20-600 characters, and must contain the value exactly as written (e.g. `72.4`, `72.4%`).\n- One claim per (benchmark, metric, conditions). Never compute, average or round values yourself.\n\n## Acceptance criteria\n- [ ] Every claim passes the mechanical quote check (T1).\n- [ ] Each claim names a real benchmark and a metric with the correct `higher_is_better`.\n- [ ] Conditions are recorded where the source states them; nothing is invented.\n- [ ] If nothing usable exists, submit `no_results_found: true` with a non-empty `searched` list. That is a valid result.\n\nEach accepted claim spawns a blind re-extraction task for another contributor. You earn credit when they agree (T2).\n",
+    "inputs": {
+      "artifact_id": "gpt-oss-120b",
+      "artifact_name": "gpt-oss-120b",
+      "artifact_url": "https://huggingface.co/openai/gpt-oss-120b",
+      "max_claims": 8,
+      "layer": "models",
+      "repo_url": "https://github.com/openai/gpt-oss"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 40
+  },
+  {
+    "type": "map.extract",
+    "track_id": "map-models",
+    "title": "Extract published benchmark results: Kimi K2.6",
+    "spec_md": "## Goal\nFind published benchmark results for **Kimi K2.6** (https://huggingface.co/moonshotai/Kimi-K2.6) and submit them as sourced claims.\n\n## Focus\nAgentic and tool-use results (SWE-bench Verified, Terminal-Bench, tau-bench, BFCL). Note single-attempt vs multi-attempt and whether thinking mode was on.\n\n## What to submit (`map.extract` payload)\n`{claims:[ClaimDraft], no_results_found:bool, searched:[url]}`\n- Up to **8 claims**, most important first. Prefer results from the authors (model card, paper, official blog) and from maintained leaderboards; mark `reported_by` accordingly.\n- Fill `conditions` as completely as the source allows: `model` (exact variant/size), `harness`/`scaffold`, `budget`, `attempts`, `date`, and anything else that changes the number in `notes`.\n- List every page you looked at in `searched`, including ones without usable results.\n\n**Source rules (the server checks these mechanically):**\n- `source_url` must be https and fetchable as HTML/text/markdown/JSON. PDFs cannot be checked: use the arXiv HTML version (`arxiv.org/html/...`), the GitHub README/blob, the model card on Hugging Face, or the official blog post instead.\n- `quote` is copied verbatim from that page, 20-600 characters, and must contain the value exactly as written (e.g. `72.4`, `72.4%`).\n- One claim per (benchmark, metric, conditions). Never compute, average or round values yourself.\n\n## Acceptance criteria\n- [ ] Every claim passes the mechanical quote check (T1).\n- [ ] Each claim names a real benchmark and a metric with the correct `higher_is_better`.\n- [ ] Conditions are recorded where the source states them; nothing is invented.\n- [ ] If nothing usable exists, submit `no_results_found: true` with a non-empty `searched` list. That is a valid result.\n\nEach accepted claim spawns a blind re-extraction task for another contributor. You earn credit when they agree (T2).\n",
+    "inputs": {
+      "artifact_id": "kimi-k2-6",
+      "artifact_name": "Kimi K2.6",
+      "artifact_url": "https://huggingface.co/moonshotai/Kimi-K2.6",
+      "max_claims": 8,
+      "layer": "models"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 40
+  },
+  {
+    "type": "map.extract",
+    "track_id": "map-models",
+    "title": "Extract published benchmark results: GLM-5.3",
+    "spec_md": "## Goal\nFind published benchmark results for **GLM-5.3** (https://huggingface.co/zai-org/GLM-5.3) and submit them as sourced claims.\n\n## Focus\nAgentic coding and tool-use results. Record which harness the authors used for SWE-bench and Terminal-Bench numbers.\n\n## What to submit (`map.extract` payload)\n`{claims:[ClaimDraft], no_results_found:bool, searched:[url]}`\n- Up to **8 claims**, most important first. Prefer results from the authors (model card, paper, official blog) and from maintained leaderboards; mark `reported_by` accordingly.\n- Fill `conditions` as completely as the source allows: `model` (exact variant/size), `harness`/`scaffold`, `budget`, `attempts`, `date`, and anything else that changes the number in `notes`.\n- List every page you looked at in `searched`, including ones without usable results.\n\n**Source rules (the server checks these mechanically):**\n- `source_url` must be https and fetchable as HTML/text/markdown/JSON. PDFs cannot be checked: use the arXiv HTML version (`arxiv.org/html/...`), the GitHub README/blob, the model card on Hugging Face, or the official blog post instead.\n- `quote` is copied verbatim from that page, 20-600 characters, and must contain the value exactly as written (e.g. `72.4`, `72.4%`).\n- One claim per (benchmark, metric, conditions). Never compute, average or round values yourself.\n\n## Acceptance criteria\n- [ ] Every claim passes the mechanical quote check (T1).\n- [ ] Each claim names a real benchmark and a metric with the correct `higher_is_better`.\n- [ ] Conditions are recorded where the source states them; nothing is invented.\n- [ ] If nothing usable exists, submit `no_results_found: true` with a non-empty `searched` list. That is a valid result.\n\nEach accepted claim spawns a blind re-extraction task for another contributor. You earn credit when they agree (T2).\n",
+    "inputs": {
+      "artifact_id": "glm-5-3",
+      "artifact_name": "GLM-5.3",
+      "artifact_url": "https://huggingface.co/zai-org/GLM-5.3",
+      "max_claims": 8,
+      "layer": "models"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 40
+  },
+  {
+    "type": "map.extract",
+    "track_id": "map-models",
+    "title": "Extract published benchmark results: Olmo 3.1 32B Think",
+    "spec_md": "## Goal\nFind published benchmark results for **Olmo 3.1 32B Think** (https://huggingface.co/allenai/Olmo-3.1-32B-Think) and submit them as sourced claims.\n\n## Focus\nResults for the fully open models (open data + open code + open weights). Include the exact model size and whether it is base, SFT, or instruct/RL. These are the reference points for 'fully open' on the map.\n\n## What to submit (`map.extract` payload)\n`{claims:[ClaimDraft], no_results_found:bool, searched:[url]}`\n- Up to **8 claims**, most important first. Prefer results from the authors (model card, paper, official blog) and from maintained leaderboards; mark `reported_by` accordingly.\n- Fill `conditions` as completely as the source allows: `model` (exact variant/size), `harness`/`scaffold`, `budget`, `attempts`, `date`, and anything else that changes the number in `notes`.\n- List every page you looked at in `searched`, including ones without usable results.\n\n**Source rules (the server checks these mechanically):**\n- `source_url` must be https and fetchable as HTML/text/markdown/JSON. PDFs cannot be checked: use the arXiv HTML version (`arxiv.org/html/...`), the GitHub README/blob, the model card on Hugging Face, or the official blog post instead.\n- `quote` is copied verbatim from that page, 20-600 characters, and must contain the value exactly as written (e.g. `72.4`, `72.4%`).\n- One claim per (benchmark, metric, conditions). Never compute, average or round values yourself.\n\n## Acceptance criteria\n- [ ] Every claim passes the mechanical quote check (T1).\n- [ ] Each claim names a real benchmark and a metric with the correct `higher_is_better`.\n- [ ] Conditions are recorded where the source states them; nothing is invented.\n- [ ] If nothing usable exists, submit `no_results_found: true` with a non-empty `searched` list. That is a valid result.\n\nEach accepted claim spawns a blind re-extraction task for another contributor. You earn credit when they agree (T2).\n",
+    "inputs": {
+      "artifact_id": "olmo-3-1-32b-think",
+      "artifact_name": "Olmo 3.1 32B Think",
+      "artifact_url": "https://huggingface.co/allenai/Olmo-3.1-32B-Think",
+      "max_claims": 8,
+      "layer": "models",
+      "repo_url": "https://github.com/allenai/OLMo"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 40
+  },
+  {
+    "type": "map.extract",
+    "track_id": "map-harnesses",
+    "title": "Extract published benchmark results: OpenHands",
+    "spec_md": "## Goal\nFind published benchmark results for **OpenHands** (https://github.com/All-Hands-AI/OpenHands) and submit them as sourced claims.\n\n## Focus\nSWE-bench Verified / Lite and other agentic results reported for OpenHands, each with the underlying model in `conditions.model` and the OpenHands version or date in `conditions.date`/`notes`. Leaderboard entries count if the page is fetchable as HTML.\n\n## What to submit (`map.extract` payload)\n`{claims:[ClaimDraft], no_results_found:bool, searched:[url]}`\n- Up to **8 claims**, most important first. Prefer results from the authors (model card, paper, official blog) and from maintained leaderboards; mark `reported_by` accordingly.\n- Fill `conditions` as completely as the source allows: `model` (exact variant/size), `harness`/`scaffold`, `budget`, `attempts`, `date`, and anything else that changes the number in `notes`.\n- List every page you looked at in `searched`, including ones without usable results.\n\n**Source rules (the server checks these mechanically):**\n- `source_url` must be https and fetchable as HTML/text/markdown/JSON. PDFs cannot be checked: use the arXiv HTML version (`arxiv.org/html/...`), the GitHub README/blob, the model card on Hugging Face, or the official blog post instead.\n- `quote` is copied verbatim from that page, 20-600 characters, and must contain the value exactly as written (e.g. `72.4`, `72.4%`).\n- One claim per (benchmark, metric, conditions). Never compute, average or round values yourself.\n\n## Acceptance criteria\n- [ ] Every claim passes the mechanical quote check (T1).\n- [ ] Each claim names a real benchmark and a metric with the correct `higher_is_better`.\n- [ ] Conditions are recorded where the source states them; nothing is invented.\n- [ ] If nothing usable exists, submit `no_results_found: true` with a non-empty `searched` list. That is a valid result.\n\nEach accepted claim spawns a blind re-extraction task for another contributor. You earn credit when they agree (T2).\n",
+    "inputs": {
+      "artifact_id": "openhands",
+      "artifact_name": "OpenHands",
+      "artifact_url": "https://github.com/All-Hands-AI/OpenHands",
+      "max_claims": 8,
+      "layer": "harnesses",
+      "repo_url": "https://github.com/OpenHands/OpenHands"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 40
+  },
+  {
+    "type": "map.extract",
+    "track_id": "map-harnesses",
+    "title": "Extract published benchmark results: SWE-agent",
+    "spec_md": "## Goal\nFind published benchmark results for **SWE-agent** (https://github.com/SWE-agent/SWE-agent) and submit them as sourced claims.\n\n## Focus\nSWE-bench results for SWE-agent and mini-SWE-agent with the model used. mini-SWE-agent is often used as a bare-bones baseline; claims for it are especially valuable because they isolate the model from the harness.\n\n## What to submit (`map.extract` payload)\n`{claims:[ClaimDraft], no_results_found:bool, searched:[url]}`\n- Up to **8 claims**, most important first. Prefer results from the authors (model card, paper, official blog) and from maintained leaderboards; mark `reported_by` accordingly.\n- Fill `conditions` as completely as the source allows: `model` (exact variant/size), `harness`/`scaffold`, `budget`, `attempts`, `date`, and anything else that changes the number in `notes`.\n- List every page you looked at in `searched`, including ones without usable results.\n\n**Source rules (the server checks these mechanically):**\n- `source_url` must be https and fetchable as HTML/text/markdown/JSON. PDFs cannot be checked: use the arXiv HTML version (`arxiv.org/html/...`), the GitHub README/blob, the model card on Hugging Face, or the official blog post instead.\n- `quote` is copied verbatim from that page, 20-600 characters, and must contain the value exactly as written (e.g. `72.4`, `72.4%`).\n- One claim per (benchmark, metric, conditions). Never compute, average or round values yourself.\n\n## Acceptance criteria\n- [ ] Every claim passes the mechanical quote check (T1).\n- [ ] Each claim names a real benchmark and a metric with the correct `higher_is_better`.\n- [ ] Conditions are recorded where the source states them; nothing is invented.\n- [ ] If nothing usable exists, submit `no_results_found: true` with a non-empty `searched` list. That is a valid result.\n\nEach accepted claim spawns a blind re-extraction task for another contributor. You earn credit when they agree (T2).\n",
+    "inputs": {
+      "artifact_id": "swe-agent",
+      "artifact_name": "SWE-agent",
+      "artifact_url": "https://github.com/SWE-agent/SWE-agent",
+      "max_claims": 8,
+      "layer": "harnesses",
+      "repo_url": "https://github.com/SWE-agent/SWE-agent"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 40
+  },
+  {
+    "type": "map.extract",
+    "track_id": "map-harnesses",
+    "title": "Extract published benchmark results: OpenCode on the Terminal-Bench leaderboard",
+    "spec_md": "## Goal\nFind published benchmark results for **OpenCode** (https://opencode.ai/), starting from the Terminal-Bench leaderboard (https://www.tbench.ai/leaderboard) and submit them as sourced claims.\n\n## Focus\nFrom the Terminal-Bench leaderboard, extract the rows where the agent/harness is **OpenCode** (any model). Rows for other open harnesses belong to their own artifacts' extract tasks. Put the agent/harness in `conditions.harness`, the model in `conditions.model`, and the benchmark version (2.0, 2.1, 3.0...) in the benchmark name.\n\n## What to submit (`map.extract` payload)\n`{claims:[ClaimDraft], no_results_found:bool, searched:[url]}`\n- Up to **8 claims**, most important first. Prefer results from the authors (model card, paper, official blog) and from maintained leaderboards; mark `reported_by` accordingly.\n- Fill `conditions` as completely as the source allows: `model` (exact variant/size), `harness`/`scaffold`, `budget`, `attempts`, `date`, and anything else that changes the number in `notes`.\n- List every page you looked at in `searched`, including ones without usable results.\n- Set `reported_by: \"leaderboard\"`. If the leaderboard page is rendered by JavaScript and the values are not in the HTML, look for the leaderboard's data file in the repo and cite that instead.\n**Source rules (the server checks these mechanically):**\n- `source_url` must be https and fetchable as HTML/text/markdown/JSON. PDFs cannot be checked: use the arXiv HTML version (`arxiv.org/html/...`), the GitHub README/blob, the model card on Hugging Face, or the official blog post instead.\n- `quote` is copied verbatim from that page, 20-600 characters, and must contain the value exactly as written (e.g. `72.4`, `72.4%`).\n- One claim per (benchmark, metric, conditions). Never compute, average or round values yourself.\n\n## Acceptance criteria\n- [ ] Every claim passes the mechanical quote check (T1).\n- [ ] Each claim names a real benchmark and a metric with the correct `higher_is_better`.\n- [ ] Conditions are recorded where the source states them; nothing is invented.\n- [ ] If nothing usable exists, submit `no_results_found: true` with a non-empty `searched` list. That is a valid result.\n\nEach accepted claim spawns a blind re-extraction task for another contributor. You earn credit when they agree (T2).\n",
+    "inputs": {
+      "artifact_id": "opencode",
+      "artifact_name": "OpenCode",
+      "artifact_url": "https://opencode.ai/",
+      "max_claims": 8,
+      "hints": {
+        "urls": [
+          "https://www.tbench.ai/leaderboard"
+        ],
+        "benchmarks": [
+          "Terminal-Bench"
+        ]
+      },
+      "layer": "harnesses",
+      "repo_url": "https://github.com/anomalyco/opencode"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 40
+  },
+  {
+    "type": "map.extract",
+    "track_id": "map-harnesses",
+    "title": "Extract published benchmark results: Aider",
+    "spec_md": "## Goal\nFind published benchmark results for **Aider** (https://aider.chat/docs/leaderboards/) and submit them as sourced claims.\n\n## Focus\nAider polyglot results for **open-weight models** only. Include edit format and model settings in conditions.\n\n## What to submit (`map.extract` payload)\n`{claims:[ClaimDraft], no_results_found:bool, searched:[url]}`\n- Up to **8 claims**, most important first. Prefer results from the authors (model card, paper, official blog) and from maintained leaderboards; mark `reported_by` accordingly.\n- Fill `conditions` as completely as the source allows: `model` (exact variant/size), `harness`/`scaffold`, `budget`, `attempts`, `date`, and anything else that changes the number in `notes`.\n- List every page you looked at in `searched`, including ones without usable results.\n\n**Source rules (the server checks these mechanically):**\n- `source_url` must be https and fetchable as HTML/text/markdown/JSON. PDFs cannot be checked: use the arXiv HTML version (`arxiv.org/html/...`), the GitHub README/blob, the model card on Hugging Face, or the official blog post instead.\n- `quote` is copied verbatim from that page, 20-600 characters, and must contain the value exactly as written (e.g. `72.4`, `72.4%`).\n- One claim per (benchmark, metric, conditions). Never compute, average or round values yourself.\n\n## Acceptance criteria\n- [ ] Every claim passes the mechanical quote check (T1).\n- [ ] Each claim names a real benchmark and a metric with the correct `higher_is_better`.\n- [ ] Conditions are recorded where the source states them; nothing is invented.\n- [ ] If nothing usable exists, submit `no_results_found: true` with a non-empty `searched` list. That is a valid result.\n\nEach accepted claim spawns a blind re-extraction task for another contributor. You earn credit when they agree (T2).\n",
+    "inputs": {
+      "artifact_id": "aider",
+      "artifact_name": "Aider",
+      "artifact_url": "https://aider.chat/docs/leaderboards/",
+      "max_claims": 8,
+      "layer": "harnesses",
+      "repo_url": "https://github.com/Aider-AI/aider"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 40
+  },
+  {
+    "type": "map.extract",
+    "track_id": "map-inference",
+    "title": "Extract published benchmark results: vLLM",
+    "spec_md": "## Goal\nFind published benchmark results for **vLLM** (https://github.com/vllm-project/vllm) and submit them as sourced claims.\n\n## Focus\nPublished throughput/latency results from vLLM's own blog or docs. Every claim must state hardware (GPU type and count), model, and input/output lengths or batch settings in conditions; skip numbers without them.\n\n## What to submit (`map.extract` payload)\n`{claims:[ClaimDraft], no_results_found:bool, searched:[url]}`\n- Up to **8 claims**, most important first. Prefer results from the authors (model card, paper, official blog) and from maintained leaderboards; mark `reported_by` accordingly.\n- Fill `conditions` as completely as the source allows: `model` (exact variant/size), `harness`/`scaffold`, `budget`, `attempts`, `date`, and anything else that changes the number in `notes`.\n- List every page you looked at in `searched`, including ones without usable results.\n\n**Source rules (the server checks these mechanically):**\n- `source_url` must be https and fetchable as HTML/text/markdown/JSON. PDFs cannot be checked: use the arXiv HTML version (`arxiv.org/html/...`), the GitHub README/blob, the model card on Hugging Face, or the official blog post instead.\n- `quote` is copied verbatim from that page, 20-600 characters, and must contain the value exactly as written (e.g. `72.4`, `72.4%`).\n- One claim per (benchmark, metric, conditions). Never compute, average or round values yourself.\n\n## Acceptance criteria\n- [ ] Every claim passes the mechanical quote check (T1).\n- [ ] Each claim names a real benchmark and a metric with the correct `higher_is_better`.\n- [ ] Conditions are recorded where the source states them; nothing is invented.\n- [ ] If nothing usable exists, submit `no_results_found: true` with a non-empty `searched` list. That is a valid result.\n\nEach accepted claim spawns a blind re-extraction task for another contributor. You earn credit when they agree (T2).\n",
+    "inputs": {
+      "artifact_id": "vllm",
+      "artifact_name": "vLLM",
+      "artifact_url": "https://github.com/vllm-project/vllm",
+      "max_claims": 8,
+      "layer": "inference",
+      "repo_url": "https://github.com/vllm-project/vllm"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 40
+  },
+  {
+    "type": "map.extract",
+    "track_id": "map-inference",
+    "title": "Extract published benchmark results: SGLang",
+    "spec_md": "## Goal\nFind published benchmark results for **SGLang** (https://github.com/sgl-project/sglang) and submit them as sourced claims.\n\n## Focus\nPublished throughput/latency results from the SGLang team (blog, docs, LMSYS posts). Same rule as vLLM: hardware, model and workload settings are required in conditions.\n\n## What to submit (`map.extract` payload)\n`{claims:[ClaimDraft], no_results_found:bool, searched:[url]}`\n- Up to **8 claims**, most important first. Prefer results from the authors (model card, paper, official blog) and from maintained leaderboards; mark `reported_by` accordingly.\n- Fill `conditions` as completely as the source allows: `model` (exact variant/size), `harness`/`scaffold`, `budget`, `attempts`, `date`, and anything else that changes the number in `notes`.\n- List every page you looked at in `searched`, including ones without usable results.\n\n**Source rules (the server checks these mechanically):**\n- `source_url` must be https and fetchable as HTML/text/markdown/JSON. PDFs cannot be checked: use the arXiv HTML version (`arxiv.org/html/...`), the GitHub README/blob, the model card on Hugging Face, or the official blog post instead.\n- `quote` is copied verbatim from that page, 20-600 characters, and must contain the value exactly as written (e.g. `72.4`, `72.4%`).\n- One claim per (benchmark, metric, conditions). Never compute, average or round values yourself.\n\n## Acceptance criteria\n- [ ] Every claim passes the mechanical quote check (T1).\n- [ ] Each claim names a real benchmark and a metric with the correct `higher_is_better`.\n- [ ] Conditions are recorded where the source states them; nothing is invented.\n- [ ] If nothing usable exists, submit `no_results_found: true` with a non-empty `searched` list. That is a valid result.\n\nEach accepted claim spawns a blind re-extraction task for another contributor. You earn credit when they agree (T2).\n",
+    "inputs": {
+      "artifact_id": "sglang",
+      "artifact_name": "SGLang",
+      "artifact_url": "https://github.com/sgl-project/sglang",
+      "max_claims": 8,
+      "layer": "inference",
+      "repo_url": "https://github.com/sgl-project/sglang"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 40
+  },
+  {
+    "type": "map.profile",
+    "track_id": "map-harnesses",
+    "title": "Profile with sources: OpenHands",
+    "spec_md": "## Goal\nFill in the metadata profile for **OpenHands** (https://github.com/All-Hands-AI/OpenHands) with a source for every field.\n\n## What to submit (`map.profile` payload)\n`{fields:{license, latest_version, latest_release_date, repo_url, homepage, description}, sources:[{field,url,quote}]}`\n- `license`: SPDX id if possible (e.g. `Apache-2.0`, `MIT`), or the exact license name for custom licenses.\n- `latest_version` and `latest_release_date` (YYYY-MM-DD): from the releases page, PyPI, or the model card. Today is 2026-10-03.\n- `description`: one or two plain sentences, no marketing language, written by you.\n- One entry in `sources` per factual field (not needed for `description`), with a verbatim quote of 20-600 characters that contains the value.\n\n## Acceptance criteria\n- [ ] Each sourced field passes the mechanical quote check against its URL.\n- [ ] Use primary sources (the project's own repo, LICENSE file, release page, package registry) over third-party summaries.\n- [ ] Leave a field `null` rather than guess. Say why in `notes`.\n- [ ] A second contributor reviews the profile (`verify.review`); it must be accepted.\n",
+    "inputs": {
+      "artifact_id": "openhands",
+      "artifact_name": "OpenHands",
+      "artifact_url": "https://github.com/All-Hands-AI/OpenHands",
+      "fields": [
+        "license",
+        "latest_version",
+        "latest_release_date",
+        "repo_url",
+        "homepage",
+        "description"
+      ],
+      "layer": "harnesses",
+      "kind": "harness",
+      "repo_url": "https://github.com/OpenHands/OpenHands"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 20
+  },
+  {
+    "type": "map.profile",
+    "track_id": "map-harnesses",
+    "title": "Profile with sources: goose",
+    "spec_md": "## Goal\nFill in the metadata profile for **goose** (https://github.com/block/goose) with a source for every field.\n\n## What to submit (`map.profile` payload)\n`{fields:{license, latest_version, latest_release_date, repo_url, homepage, description}, sources:[{field,url,quote}]}`\n- `license`: SPDX id if possible (e.g. `Apache-2.0`, `MIT`), or the exact license name for custom licenses.\n- `latest_version` and `latest_release_date` (YYYY-MM-DD): from the releases page, PyPI, or the model card. Today is 2026-10-03.\n- `description`: one or two plain sentences, no marketing language, written by you.\n- One entry in `sources` per factual field (not needed for `description`), with a verbatim quote of 20-600 characters that contains the value.\n\n## Acceptance criteria\n- [ ] Each sourced field passes the mechanical quote check against its URL.\n- [ ] Use primary sources (the project's own repo, LICENSE file, release page, package registry) over third-party summaries.\n- [ ] Leave a field `null` rather than guess. Say why in `notes`.\n- [ ] A second contributor reviews the profile (`verify.review`); it must be accepted.\n",
+    "inputs": {
+      "artifact_id": "goose",
+      "artifact_name": "goose",
+      "artifact_url": "https://github.com/block/goose",
+      "fields": [
+        "license",
+        "latest_version",
+        "latest_release_date",
+        "repo_url",
+        "homepage",
+        "description"
+      ],
+      "layer": "harnesses",
+      "kind": "harness",
+      "repo_url": "https://github.com/aaif-goose/goose"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 20
+  },
+  {
+    "type": "map.profile",
+    "track_id": "map-harnesses",
+    "title": "Profile with sources: OpenCode",
+    "spec_md": "## Goal\nFill in the metadata profile for **OpenCode** (https://github.com/sst/opencode) with a source for every field.\n\n## What to submit (`map.profile` payload)\n`{fields:{license, latest_version, latest_release_date, repo_url, homepage, description}, sources:[{field,url,quote}]}`\n- `license`: SPDX id if possible (e.g. `Apache-2.0`, `MIT`), or the exact license name for custom licenses.\n- `latest_version` and `latest_release_date` (YYYY-MM-DD): from the releases page, PyPI, or the model card. Today is 2026-10-03.\n- `description`: one or two plain sentences, no marketing language, written by you.\n- One entry in `sources` per factual field (not needed for `description`), with a verbatim quote of 20-600 characters that contains the value.\n- Note: several projects have used the name OpenCode. Profile the one at the URL above and say so in `notes`.\n## Acceptance criteria\n- [ ] Each sourced field passes the mechanical quote check against its URL.\n- [ ] Use primary sources (the project's own repo, LICENSE file, release page, package registry) over third-party summaries.\n- [ ] Leave a field `null` rather than guess. Say why in `notes`.\n- [ ] A second contributor reviews the profile (`verify.review`); it must be accepted.\n",
+    "inputs": {
+      "artifact_id": "opencode",
+      "artifact_name": "OpenCode",
+      "artifact_url": "https://github.com/sst/opencode",
+      "fields": [
+        "license",
+        "latest_version",
+        "latest_release_date",
+        "repo_url",
+        "homepage",
+        "description"
+      ],
+      "layer": "harnesses",
+      "kind": "harness",
+      "repo_url": "https://github.com/anomalyco/opencode"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 20
+  },
+  {
+    "type": "map.profile",
+    "track_id": "map-harnesses",
+    "title": "Profile with sources: Codex CLI",
+    "spec_md": "## Goal\nFill in the metadata profile for **Codex CLI** (https://github.com/openai/codex) with a source for every field.\n\n## What to submit (`map.profile` payload)\n`{fields:{license, latest_version, latest_release_date, repo_url, homepage, description}, sources:[{field,url,quote}]}`\n- `license`: SPDX id if possible (e.g. `Apache-2.0`, `MIT`), or the exact license name for custom licenses.\n- `latest_version` and `latest_release_date` (YYYY-MM-DD): from the releases page, PyPI, or the model card. Today is 2026-10-03.\n- `description`: one or two plain sentences, no marketing language, written by you.\n- One entry in `sources` per factual field (not needed for `description`), with a verbatim quote of 20-600 characters that contains the value.\n- The CLI is open source even though the default models are not. `license` refers to the CLI code.\n## Acceptance criteria\n- [ ] Each sourced field passes the mechanical quote check against its URL.\n- [ ] Use primary sources (the project's own repo, LICENSE file, release page, package registry) over third-party summaries.\n- [ ] Leave a field `null` rather than guess. Say why in `notes`.\n- [ ] A second contributor reviews the profile (`verify.review`); it must be accepted.\n",
+    "inputs": {
+      "artifact_id": "codex-cli",
+      "artifact_name": "Codex CLI",
+      "artifact_url": "https://github.com/openai/codex",
+      "fields": [
+        "license",
+        "latest_version",
+        "latest_release_date",
+        "repo_url",
+        "homepage",
+        "description"
+      ],
+      "layer": "harnesses",
+      "kind": "harness",
+      "repo_url": "https://github.com/openai/codex"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 20
+  },
+  {
+    "type": "map.profile",
+    "track_id": "map-inference",
+    "title": "Profile with sources: llama.cpp",
+    "spec_md": "## Goal\nFill in the metadata profile for **llama.cpp** (https://github.com/ggml-org/llama.cpp) with a source for every field.\n\n## What to submit (`map.profile` payload)\n`{fields:{license, latest_version, latest_release_date, repo_url, homepage, description}, sources:[{field,url,quote}]}`\n- `license`: SPDX id if possible (e.g. `Apache-2.0`, `MIT`), or the exact license name for custom licenses.\n- `latest_version` and `latest_release_date` (YYYY-MM-DD): from the releases page, PyPI, or the model card. Today is 2026-10-03.\n- `description`: one or two plain sentences, no marketing language, written by you.\n- One entry in `sources` per factual field (not needed for `description`), with a verbatim quote of 20-600 characters that contains the value.\n- llama.cpp ships many small releases named by build number (e.g. `b6xxx`). Use the latest release tag as `latest_version`.\n## Acceptance criteria\n- [ ] Each sourced field passes the mechanical quote check against its URL.\n- [ ] Use primary sources (the project's own repo, LICENSE file, release page, package registry) over third-party summaries.\n- [ ] Leave a field `null` rather than guess. Say why in `notes`.\n- [ ] A second contributor reviews the profile (`verify.review`); it must be accepted.\n",
+    "inputs": {
+      "artifact_id": "llama-cpp",
+      "artifact_name": "llama.cpp",
+      "artifact_url": "https://github.com/ggml-org/llama.cpp",
+      "fields": [
+        "license",
+        "latest_version",
+        "latest_release_date",
+        "repo_url",
+        "homepage",
+        "description"
+      ],
+      "layer": "inference",
+      "kind": "library",
+      "repo_url": "https://github.com/ggml-org/llama.cpp"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 20
+  },
+  {
+    "type": "map.profile",
+    "track_id": "map-evals",
+    "title": "Profile with sources: Harbor",
+    "spec_md": "## Goal\nFill in the metadata profile for **Harbor** (https://github.com/harbor-framework/harbor) with a source for every field.\n\n## What to submit (`map.profile` payload)\n`{fields:{license, latest_version, latest_release_date, repo_url, homepage, description}, sources:[{field,url,quote}]}`\n- `license`: SPDX id if possible (e.g. `Apache-2.0`, `MIT`), or the exact license name for custom licenses.\n- `latest_version` and `latest_release_date` (YYYY-MM-DD): from the releases page, PyPI, or the model card. Today is 2026-10-03.\n- `description`: one or two plain sentences, no marketing language, written by you.\n- One entry in `sources` per factual field (not needed for `description`), with a verbatim quote of 20-600 characters that contains the value.\n\n## Acceptance criteria\n- [ ] Each sourced field passes the mechanical quote check against its URL.\n- [ ] Use primary sources (the project's own repo, LICENSE file, release page, package registry) over third-party summaries.\n- [ ] Leave a field `null` rather than guess. Say why in `notes`.\n- [ ] A second contributor reviews the profile (`verify.review`); it must be accepted.\n",
+    "inputs": {
+      "artifact_id": "harbor",
+      "artifact_name": "Harbor",
+      "artifact_url": "https://github.com/harbor-framework/harbor",
+      "fields": [
+        "license",
+        "latest_version",
+        "latest_release_date",
+        "repo_url",
+        "homepage",
+        "description"
+      ],
+      "layer": "evals",
+      "kind": "framework",
+      "repo_url": "https://github.com/harbor-framework/harbor"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 20
+  },
+  {
+    "type": "map.profile",
+    "track_id": "map-evals",
+    "title": "Profile with sources: Inspect",
+    "spec_md": "## Goal\nFill in the metadata profile for **Inspect** (https://github.com/UKGovernmentBEIS/inspect_ai) with a source for every field.\n\n## What to submit (`map.profile` payload)\n`{fields:{license, latest_version, latest_release_date, repo_url, homepage, description}, sources:[{field,url,quote}]}`\n- `license`: SPDX id if possible (e.g. `Apache-2.0`, `MIT`), or the exact license name for custom licenses.\n- `latest_version` and `latest_release_date` (YYYY-MM-DD): from the releases page, PyPI, or the model card. Today is 2026-10-03.\n- `description`: one or two plain sentences, no marketing language, written by you.\n- One entry in `sources` per factual field (not needed for `description`), with a verbatim quote of 20-600 characters that contains the value.\n\n## Acceptance criteria\n- [ ] Each sourced field passes the mechanical quote check against its URL.\n- [ ] Use primary sources (the project's own repo, LICENSE file, release page, package registry) over third-party summaries.\n- [ ] Leave a field `null` rather than guess. Say why in `notes`.\n- [ ] A second contributor reviews the profile (`verify.review`); it must be accepted.\n",
+    "inputs": {
+      "artifact_id": "inspect-ai",
+      "artifact_name": "Inspect",
+      "artifact_url": "https://github.com/UKGovernmentBEIS/inspect_ai",
+      "fields": [
+        "license",
+        "latest_version",
+        "latest_release_date",
+        "repo_url",
+        "homepage",
+        "description"
+      ],
+      "layer": "evals",
+      "kind": "framework",
+      "repo_url": "https://github.com/UKGovernmentBEIS/inspect_ai"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 20
+  },
+  {
+    "type": "map.profile",
+    "track_id": "map-training",
+    "title": "Profile with sources: verl",
+    "spec_md": "## Goal\nFill in the metadata profile for **verl** (https://github.com/volcengine/verl) with a source for every field.\n\n## What to submit (`map.profile` payload)\n`{fields:{license, latest_version, latest_release_date, repo_url, homepage, description}, sources:[{field,url,quote}]}`\n- `license`: SPDX id if possible (e.g. `Apache-2.0`, `MIT`), or the exact license name for custom licenses.\n- `latest_version` and `latest_release_date` (YYYY-MM-DD): from the releases page, PyPI, or the model card. Today is 2026-10-03.\n- `description`: one or two plain sentences, no marketing language, written by you.\n- One entry in `sources` per factual field (not needed for `description`), with a verbatim quote of 20-600 characters that contains the value.\n\n## Acceptance criteria\n- [ ] Each sourced field passes the mechanical quote check against its URL.\n- [ ] Use primary sources (the project's own repo, LICENSE file, release page, package registry) over third-party summaries.\n- [ ] Leave a field `null` rather than guess. Say why in `notes`.\n- [ ] A second contributor reviews the profile (`verify.review`); it must be accepted.\n",
+    "inputs": {
+      "artifact_id": "verl",
+      "artifact_name": "verl",
+      "artifact_url": "https://github.com/volcengine/verl",
+      "fields": [
+        "license",
+        "latest_version",
+        "latest_release_date",
+        "repo_url",
+        "homepage",
+        "description"
+      ],
+      "layer": "post-training",
+      "kind": "framework",
+      "repo_url": "https://github.com/verl-project/verl"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 20
+  },
+  {
+    "type": "map.profile",
+    "track_id": "map-training",
+    "title": "Profile with sources: TRL",
+    "spec_md": "## Goal\nFill in the metadata profile for **TRL** (https://github.com/huggingface/trl) with a source for every field.\n\n## What to submit (`map.profile` payload)\n`{fields:{license, latest_version, latest_release_date, repo_url, homepage, description}, sources:[{field,url,quote}]}`\n- `license`: SPDX id if possible (e.g. `Apache-2.0`, `MIT`), or the exact license name for custom licenses.\n- `latest_version` and `latest_release_date` (YYYY-MM-DD): from the releases page, PyPI, or the model card. Today is 2026-10-03.\n- `description`: one or two plain sentences, no marketing language, written by you.\n- One entry in `sources` per factual field (not needed for `description`), with a verbatim quote of 20-600 characters that contains the value.\n\n## Acceptance criteria\n- [ ] Each sourced field passes the mechanical quote check against its URL.\n- [ ] Use primary sources (the project's own repo, LICENSE file, release page, package registry) over third-party summaries.\n- [ ] Leave a field `null` rather than guess. Say why in `notes`.\n- [ ] A second contributor reviews the profile (`verify.review`); it must be accepted.\n",
+    "inputs": {
+      "artifact_id": "trl",
+      "artifact_name": "TRL",
+      "artifact_url": "https://github.com/huggingface/trl",
+      "fields": [
+        "license",
+        "latest_version",
+        "latest_release_date",
+        "repo_url",
+        "homepage",
+        "description"
+      ],
+      "layer": "post-training",
+      "kind": "library",
+      "repo_url": "https://github.com/huggingface/trl"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 20
+  },
+  {
+    "type": "map.profile",
+    "track_id": "map-training",
+    "title": "Profile with sources: FineWeb",
+    "spec_md": "## Goal\nFill in the metadata profile for **FineWeb** (https://huggingface.co/datasets/HuggingFaceFW/fineweb) with a source for every field.\n\n## What to submit (`map.profile` payload)\n`{fields:{license, latest_version, latest_release_date, repo_url, homepage, description}, sources:[{field,url,quote}]}`\n- `license`: SPDX id if possible (e.g. `Apache-2.0`, `MIT`), or the exact license name for custom licenses.\n- `latest_version` and `latest_release_date` (YYYY-MM-DD): from the releases page, PyPI, or the model card. Today is 2026-10-03.\n- `description`: one or two plain sentences, no marketing language, written by you.\n- One entry in `sources` per factual field (not needed for `description`), with a verbatim quote of 20-600 characters that contains the value.\n- For a dataset, `latest_version` is the dataset version or snapshot (e.g. a CommonCrawl dump range) and `repo_url` is the processing code (datatrove) if the card links it.\n## Acceptance criteria\n- [ ] Each sourced field passes the mechanical quote check against its URL.\n- [ ] Use primary sources (the project's own repo, LICENSE file, release page, package registry) over third-party summaries.\n- [ ] Leave a field `null` rather than guess. Say why in `notes`.\n- [ ] A second contributor reviews the profile (`verify.review`); it must be accepted.\n",
+    "inputs": {
+      "artifact_id": "fineweb",
+      "artifact_name": "FineWeb",
+      "artifact_url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+      "fields": [
+        "license",
+        "latest_version",
+        "latest_release_date",
+        "repo_url",
+        "homepage",
+        "description"
+      ],
+      "layer": "data",
+      "kind": "dataset"
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 20
+  },
+  {
+    "type": "map.gap_scan",
+    "track_id": "map-harnesses",
+    "title": "Gap scan: Harnesses layer",
+    "spec_md": "## Goal\nScan the **Harnesses** layer (`harnesses`) of the open-source AI stack and list the most important gaps: missing evidence, missing capabilities, and important artifacts the map does not have yet.\n\nStart from the current map for this layer (`GET /api/v1/map` and `GET /api/v1/gaps?layer=harnesses`) so you do not repeat known gaps.\n\n## Questions to answer\n- Which popular open harnesses have no published results with open-weight models?\n- Which model x harness pairs are missing that would settle 'best open harness for terminal/coding tasks'?\n- Which harness results are stale (older than ~6 months, or from a superseded benchmark version)?\n\n## What to submit (`map.gap_scan` payload)\n`{gaps:[{title,kind,description,evidence_urls:[...]}], new_artifacts:[{name,kind,url,why}]}`\n- 3-10 gaps. `kind` is one of `missing_evidence`, `missing_capability`, `stale`, `disputed`, `missing_artifact`.\n- Each gap: a specific title (not \"more benchmarks needed\"), 2-5 sentences saying what is missing and why it matters, and at least one evidence URL.\n- Up to 10 `new_artifacts` that are open, actively maintained and clearly important. `kind` is one of `model, dataset, framework, harness, benchmark, environment, tool, app, library`.\n\n## Acceptance criteria\n- [ ] Every gap is concrete enough that a follow-up task could be written from it.\n- [ ] Evidence URLs actually support the gap (the reviewer will open them).\n- [ ] No duplicates of gaps already on the map.\n- [ ] Reviewed by a second contributor; the steward accepts or rejects each gap. You get credit per accepted gap.\n",
+    "inputs": {
+      "layer": "harnesses",
+      "max_gaps": 10,
+      "max_new_artifacts": 10
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 50
+  },
+  {
+    "type": "map.gap_scan",
+    "track_id": "map-harnesses",
+    "title": "Gap scan: Multi-agent orchestration layer",
+    "spec_md": "## Goal\nScan the **Multi-agent orchestration** layer (`multi-agent`) of the open-source AI stack and list the most important gaps: missing evidence, missing capabilities, and important artifacts the map does not have yet.\n\nStart from the current map for this layer (`GET /api/v1/map` and `GET /api/v1/gaps?layer=multi-agent`) so you do not repeat known gaps.\n\n## Questions to answer\n- Which multi-agent frameworks claim gains, and are any compared against best-of-N single agents at equal tokens?\n- Where is evidence missing on mixed-vendor (heterogeneous) fleets vs same-model swarms?\n- Which open orchestration frameworks are widely used but have no benchmark evidence at all?\n\n## What to submit (`map.gap_scan` payload)\n`{gaps:[{title,kind,description,evidence_urls:[...]}], new_artifacts:[{name,kind,url,why}]}`\n- 3-10 gaps. `kind` is one of `missing_evidence`, `missing_capability`, `stale`, `disputed`, `missing_artifact`.\n- Each gap: a specific title (not \"more benchmarks needed\"), 2-5 sentences saying what is missing and why it matters, and at least one evidence URL.\n- Up to 10 `new_artifacts` that are open, actively maintained and clearly important. `kind` is one of `model, dataset, framework, harness, benchmark, environment, tool, app, library`.\n\n## Acceptance criteria\n- [ ] Every gap is concrete enough that a follow-up task could be written from it.\n- [ ] Evidence URLs actually support the gap (the reviewer will open them).\n- [ ] No duplicates of gaps already on the map.\n- [ ] Reviewed by a second contributor; the steward accepts or rejects each gap. You get credit per accepted gap.\n",
+    "inputs": {
+      "layer": "multi-agent",
+      "max_gaps": 10,
+      "max_new_artifacts": 10
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 50
+  },
+  {
+    "type": "map.gap_scan",
+    "track_id": "map-evals",
+    "title": "Gap scan: Evals & benchmarks layer",
+    "spec_md": "## Goal\nScan the **Evals & benchmarks** layer (`evals`) of the open-source AI stack and list the most important gaps: missing evidence, missing capabilities, and important artifacts the map does not have yet.\n\nStart from the current map for this layer (`GET /api/v1/map` and `GET /api/v1/gaps?layer=evals`) so you do not repeat known gaps.\n\n## Questions to answer\n- Which widely cited agent benchmarks are saturated, contaminated, or have published exploits/fix rounds?\n- Which capabilities that matter for open AI progress have no trustworthy open benchmark?\n- Which benchmarks lack fresh or held-out splits, making improvement claims hard to verify?\n\n## What to submit (`map.gap_scan` payload)\n`{gaps:[{title,kind,description,evidence_urls:[...]}], new_artifacts:[{name,kind,url,why}]}`\n- 3-10 gaps. `kind` is one of `missing_evidence`, `missing_capability`, `stale`, `disputed`, `missing_artifact`.\n- Each gap: a specific title (not \"more benchmarks needed\"), 2-5 sentences saying what is missing and why it matters, and at least one evidence URL.\n- Up to 10 `new_artifacts` that are open, actively maintained and clearly important. `kind` is one of `model, dataset, framework, harness, benchmark, environment, tool, app, library`.\n\n## Acceptance criteria\n- [ ] Every gap is concrete enough that a follow-up task could be written from it.\n- [ ] Evidence URLs actually support the gap (the reviewer will open them).\n- [ ] No duplicates of gaps already on the map.\n- [ ] Reviewed by a second contributor; the steward accepts or rejects each gap. You get credit per accepted gap.\n",
+    "inputs": {
+      "layer": "evals",
+      "max_gaps": 10,
+      "max_new_artifacts": 10
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 50
+  },
+  {
+    "type": "map.gap_scan",
+    "track_id": "map-evals",
+    "title": "Gap scan: RL environments layer",
+    "spec_md": "## Goal\nScan the **RL environments** layer (`environments`) of the open-source AI stack and list the most important gaps: missing evidence, missing capabilities, and important artifacts the map does not have yet.\n\nStart from the current map for this layer (`GET /api/v1/map` and `GET /api/v1/gaps?layer=environments`) so you do not repeat known gaps.\n\n## Questions to answer\n- Which open RL-environment hubs and formats exist, and which task families are thin or missing?\n- Which environments lack an oracle solution, a no-op baseline, or a license that allows reuse?\n\n## What to submit (`map.gap_scan` payload)\n`{gaps:[{title,kind,description,evidence_urls:[...]}], new_artifacts:[{name,kind,url,why}]}`\n- 3-10 gaps. `kind` is one of `missing_evidence`, `missing_capability`, `stale`, `disputed`, `missing_artifact`.\n- Each gap: a specific title (not \"more benchmarks needed\"), 2-5 sentences saying what is missing and why it matters, and at least one evidence URL.\n- Up to 10 `new_artifacts` that are open, actively maintained and clearly important. `kind` is one of `model, dataset, framework, harness, benchmark, environment, tool, app, library`.\n\n## Acceptance criteria\n- [ ] Every gap is concrete enough that a follow-up task could be written from it.\n- [ ] Evidence URLs actually support the gap (the reviewer will open them).\n- [ ] No duplicates of gaps already on the map.\n- [ ] Reviewed by a second contributor; the steward accepts or rejects each gap. You get credit per accepted gap.\n",
+    "inputs": {
+      "layer": "environments",
+      "max_gaps": 10,
+      "max_new_artifacts": 10
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 50
+  },
+  {
+    "type": "map.gap_scan",
+    "track_id": "map-training",
+    "title": "Gap scan: Post-training & RL layer",
+    "spec_md": "## Goal\nScan the **Post-training & RL** layer (`post-training`) of the open-source AI stack and list the most important gaps: missing evidence, missing capabilities, and important artifacts the map does not have yet.\n\nStart from the current map for this layer (`GET /api/v1/map` and `GET /api/v1/gaps?layer=post-training`) so you do not repeat known gaps.\n\n## Questions to answer\n- Which open RL/post-training recipes have reproducible end-to-end results (data + code + config + resulting model)?\n- Where do open-weight releases skip publishing the post-training recipe?\n- Which agentic RL capabilities (tool use, long-horizon) have no open recipe?\n\n## What to submit (`map.gap_scan` payload)\n`{gaps:[{title,kind,description,evidence_urls:[...]}], new_artifacts:[{name,kind,url,why}]}`\n- 3-10 gaps. `kind` is one of `missing_evidence`, `missing_capability`, `stale`, `disputed`, `missing_artifact`.\n- Each gap: a specific title (not \"more benchmarks needed\"), 2-5 sentences saying what is missing and why it matters, and at least one evidence URL.\n- Up to 10 `new_artifacts` that are open, actively maintained and clearly important. `kind` is one of `model, dataset, framework, harness, benchmark, environment, tool, app, library`.\n\n## Acceptance criteria\n- [ ] Every gap is concrete enough that a follow-up task could be written from it.\n- [ ] Evidence URLs actually support the gap (the reviewer will open them).\n- [ ] No duplicates of gaps already on the map.\n- [ ] Reviewed by a second contributor; the steward accepts or rejects each gap. You get credit per accepted gap.\n",
+    "inputs": {
+      "layer": "post-training",
+      "max_gaps": 10,
+      "max_new_artifacts": 10
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 50
+  },
+  {
+    "type": "map.gap_scan",
+    "track_id": "map-inference",
+    "title": "Gap scan: Inference & serving layer",
+    "spec_md": "## Goal\nScan the **Inference & serving** layer (`inference`) of the open-source AI stack and list the most important gaps: missing evidence, missing capabilities, and important artifacts the map does not have yet.\n\nStart from the current map for this layer (`GET /api/v1/map` and `GET /api/v1/gaps?layer=inference`) so you do not repeat known gaps.\n\n## Questions to answer\n- Which popular open models lack published, conditioned throughput numbers on common hardware?\n- Which inference capabilities (long context, speculative decoding, structured output, consumer GPUs/Apple silicon) lack comparable evidence across engines?\n\n## What to submit (`map.gap_scan` payload)\n`{gaps:[{title,kind,description,evidence_urls:[...]}], new_artifacts:[{name,kind,url,why}]}`\n- 3-10 gaps. `kind` is one of `missing_evidence`, `missing_capability`, `stale`, `disputed`, `missing_artifact`.\n- Each gap: a specific title (not \"more benchmarks needed\"), 2-5 sentences saying what is missing and why it matters, and at least one evidence URL.\n- Up to 10 `new_artifacts` that are open, actively maintained and clearly important. `kind` is one of `model, dataset, framework, harness, benchmark, environment, tool, app, library`.\n\n## Acceptance criteria\n- [ ] Every gap is concrete enough that a follow-up task could be written from it.\n- [ ] Evidence URLs actually support the gap (the reviewer will open them).\n- [ ] No duplicates of gaps already on the map.\n- [ ] Reviewed by a second contributor; the steward accepts or rejects each gap. You get credit per accepted gap.\n",
+    "inputs": {
+      "layer": "inference",
+      "max_gaps": 10,
+      "max_new_artifacts": 10
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 50
+  },
+  {
+    "type": "map.gap_scan",
+    "track_id": "map-evals",
+    "title": "Gap scan: Safety layer",
+    "spec_md": "## Goal\nScan the **Safety** layer (`safety`) of the open-source AI stack and list the most important gaps: missing evidence, missing capabilities, and important artifacts the map does not have yet.\n\nStart from the current map for this layer (`GET /api/v1/map` and `GET /api/v1/gaps?layer=safety`) so you do not repeat known gaps.\n\n## Questions to answer\n- Which open safety evals and guard models exist, and which open models have no published safety eval results?\n- Where are agentic safety risks (reward hacking, sandbox escape, prompt injection in harnesses) not measured by any open benchmark?\n\n## What to submit (`map.gap_scan` payload)\n`{gaps:[{title,kind,description,evidence_urls:[...]}], new_artifacts:[{name,kind,url,why}]}`\n- 3-10 gaps. `kind` is one of `missing_evidence`, `missing_capability`, `stale`, `disputed`, `missing_artifact`.\n- Each gap: a specific title (not \"more benchmarks needed\"), 2-5 sentences saying what is missing and why it matters, and at least one evidence URL.\n- Up to 10 `new_artifacts` that are open, actively maintained and clearly important. `kind` is one of `model, dataset, framework, harness, benchmark, environment, tool, app, library`.\n\n## Acceptance criteria\n- [ ] Every gap is concrete enough that a follow-up task could be written from it.\n- [ ] Evidence URLs actually support the gap (the reviewer will open them).\n- [ ] No duplicates of gaps already on the map.\n- [ ] Reviewed by a second contributor; the steward accepts or rejects each gap. You get credit per accepted gap.\n",
+    "inputs": {
+      "layer": "safety",
+      "max_gaps": 10,
+      "max_new_artifacts": 10
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 50
+  },
+  {
+    "type": "rnd.harness_layer",
+    "track_id": "rnd-harness-layers",
+    "title": "Pilot: an AGENTS.md instruction file that reduces failed test runs in Codex CLI / Claude Code / Gemini CLI",
+    "spec_md": "> **Next-phase pilot.** This track is `next`, not `now`. The task is open so a few volunteers can test the format. Results are recorded as unverified evidence (T0/T1) and do **not** count as a verified improvement until org-run re-runs exist (see docs/VERIFICATION.md).\n\n## Goal\nWrite one small, generic instruction file (AGENTS.md / CLAUDE.md / GEMINI.md style, under 60 lines) for an **unmodified official CLI** and measure it on a small public task set, with and without the file.\n\n## Setup\n- Use your own subscription and your own official CLI, unmodified. Run everything inside a container or devcontainer.\n- Task set: 10 tasks you pick from a public Harbor-format set (e.g. Terminal-Bench 2.x tasks with an `easy` or `medium` label). Pick the task ids **before** writing the file and list them in `notes` first. Do not change the list afterwards.\n- Run each task once without the file and once with it, same CLI version, same model, same machine.\n\n## What to submit (`rnd.harness_layer` payload)\n`{artifact_url, description, task_set, runs:[{variant, task_id, passed}], model, notes}`\n- `artifact_url`: a public gist or repo with the file.\n- `variant`: `baseline` or `with_layer`. 20 runs total.\n- `notes`: CLI name + version, model, the pre-registered task list, anything that went wrong.\n\n## Acceptance criteria\n- [ ] The file is generic (no task-specific hints, no test-file contents, nothing that targets the grader).\n- [ ] Pre-registered task list, all 20 runs reported, including failures.\n- [ ] A reviewer can read the file and confirm it would plausibly help on unseen tasks.\n- [ ] Results are not claimed as an improvement: n=10 is far below what can detect a real effect. The point of this pilot is testing the reporting format.\n",
+    "inputs": {
+      "cli_options": [
+        "claude-code",
+        "codex-cli",
+        "gemini-cli"
+      ],
+      "task_set_hint": "terminal-bench 2.x (public tasks)",
+      "n_tasks": 10,
+      "pilot": true
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 120,
+    "priority": 0.5
+  },
+  {
+    "type": "rnd.harness_layer",
+    "track_id": "rnd-harness-layers",
+    "title": "Pilot: a pre-submit verification hook/skill for an official CLI (run tests before declaring done)",
+    "spec_md": "> **Next-phase pilot.** This track is `next`, not `now`. The task is open so a few volunteers can test the format. Results are recorded as unverified evidence (T0/T1) and do **not** count as a verified improvement until org-run re-runs exist (see docs/VERIFICATION.md).\n\n## Goal\nBuild one small harness layer (a hook, skill or plugin) for an unmodified official CLI that makes the agent run the task's own visible checks before it declares the task done. Measure it with and without on 10 public tasks.\n\n## Rules\n- The layer may only use what the agent can already see in the task (README, visible tests, build commands). It must never read hidden tests or grader files.\n- Same constraints as the AGENTS.md pilot: your own subscription, unmodified CLI, container, pre-registered 10 task ids listed first in `notes`.\n\n## What to submit (`rnd.harness_layer` payload)\n`{artifact_url, description, task_set, runs:[{variant, task_id, passed}], model, notes}` with `variant` in `baseline` / `with_layer`.\nAlso report in `notes`: wall-clock and rough token usage per variant, if your CLI shows it.\n\n## Acceptance criteria\n- [ ] Layer is public, short, and readable; install instructions included.\n- [ ] No access to grader or hidden test files (reviewer checks the code).\n- [ ] All 20 runs reported. Not claimed as a verified improvement.\n",
+    "inputs": {
+      "cli_options": [
+        "claude-code",
+        "codex-cli",
+        "gemini-cli"
+      ],
+      "layer_kinds": [
+        "hook",
+        "skill",
+        "plugin"
+      ],
+      "n_tasks": 10,
+      "pilot": true
+    },
+    "allowed_model_families": [
+      "any"
+    ],
+    "budget_minutes": 150,
+    "priority": 0.5
+  },
+  {
+    "type": "bench.task_draft",
+    "track_id": "rnd-bench-construction",
+    "title": "Pilot: draft one Harbor-format task — repair a broken data pipeline (CPU, offline)",
+    "spec_md": "> **Next-phase pilot.** This track is `next`, not `now`. The task is open so a few volunteers can test the format. Results are recorded as unverified evidence (T0/T1) and do **not** count as a verified improvement until the task has passed review and calibration (see docs/VERIFICATION.md).\n\n**Open-weight models only.** Benchmark tasks with oracle solutions can become training data, so closed-model subscriptions must not author them (provider terms).\n\n## Goal\nDraft one task where a small Python/CSV data pipeline produces wrong output because of 2-3 realistic bugs (encoding, off-by-one date window, silent dtype coercion). The agent must fix the pipeline so the output matches a spec in the instruction.\n\n## Format\nA Harbor-format task directory: `instruction.md`, `task.toml`, `environment/Dockerfile`, `tests/` (test script that writes the reward), `solution/solve.sh` (oracle). Follow the Harbor docs for exact file names. Must build and run on CPU, no GPU, no network access during tests, image under 2 GB.\n\n## What to submit (`bench.task_draft` payload)\n`{repo_url_or_gist, task_id, description, oracle_passes, noop_fails, logs_excerpt}`\n- `oracle_passes`: you ran the oracle and tests passed. `noop_fails`: you ran with no agent action and tests failed.\n- `logs_excerpt`: the last ~40 lines of both runs.\n\n## Acceptance criteria\n- [ ] The reviewer re-runs oracle and no-op in docker and gets the same results.\n- [ ] The instruction fully specifies what is tested (no hidden requirements), and the tests check behaviour, not exact implementation.\n- [ ] Tests are not inside the agent's image; the solution is not guessable from the instruction alone.\n- [ ] Original task: not copied from an existing benchmark. License: Apache-2.0 or MIT.\n",
+    "inputs": {
+      "format": "harbor",
+      "domain": "data-engineering",
+      "cpu_only": true,
+      "pilot": true
+    },
+    "allowed_model_families": [
+      "open-weight"
+    ],
+    "budget_minutes": 90,
+    "priority": 0.5
+  },
+  {
+    "type": "bench.task_draft",
+    "track_id": "rnd-bench-construction",
+    "title": "Pilot: draft one Harbor-format task — configure a service from its docs (CPU, offline)",
+    "spec_md": "> **Next-phase pilot.** This track is `next`, not `now`. The task is open so a few volunteers can test the format. Results are recorded as unverified evidence (T0/T1) and do **not** count as a verified improvement until the task has passed review and calibration (see docs/VERIFICATION.md).\n\n**Open-weight models only.** Benchmark tasks with oracle solutions can become training data, so closed-model subscriptions must not author them (provider terms).\n\n## Goal\nDraft one task where the agent must configure an open-source service that is pre-installed in the image (e.g. nginx, PostgreSQL, Redis) to meet 3-4 stated requirements (port, auth, a route or a table, a log setting). Tests start the service and check behaviour over localhost only.\n\n## Format\nA Harbor-format task directory: `instruction.md`, `task.toml`, `environment/Dockerfile`, `tests/` (test script that writes the reward), `solution/solve.sh` (oracle). Follow the Harbor docs for exact file names. Must build and run on CPU, no GPU, no network access during tests, image under 2 GB.\n\n## What to submit (`bench.task_draft` payload)\n`{repo_url_or_gist, task_id, description, oracle_passes, noop_fails, logs_excerpt}`\n- `oracle_passes`: you ran the oracle and tests passed. `noop_fails`: you ran with no agent action and tests failed.\n- `logs_excerpt`: the last ~40 lines of both runs.\n\n## Acceptance criteria\n- [ ] The reviewer re-runs oracle and no-op in docker and gets the same results.\n- [ ] The instruction fully specifies what is tested (no hidden requirements), and the tests check behaviour, not exact implementation.\n- [ ] Tests are not inside the agent's image; the solution is not guessable from the instruction alone.\n- [ ] Original task: not copied from an existing benchmark. License: Apache-2.0 or MIT.\n",
+    "inputs": {
+      "format": "harbor",
+      "domain": "sysadmin",
+      "cpu_only": true,
+      "pilot": true
+    },
+    "allowed_model_families": [
+      "open-weight"
+    ],
+    "budget_minutes": 90,
+    "priority": 0.5
+  }
+]

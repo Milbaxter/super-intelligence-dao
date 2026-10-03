@@ -1,0 +1,49 @@
+{
+ "id": "the-stack-v2",
+ "name": "The Stack v2",
+ "layer": "data",
+ "kind": "dataset",
+ "url": "https://huggingface.co/datasets/bigcode/the-stack-v2",
+ "repo_url": null,
+ "license": null,
+ "open_weights": null,
+ "description": "Source-code corpus from the BigCode project.",
+ "latest_version": null,
+ "latest_release_date": null,
+ "created_at": "2026-08-04T06:04:00Z",
+ "updated_at": "2026-10-01T06:04:00Z",
+ "source": "seed",
+ "claim_count": 0,
+ "verified_claim_count": 0,
+ "best_tier": null,
+ "claims": [],
+ "gaps": [
+  {
+   "id": "g_f4b260",
+   "layer": "data",
+   "kind": "missing_capability",
+   "title": "Licence provenance for code corpora",
+   "description": "Per-file licence provenance is hard to audit for large code datasets.",
+   "evidence_urls": [],
+   "status": "accepted",
+   "created_at": "2026-09-30T06:04:00Z",
+   "task_ids": []
+  }
+ ],
+ "tasks": [
+  {
+   "id": "t_b42ccd",
+   "type": "map.extract",
+   "track_id": "map-extract",
+   "title": "Find published benchmark results for The Stack v2",
+   "status": "open",
+   "priority": 6.9,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 45,
+   "attempts": 0,
+   "created_at": "2026-10-01T10:04:00Z"
+  }
+ ]
+}

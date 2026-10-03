@@ -1,0 +1,122 @@
+{
+ "id": "llama-3-3-70b",
+ "name": "Llama 3.3 70B",
+ "layer": "models",
+ "kind": "model",
+ "url": "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct",
+ "repo_url": null,
+ "license": "Llama 3.3 Community License",
+ "open_weights": 1,
+ "description": "Open-weight instruction-tuned model.",
+ "latest_version": null,
+ "latest_release_date": null,
+ "created_at": "2026-08-04T06:04:00Z",
+ "updated_at": "2026-10-01T06:04:00Z",
+ "source": "seed",
+ "claim_count": 2,
+ "verified_claim_count": 1,
+ "best_tier": "reproduced",
+ "claims": [
+  {
+   "id": "cl_14b660",
+   "artifact_id": "llama-3-3-70b",
+   "artifact_name": "Llama 3.3 70B",
+   "layer": "models",
+   "benchmark_id": "gpqa-diamond",
+   "benchmark_name": "GPQA Diamond",
+   "metric": "accuracy",
+   "value": 54.2,
+   "unit": "%",
+   "higher_is_better": true,
+   "conditions": {
+    "date": "2026-06-10",
+    "notes": "Illustrative example value from mock fixtures, not a real result.",
+    "attempts": 1,
+    "scaffold": "zero-shot"
+   },
+   "source_url": "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct",
+   "quote": "[Illustrative example quote] Llama 3.3 70B reaches 54.2% on GPQA Diamond under the stated setup.",
+   "reported_by": "third-party",
+   "tier": "reproduced",
+   "special_status": null,
+   "display_status": "reproduced",
+   "created_at": "2026-09-22T22:04:00Z",
+   "tier_changed_at": "2026-09-25T22:04:00Z",
+   "expires_at": "2027-03-24T22:04:00Z",
+   "seed": 1,
+   "check_result": {
+    "passed": true,
+    "reason": "quote_found_value_present",
+    "fetched_url": "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct",
+    "http_status": 200,
+    "fetched_at": "2026-09-25T22:04:00Z",
+    "content_sha256": "0490653618d880e67618ddfc2cf396d26756220f4bbedbda2c9864532ee0dac5"
+   }
+  },
+  {
+   "id": "cl_160854",
+   "artifact_id": "llama-3-3-70b",
+   "artifact_name": "Llama 3.3 70B",
+   "layer": "models",
+   "benchmark_id": "humaneval",
+   "benchmark_name": "HumanEval",
+   "metric": "pass@1",
+   "value": 31.6,
+   "unit": "pass@1",
+   "higher_is_better": true,
+   "conditions": {
+    "date": "2026-06-24",
+    "notes": "Illustrative example value from mock fixtures, not a real result.",
+    "attempts": 1,
+    "scaffold": "zero-shot"
+   },
+   "source_url": "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct",
+   "quote": "[Illustrative example quote] Llama 3.3 70B reaches 31.6 on HumanEval under the stated setup.",
+   "reported_by": "artifact-authors",
+   "tier": "source-checked",
+   "special_status": null,
+   "display_status": "source-checked",
+   "created_at": "2026-03-28T19:04:00Z",
+   "tier_changed_at": "2026-03-30T19:04:00Z",
+   "expires_at": "2026-09-26T19:04:00Z",
+   "seed": 0,
+   "check_result": {
+    "passed": true,
+    "reason": "quote_found_value_present",
+    "fetched_url": "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct",
+    "http_status": 200,
+    "fetched_at": "2026-03-30T19:04:00Z",
+    "content_sha256": "b60df687fe533297571c0780310b99d7bceafa06d825b7f3e31138033066c9b6"
+   }
+  }
+ ],
+ "gaps": [
+  {
+   "id": "g_3a9a04",
+   "layer": "models",
+   "kind": "stale",
+   "title": "OLMo 2 claims need re-verification",
+   "description": "Several claims are close to their 180-day expiry.",
+   "evidence_urls": [],
+   "status": "accepted",
+   "created_at": "2026-09-26T06:04:00Z",
+   "task_ids": []
+  }
+ ],
+ "tasks": [
+  {
+   "id": "t_461de9",
+   "type": "verify.blind_extract",
+   "track_id": "referee",
+   "title": "Blind re-extract: Llama 3.3 70B on HumanEval",
+   "status": "verified",
+   "priority": 9.96,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 15,
+   "attempts": 1,
+   "created_at": "2026-09-24T19:04:00Z"
+  }
+ ]
+}

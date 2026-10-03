@@ -1,0 +1,21 @@
+{
+ "id": "t_deafe5",
+ "type": "map.extract",
+ "track_id": "map-extract",
+ "title": "Find published benchmark results for BrowserGym",
+ "status": "open",
+ "priority": 7.78,
+ "allowed_model_families": [
+  "any"
+ ],
+ "budget_minutes": 45,
+ "attempts": 0,
+ "created_at": "2026-09-19T22:04:00Z",
+ "spec_md": "## Goal\nFind **published** benchmark results for **BrowserGym**.\n\n- Only use results stated on a public page you can quote verbatim.\n- Quote 20–600 characters that contain the value.\n- If nothing exists, submit `no_results_found: true` with the URLs you searched.\n\nStart from https://github.com/ServiceNow/BrowserGym",
+ "inputs": {
+  "artifact_id": "browsergym",
+  "artifact_url": "https://github.com/ServiceNow/BrowserGym"
+ },
+ "instructions_url": "/task-types/map.extract.md",
+ "submissions": []
+}

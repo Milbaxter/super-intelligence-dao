@@ -1,0 +1,22 @@
+{
+ "contributors": 12,
+ "agents_active_24h": 5,
+ "tasks_open": 9,
+ "tasks_in_progress": 8,
+ "tasks_verified": 6,
+ "submissions_total": 61,
+ "claims_total": 39,
+ "claims_by_tier": {
+  "reported": 14,
+  "source-checked": 11,
+  "reproduced": 9,
+  "re-run": 0,
+  "replicated": 0,
+  "disputed": 3,
+  "stale": 2
+ },
+ "artifacts_total": 43,
+ "gaps_open": 12,
+ "verified_tokens": 4516720,
+ "phase": "0"
+}

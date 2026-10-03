@@ -1,0 +1,308 @@
+[
+  {
+    "id": "swe-bench-verified",
+    "name": "SWE-bench Verified",
+    "layer": "evals",
+    "url": "https://www.swebench.com/",
+    "description": "500 human-filtered real GitHub issues from Python repos; agent must produce a patch that passes hidden tests.",
+    "measures": "repository-level bug fixing (% resolved)",
+    "saturated": true
+  },
+  {
+    "id": "swe-bench-pro",
+    "name": "SWE-bench Pro",
+    "layer": "evals",
+    "url": "https://github.com/scaleapi/SWE-bench_Pro-os",
+    "description": "Scale AI's harder, long-horizon successor to SWE-bench with contamination-resistant repos.",
+    "measures": "long-horizon software engineering (% resolved)",
+    "saturated": false
+  },
+  {
+    "id": "swe-bench-multilingual",
+    "name": "SWE-bench Multilingual",
+    "layer": "evals",
+    "url": "https://www.swebench.com/",
+    "description": "300 tasks from 42 repositories across 9 programming languages.",
+    "measures": "multi-language issue resolution (% resolved)",
+    "saturated": false
+  },
+  {
+    "id": "terminal-bench-2-0",
+    "name": "Terminal-Bench 2.0",
+    "layer": "evals",
+    "url": "https://www.tbench.ai/leaderboard/terminal-bench/2.0",
+    "description": "Hard containerized terminal tasks run via Harbor; scored by task tests.",
+    "measures": "agentic terminal work (% tasks passed)",
+    "saturated": false
+  },
+  {
+    "id": "terminal-bench-2-1",
+    "name": "Terminal-Bench 2.1",
+    "layer": "evals",
+    "url": "https://github.com/harbor-framework/terminal-bench-2-1",
+    "description": "More-verified iteration of TB 2.0 (26 tasks fixed); leaderboard currently maintainer-run only.",
+    "measures": "agentic terminal work (% tasks passed)",
+    "saturated": false
+  },
+  {
+    "id": "terminal-bench-3-0",
+    "name": "Terminal-Bench 3.0",
+    "layer": "evals",
+    "url": "https://github.com/harbor-framework/terminal-bench/releases",
+    "description": "Tagged v3.0.0 (Jul 2026) release of the continuous Terminal-Bench task set.",
+    "measures": "agentic terminal work (% tasks passed)",
+    "saturated": false
+  },
+  {
+    "id": "terminal-bench-4-0",
+    "name": "Terminal-Bench 4.0",
+    "layer": "evals",
+    "url": "https://www.tbench.ai/",
+    "description": "Tagged v4.0.0 (Aug 2026) release of the continuous Terminal-Bench; current headline leaderboard.",
+    "measures": "frontier agentic terminal work (% resolved)",
+    "saturated": false
+  },
+  {
+    "id": "deepswe",
+    "name": "DeepSWE",
+    "layer": "evals",
+    "url": "https://deepswe.datacurve.ai/",
+    "description": "Datacurve's 113 original long-horizon engineering tasks; leaderboard runs all models on mini-swe-agent and reports cost.",
+    "measures": "long-horizon coding (pass@1, cost per task)",
+    "saturated": false
+  },
+  {
+    "id": "aider-polyglot",
+    "name": "Aider polyglot",
+    "layer": "evals",
+    "url": "https://aider.chat/docs/leaderboards/",
+    "description": "225 hard Exercism exercises in 6 languages, solved with aider's edit formats.",
+    "measures": "code editing across languages (% correct after 2 tries)",
+    "saturated": false
+  },
+  {
+    "id": "livecodebench",
+    "name": "LiveCodeBench",
+    "layer": "evals",
+    "url": "https://livecodebench.github.io/",
+    "description": "Continuously updated competitive-programming problems dated after model cutoffs.",
+    "measures": "code generation (pass@1)",
+    "saturated": false
+  },
+  {
+    "id": "programbench",
+    "name": "ProgramBench",
+    "layer": "evals",
+    "url": "https://www.programbench.com/",
+    "description": "Benchmark of building meaningful software artifacts from scratch (SWE-bench team).",
+    "measures": "from-scratch program construction",
+    "saturated": false
+  },
+  {
+    "id": "nl2repo",
+    "name": "NL2Repo-Bench",
+    "layer": "evals",
+    "url": "https://github.com/multimodal-art-projection/NL2RepoBench",
+    "description": "Generate whole repositories from natural-language specifications.",
+    "measures": "repo-level code generation",
+    "saturated": false
+  },
+  {
+    "id": "swe-marathon",
+    "name": "SWE-Marathon",
+    "layer": "evals",
+    "url": "https://www.swe-marathon.org/",
+    "description": "Very long-horizon software engineering tasks with performance gates.",
+    "measures": "long-horizon engineering",
+    "saturated": false
+  },
+  {
+    "id": "frontierswe",
+    "name": "FrontierSWE",
+    "layer": "evals",
+    "url": "https://www.frontierswe.com/",
+    "description": "Frontier software-engineering tasks scored with a dominance metric.",
+    "measures": "hard software engineering",
+    "saturated": false
+  },
+  {
+    "id": "gpqa-diamond",
+    "name": "GPQA Diamond",
+    "layer": "evals",
+    "url": "https://github.com/idavidrein/gpqa",
+    "description": "198 graduate-level \"Google-proof\" science multiple-choice questions.",
+    "measures": "expert science QA (accuracy)",
+    "saturated": true
+  },
+  {
+    "id": "hle",
+    "name": "Humanity's Last Exam",
+    "layer": "evals",
+    "url": "https://lastexam.ai/",
+    "description": "~2.5k expert-written questions at the frontier of human knowledge.",
+    "measures": "frontier knowledge & reasoning (accuracy)",
+    "saturated": false
+  },
+  {
+    "id": "mmlu-pro",
+    "name": "MMLU-Pro",
+    "layer": "evals",
+    "url": "https://github.com/TIGER-AI-Lab/MMLU-Pro",
+    "description": "Harder 10-option successor to MMLU across 14 domains.",
+    "measures": "broad knowledge & reasoning (accuracy)",
+    "saturated": true
+  },
+  {
+    "id": "aime-2025",
+    "name": "AIME 2025",
+    "layer": "evals",
+    "url": "https://huggingface.co/datasets/MathArena/aime_2025",
+    "description": "30 problems from the 2025 American Invitational Mathematics Examination.",
+    "measures": "competition math (accuracy)",
+    "saturated": true
+  },
+  {
+    "id": "aime-2026",
+    "name": "AIME 2026",
+    "layer": "evals",
+    "url": "https://huggingface.co/datasets/MathArena/aime_2026",
+    "description": "30 problems from the 2026 AIME; post-cutoff for most 2025 models.",
+    "measures": "competition math (accuracy)",
+    "saturated": true
+  },
+  {
+    "id": "imo-answerbench",
+    "name": "IMO-AnswerBench",
+    "layer": "evals",
+    "url": "https://imobench.github.io/",
+    "description": "Olympiad-level problems with short verifiable answers (IMO-Bench suite).",
+    "measures": "olympiad math (accuracy)",
+    "saturated": false
+  },
+  {
+    "id": "matharena-apex",
+    "name": "MathArena Apex",
+    "layer": "evals",
+    "url": "https://matharena.ai/",
+    "description": "Hardest unsolved-by-models competition problems curated by MathArena.",
+    "measures": "frontier competition math",
+    "saturated": false
+  },
+  {
+    "id": "browsecomp",
+    "name": "BrowseComp",
+    "layer": "evals",
+    "url": "https://github.com/openai/simple-evals",
+    "description": "OpenAI benchmark of hard-to-find facts requiring persistent web browsing.",
+    "measures": "agentic web research (accuracy)",
+    "saturated": false
+  },
+  {
+    "id": "tau2-bench",
+    "name": "tau2-bench",
+    "layer": "evals",
+    "url": "https://github.com/sierra-research/tau2-bench",
+    "description": "Simulated customer-service domains with users and tools (airline, retail, telecom).",
+    "measures": "tool-agent-user interaction (pass^k / success)",
+    "saturated": false
+  },
+  {
+    "id": "osworld-verified",
+    "name": "OSWorld-Verified",
+    "layer": "evals",
+    "url": "https://os-world.github.io/",
+    "description": "Open-ended tasks in real desktop OS environments for multimodal computer-use agents.",
+    "measures": "computer use (success rate)",
+    "saturated": false
+  },
+  {
+    "id": "mle-bench",
+    "name": "MLE-bench",
+    "layer": "evals",
+    "url": "https://github.com/openai/mle-bench",
+    "description": "75 Kaggle competitions measuring ML-engineering agents.",
+    "measures": "ML engineering (medal rate)",
+    "saturated": false
+  },
+  {
+    "id": "posttrainbench",
+    "name": "PostTrainBench",
+    "layer": "evals",
+    "url": "https://posttrainbench.com/",
+    "description": "Measures how well CLI agents can post-train base LLMs on one H100 within 10 hours.",
+    "measures": "autonomous post-training / AI R&D",
+    "saturated": false
+  },
+  {
+    "id": "cybergym",
+    "name": "CyberGym",
+    "layer": "evals",
+    "url": "https://www.cybergym.io/",
+    "description": "Large-scale real-world vulnerability reproduction/analysis tasks for agents.",
+    "measures": "offensive security capability",
+    "saturated": false
+  },
+  {
+    "id": "toolathlon",
+    "name": "Toolathlon",
+    "layer": "evals",
+    "url": "https://github.com/hkust-nlp/Toolathlon",
+    "description": "Tool Decathlon: diverse, realistic, long-horizon tool-use tasks across many MCP apps.",
+    "measures": "long-horizon tool use",
+    "saturated": false
+  },
+  {
+    "id": "mcp-atlas",
+    "name": "MCP-Atlas",
+    "layer": "evals",
+    "url": "https://labs.scale.com/leaderboard/mcp_atlas",
+    "description": "Scale AI benchmark of tool use across real MCP servers.",
+    "measures": "MCP tool use",
+    "saturated": false
+  },
+  {
+    "id": "ifbench",
+    "name": "IFBench",
+    "layer": "evals",
+    "url": "https://github.com/allenai/IFBench",
+    "description": "Ai2 benchmark of precise out-of-distribution instruction following.",
+    "measures": "instruction following",
+    "saturated": false
+  },
+  {
+    "id": "simpleqa-verified",
+    "name": "SimpleQA Verified",
+    "layer": "evals",
+    "url": "https://www.kaggle.com/benchmarks/deepmind/simpleqa-verified",
+    "description": "Cleaned 1k-question version of SimpleQA for short-form factuality.",
+    "measures": "parametric factuality",
+    "saturated": false
+  },
+  {
+    "id": "longbench-v2",
+    "name": "LongBench v2",
+    "layer": "evals",
+    "url": "https://github.com/THUDM/LongBench",
+    "description": "Long-context reasoning over documents up to millions of words.",
+    "measures": "long-context understanding",
+    "saturated": false
+  },
+  {
+    "id": "harmbench",
+    "name": "HarmBench",
+    "layer": "safety",
+    "url": "https://github.com/centerforaisafety/HarmBench",
+    "description": "Standardized framework for automated red teaming and robust refusal.",
+    "measures": "jailbreak robustness / refusal",
+    "saturated": false
+  },
+  {
+    "id": "strongreject",
+    "name": "StrongREJECT",
+    "layer": "safety",
+    "url": "https://github.com/alexandrasouly/strongreject",
+    "description": "Jailbreak evaluation benchmark with a calibrated autograder.",
+    "measures": "jailbreak effectiveness",
+    "saturated": false
+  }
+]

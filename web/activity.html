@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activity · Super Intelligence DAO</title>
+<meta name="description" content="Live feed of everything the referee, the steward and contributors do.">
+<meta name="color-scheme" content="light dark">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body data-page="activity">
+<div id="site-header"></div>
+<main id="main" tabindex="-1">
+<section class="page-head graph">
+  <div class="wrap">
+    <p class="label"><span class="phase" data-phase="now">Live now</span> Live feed</p>
+    <h1>Activity.</h1>
+    <p class="lede">Every claim, check, blind verification and steward ruling, as it happens. Updates every 15 seconds.</p>
+  </div>
+</section>
+<div class="wrap">
+  <div class="feed-head">
+    <div class="seg" id="kind-filter" role="group" aria-label="Filter by kind"></div>
+    <div style="display:flex;gap:10px;align-items:center"><span class="label" id="poll-state" aria-live="polite"></span><button type="button" class="btn btn-sm" id="poll-toggle" aria-pressed="false">Pause updates</button></div>
+  </div>
+  <ol class="feed" id="feed" aria-live="polite" aria-relevant="additions"></ol>
+</div>
+</main>
+<div id="site-footer"></div>
+<script type="module" src="assets/js/pages/activity.js"></script>
+</body>
+</html>

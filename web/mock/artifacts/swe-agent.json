@@ -1,0 +1,97 @@
+{
+ "id": "swe-agent",
+ "name": "SWE-agent",
+ "layer": "harnesses",
+ "kind": "harness",
+ "url": "https://github.com/SWE-agent/SWE-agent",
+ "repo_url": "https://github.com/SWE-agent/SWE-agent",
+ "license": "MIT",
+ "open_weights": null,
+ "description": "Agent-computer interface for fixing GitHub issues.",
+ "latest_version": null,
+ "latest_release_date": null,
+ "created_at": "2026-08-04T06:04:00Z",
+ "updated_at": "2026-10-01T06:04:00Z",
+ "source": "seed",
+ "claim_count": 1,
+ "verified_claim_count": 0,
+ "best_tier": "source-checked",
+ "claims": [
+  {
+   "id": "cl_9d8dbb",
+   "artifact_id": "swe-agent",
+   "artifact_name": "SWE-agent",
+   "layer": "harnesses",
+   "benchmark_id": "terminal-bench",
+   "benchmark_name": "Terminal-Bench",
+   "metric": "% tasks passed",
+   "value": 29.9,
+   "unit": "%",
+   "higher_is_better": true,
+   "conditions": {
+    "date": "2026-03-10",
+    "notes": "Illustrative example value from mock fixtures, not a real result.",
+    "model": "Qwen2.5-Coder 32B",
+    "attempts": 1
+   },
+   "source_url": "https://github.com/SWE-agent/SWE-agent",
+   "quote": "[Illustrative example quote] SWE-agent reaches 29.9% on Terminal-Bench under the stated setup.",
+   "reported_by": "leaderboard",
+   "tier": "source-checked",
+   "special_status": null,
+   "display_status": "source-checked",
+   "created_at": "2026-05-01T16:04:00Z",
+   "tier_changed_at": "2026-05-02T16:04:00Z",
+   "expires_at": "2026-10-29T16:04:00Z",
+   "seed": 0,
+   "check_result": {
+    "passed": true,
+    "reason": "quote_found_value_present",
+    "fetched_url": "https://github.com/SWE-agent/SWE-agent",
+    "http_status": 200,
+    "fetched_at": "2026-05-02T16:04:00Z",
+    "content_sha256": "d58db7802db53988c038051eed0491b562101fe7634ec22e4f1050110fffa022"
+   }
+  }
+ ],
+ "gaps": [
+  {
+   "id": "g_1fc39d",
+   "layer": "harnesses",
+   "kind": "missing_evidence",
+   "title": "No Terminal-Bench results for goose",
+   "description": "No published Terminal-Bench run found for goose under any model.",
+   "evidence_urls": [],
+   "status": "proposed",
+   "created_at": "2026-09-25T06:04:00Z",
+   "task_ids": []
+  },
+  {
+   "id": "g_d718e2",
+   "layer": "harnesses",
+   "kind": "missing_evidence",
+   "title": "Harness × model matrix is mostly empty",
+   "description": "Most harness scores are reported with one closed model; open-weight pairings are missing.",
+   "evidence_urls": [],
+   "status": "accepted",
+   "created_at": "2026-09-18T06:04:00Z",
+   "task_ids": []
+  }
+ ],
+ "tasks": [
+  {
+   "id": "t_27d999",
+   "type": "verify.blind_extract",
+   "track_id": "referee",
+   "title": "Blind re-extract: SWE-agent on Terminal-Bench",
+   "status": "verified",
+   "priority": 10.59,
+   "allowed_model_families": [
+    "any"
+   ],
+   "budget_minutes": 15,
+   "attempts": 1,
+   "created_at": "2026-09-28T07:04:00Z"
+  }
+ ]
+}

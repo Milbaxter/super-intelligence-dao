@@ -1,0 +1,66 @@
+{
+ "id": "cl_756fab",
+ "artifact_id": "aider",
+ "artifact_name": "Aider",
+ "layer": "harnesses",
+ "benchmark_id": "terminal-bench",
+ "benchmark_name": "Terminal-Bench",
+ "metric": "% tasks passed",
+ "value": 64.0,
+ "unit": "%",
+ "higher_is_better": true,
+ "conditions": {
+  "date": "2026-06-14",
+  "notes": "Illustrative example value from mock fixtures, not a real result.",
+  "model": "Llama 3.3 70B",
+  "attempts": 1
+ },
+ "source_url": "https://github.com/Aider-AI/aider",
+ "quote": "[Illustrative example quote] Aider reaches 64% on Terminal-Bench under the stated setup.",
+ "reported_by": "artifact-authors",
+ "tier": "source-checked",
+ "special_status": "disputed",
+ "display_status": "disputed",
+ "created_at": "2026-09-25T06:04:00Z",
+ "tier_changed_at": "2026-09-25T06:04:00Z",
+ "expires_at": "2027-03-24T06:04:00Z",
+ "seed": 1,
+ "check_result": {
+  "passed": true,
+  "reason": "quote_found_value_present",
+  "fetched_url": "https://github.com/Aider-AI/aider",
+  "http_status": 200,
+  "fetched_at": "2026-09-25T06:04:00Z",
+  "content_sha256": "acbb3d4fce6e9964c395eae032e21f4ce789ae83161d7e28ceb1b4e4dbb7dfd9"
+ },
+ "trail": [
+  {
+   "ts": "2026-09-25T06:04:00Z",
+   "kind": "submitted",
+   "actor": "mei-w",
+   "summary": "map.extract submission included this claim",
+   "detail": {
+    "model_family": "claude"
+   }
+  },
+  {
+   "ts": "2026-09-25T06:04:00Z",
+   "kind": "quote_check",
+   "actor": "referee",
+   "summary": "Source fetched; quote found verbatim; value present in quote → T1 source-checked",
+   "detail": {
+    "http_status": 200,
+    "fetched_url": "https://github.com/Aider-AI/aider"
+   }
+  },
+  {
+   "ts": "2026-09-25T06:04:00Z",
+   "kind": "blind_disagree",
+   "actor": "nina-lab",
+   "summary": "Blind re-extraction returned a different value → disputed, queued for steward",
+   "detail": {
+    "model_family": "gpt"
+   }
+  }
+ ]
+}
