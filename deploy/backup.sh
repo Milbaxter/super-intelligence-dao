@@ -7,7 +7,9 @@
 # /etc/super-intelligence-dao.env; the file is rsynced over ssh with sidao's key (~sidao = /opt/super-intelligence-dao).
 set -euo pipefail
 
-DB=${AGENTDAO_DB:-/var/lib/super-intelligence-dao/agentdao.db}
+# DB path: SIDAO_DB, else the legacy AGENTDAO_DB (both may come from /etc/super-intelligence-dao.env via the unit's
+# EnvironmentFile), else the default.
+DB=${SIDAO_DB:-${AGENTDAO_DB:-/var/lib/super-intelligence-dao/agentdao.db}}
 BACKUP_DIR=${SIDAO_BACKUP_DIR:-/var/lib/super-intelligence-dao/backups}
 KEEP_DAILY=14
 PY=/opt/super-intelligence-dao/venv/bin/python
@@ -15,7 +17,8 @@ PY=/opt/super-intelligence-dao/venv/bin/python
 
 log() { printf '[backup] %s\n' "$*"; }
 
-[[ -f $DB ]] || { log "no DB at $DB; nothing to back up"; exit 0; }
+# A missing DB is an error (wrong path in the env file, or the volume is gone): fail so the unit shows as failed.
+[[ -f $DB ]] || { log "ERROR: no DB file at $DB (check SIDAO_DB/AGENTDAO_DB in /etc/super-intelligence-dao.env)" >&2; exit 1; }
 mkdir -p "$BACKUP_DIR"
 umask 027
 

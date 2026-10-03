@@ -6,7 +6,7 @@ After=super-intelligence-dao.service
 Type=oneshot
 User=sidao
 Group=sidao
-# Optional: AGENTDAO_DB, SIDAO_BACKUP_RSYNC_TARGET
+# Optional: SIDAO_DB (or legacy AGENTDAO_DB), SIDAO_BACKUP_DIR, SIDAO_BACKUP_RSYNC_TARGET
 EnvironmentFile=-/etc/super-intelligence-dao.env
 ExecStart=/opt/super-intelligence-dao/backup.sh
 Nice=10

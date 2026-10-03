@@ -73,6 +73,9 @@ BLIND_TOLERANCE_REL = 0.005
 BLIND_VOTES_TO_DECIDE = 2
 BLIND_MAX_VERDICTS = 3  # per round; 2-of-3 always decides (defensive fallback: disputed → steward)
 TASKGEN_MAX_BLIND_PER_RUN = 25
+# /admin/queue lists an undecided blind round once its open blind task is this old (rounds with a split are always
+# listed): with few contributors a tie-breaker may be eligible for nobody, so the steward has to decide it.
+BLIND_ROUND_STEWARD_AFTER_DAYS = 3
 
 # --- limits -------------------------------------------------------------------
 MAX_BODY_BYTES = 256 * 1024
@@ -89,7 +92,8 @@ QUOTE_MAX_CHARS = 600
 PRECHECK_WORKERS = 6  # concurrent quote checks per submission
 PRECHECK_DEADLINE_S = 60.0  # checks unfinished by then soft-fail as "timeout" (claim stays T0)
 MAX_EXTRACT_CLAIMS = 30  # claims per map.extract submission
-AMBIGUOUS_QUOTE_MIN_NUMBERS = 2  # ≥ this many same-format numbers in a quote → "ambiguous_quote" (needs conditions.notes)
+AMBIGUOUS_QUOTE_MIN_NUMBERS = 2  # ≥ this many same-format numbers in a quote → claim flagged "ambiguous_quote"
+AMBIGUOUS_QUOTE_REQUIRE_NOTES_AT = 3  # ≥ this many (table row) → conditions.notes required, else the claim is dropped
 
 # --- GitHub identity (required for verify.* work) -----------------------------
 GITHUB_API_HOST = "api.github.com"  # the only host the GitHub client ever talks to

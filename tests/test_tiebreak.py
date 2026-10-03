@@ -138,7 +138,7 @@ def test_value_hidden_during_tiebreak(client):
     c = client.get(f"/api/v1/claims/{claim_id}").json()
     assert c["value"] is None and c["quote"] is None and c["value_hidden"] is True
     assert all(t["detail"] is None for t in c["trail"])
-    assert any(t["kind"] == "claim_blind_split" for t in c["trail"])
+    assert any(t["kind"] == "claim_blind_check" for t in c["trail"])
     blobs = [leased.text, client.get(f"/api/v1/tasks/{tb}").text, client.get(f"/api/v1/claims/{claim_id}").text,
              client.get("/api/v1/claims").text, client.get("/api/v1/map").text, client.get("/api/v1/activity").text,
              client.get("/api/v1/artifacts/foo-agent").text, client.get("/api/v1/me", headers=w).text]
@@ -250,3 +250,157 @@ def test_round_handed_to_steward_stays_hidden_until_resolved(client, conn):
     client.post(f"/api/v1/admin/claims/{claim_id}/resolve", json={"tier": "reproduced", "note": "ok"}, headers=STEWARD)
     assert sub_status(conn, out["submission_id"]) == "rejected" and task_status(conn, t1) == "rejected"
     assert value_shown(client, claim_id)
+
+
+# ---- public trail must not reveal how an undecided round is split
+
+
+SPLIT_WORDS = ("match", "tie-breaker", "tiebreak", "agree", "disagree", "split")
+
+
+def test_trail_neutral_while_undecided_then_revealed(client):
+    _, claim_id, _ = setup(client)
+    blind(client, "victor", DISAGREE)
+    blind(client, "wendy", AGREE, "gemini")  # 1–1: still undecided
+    c = client.get(f"/api/v1/claims/{claim_id}").json()
+    checks = [t for t in c["trail"] if t["kind"] == "claim_blind_check"]
+    assert len(checks) == 2 and all(t["detail"] is None for t in checks)
+    assert all(t["summary"].startswith("blind check submitted; awaiting further checks") for t in checks)
+    feed = client.get("/api/v1/activity").json()
+    for text in [t["summary"] for t in c["trail"]] + [e["summary"] for e in feed] + [e["kind"] for e in feed]:
+        assert not any(w in text.lower() for w in SPLIT_WORDS), text
+    blind(client, "xavi", AGREE, "open-weight")  # decided: reproduced
+    c = client.get(f"/api/v1/claims/{claim_id}").json()
+    assert [t["summary"].split(":")[0] for t in c["trail"] if t["kind"] == "claim_blind_check"] == [
+        "blind check did not match the original", "blind check matched the original"]
+
+
+def test_legacy_split_event_is_neutralised(client, conn):
+    _, claim_id, _ = setup(client)
+    blind(client, "victor", DISAGREE)
+    with db.tx(conn):  # an event written by the old code
+        lifecycle.emit(conn, "claim_blind_split", "blind re-extraction did not match; tie-breaker check spawned: foo",
+                       "victor", "claim", claim_id, {"found": True})
+    c = client.get(f"/api/v1/claims/{claim_id}").json()
+    assert "claim_blind_split" not in {t["kind"] for t in c["trail"]}
+    assert all("match" not in t["summary"] for t in c["trail"])
+    assert all("match" not in e["summary"] for e in client.get("/api/v1/activity").json())
+
+
+# ---- one vote per person per claim
+
+
+def register_as(client, handle, person, family="gemini"):
+    code = client.post("/api/v1/admin/invites", json={"count": 1, "person": person}, headers=STEWARD).json()["codes"][0]
+    r = client.post("/api/v1/register", json={"invite_code": code, "handle": handle, "model_family": family})
+    assert r.status_code == 201, r.text
+    return {"Authorization": f"Bearer {r.json()['api_key']}"}
+
+
+def test_same_person_second_agent_cannot_take_tiebreak(client):
+    setup(client)
+    x1 = register_as(client, "xbot-one", "xavier", "gpt")
+    lease = claim(client, x1, task_types=["verify.blind_extract"]).json()["lease"]
+    out = submit(client, x1, lease["id"], DISAGREE).json()
+    tb = out["spawned_task_ids"][0]
+    x2 = register_as(client, "xbot-two", "xavier", "gemini")  # same operator, different agent
+    r = claim(client, x2, task_types=["verify.blind_extract"])
+    assert r.status_code == 204 and r.headers["X-No-Task-Reason"] == "none_eligible_for_you"
+    w = register(client, "wendy", "open-weight")
+    assert claim(client, w, task_types=["verify.blind_extract"]).json()["task"]["id"] == tb
+
+
+def test_same_person_blocked_while_other_agent_holds_lease(client, conn):
+    _, claim_id, _ = setup(client)
+    x1 = register_as(client, "xbot-one", "xavier", "gpt")
+    assert claim(client, x1, task_types=["verify.blind_extract"]).status_code == 200  # x1 holds the first check
+    with db.tx(conn):  # a second blind task for the same claim (e.g. a re-check) while x1's lease is active
+        t2 = lifecycle.spawn_blind_task(conn, db.one(conn, "SELECT * FROM claims WHERE id=?", (claim_id,)), None)
+    x2 = register_as(client, "xbot-two", "xavier", "gemini")
+    assert claim(client, x2, task_types=["verify.blind_extract"]).status_code == 204
+    w = register(client, "wendy", "open-weight")
+    assert claim(client, w, task_types=["verify.blind_extract"]).json()["task"]["id"] == t2
+
+
+def test_same_ip_as_earlier_verifier_blocked_without_dev_flag(app, client, conn):
+    setup(client)
+    v = register(client, "victor", "gpt")
+    lease = claim(client, v, task_types=["verify.blind_extract"]).json()["lease"]
+    submit(client, v, lease["id"], DISAGREE)
+    w = register(client, "wendy", "gemini")
+    with db.tx(conn):  # alice (author) on another IP; victor and wendy share one
+        conn.execute("UPDATE contributors SET registered_ip_hash='ip-author' WHERE handle='alice'")
+        conn.execute("UPDATE contributors SET registered_ip_hash='ip-shared' WHERE handle IN ('victor','wendy')")
+        conn.execute("UPDATE contributors SET github_id=handle")  # GitHub requirement is on without the dev flag
+    app.state.settings.dev_allow_same_ip = False
+    try:
+        assert claim(client, w, task_types=["verify.blind_extract"]).status_code == 204
+        with db.tx(conn):
+            conn.execute("UPDATE contributors SET registered_ip_hash='ip-wendy' WHERE handle='wendy'")
+        assert claim(client, w, task_types=["verify.blind_extract"]).status_code == 200
+    finally:
+        app.state.settings.dev_allow_same_ip = True
+
+
+# ---- dispute credits: only the round that produced the dispute
+
+
+def test_dispute_credit_only_to_disputed_round_voters(client, conn):
+    _, claim_id, _ = setup(client)
+    blind(client, "victor", DISAGREE)  # round 1: victor outvoted
+    blind(client, "wendy", AGREE, "gemini")
+    _, _, out = blind(client, "xavi", AGREE, "open-weight")
+    assert out["status"] == "verified"
+    with db.tx(conn):
+        conn.execute("UPDATE claims SET expires_at='2000-01-01T00:00:00Z' WHERE id=?", (claim_id,))
+    assert client.post("/api/v1/admin/generate", headers=STEWARD).status_code == 200
+    blind(client, "yara", DISAGREE, "gpt")  # round 2
+    _, _, out = blind(client, "zed", NOT_FOUND, "gemini")
+    assert out["status"] == "disputed"
+    r = client.post(f"/api/v1/admin/claims/{claim_id}/resolve", json={"special_status": "retracted", "note": "x"},
+                    headers=STEWARD)
+    assert r.status_code == 200, r.text
+    got = credits(client)
+    assert got["yara"] == 6 and got["zed"] == 6
+    assert got["victor"] == 0  # disagreed in an earlier, decided round: no dispute credit
+
+
+# ---- stuck tie-breaker with only two contributors → steward queue → steward resolution
+
+
+def test_two_contributor_stuck_tiebreak_listed_and_resolved_by_steward(client, conn):
+    alice, claim_id, ext_sub = setup(client)
+    bob, _, out = blind(client, "bob", DISAGREE)
+    tb = out["spawned_task_ids"][0]
+    # nobody can take the tie-breaker: alice wrote the claim, bob already voted
+    assert claim(client, alice, task_types=["verify.blind_extract"]).status_code == 204
+    assert claim(client, bob, task_types=["verify.blind_extract"]).status_code == 204
+    assert sub_status(conn, ext_sub) == "verifying" and task_status(conn, tb) == "open"
+    q = client.get("/api/v1/admin/queue", headers=STEWARD).json()
+    assert q["needs_steward"] == [] and q["disputed_claims"] == []
+    [item] = q["undecided_blind_rounds"]
+    r = item["blind_round"]
+    assert item["id"] == claim_id and item["artifact_id"] == "foo-agent" and item["benchmark_id"] == "swe-bench-verified"
+    assert item["metric"] == "resolved rate" and item["value"] == 72.4
+    assert r["votes"] == {"agree": 0, "disagree": 1} and r["overdue"] is False and r["age_days"] >= 0
+    assert [t["id"] for t in r["open_tasks"]] == [tb]
+    assert [(v["verdict"], v["contributor"]) for v in r["verdicts"]] == [("disagree", "bob")]
+    # steward upholds the claim
+    res = client.post(f"/api/v1/admin/claims/{claim_id}/resolve", json={"tier": "reproduced", "note": "read it myself"},
+                      headers=STEWARD)
+    assert res.status_code == 200, res.text
+    assert task_status(conn, tb) == "closed"
+    assert sub_status(conn, out["submission_id"]) == "rejected"  # bob's verdict lost
+    assert sub_status(conn, ext_sub) == "verified"
+    assert client.get(f"/api/v1/claims/{claim_id}").json()["value_hidden"] is False
+    assert client.get("/api/v1/admin/queue", headers=STEWARD).json()["undecided_blind_rounds"] == []
+
+
+def test_queue_lists_overdue_first_blind_check(client, conn):
+    _, claim_id, _ = setup(client)
+    assert client.get("/api/v1/admin/queue", headers=STEWARD).json()["undecided_blind_rounds"] == []  # fresh
+    with db.tx(conn):
+        conn.execute("UPDATE tasks SET created_at=? WHERE target_claim_id=?", (db.ts_in(days=-4), claim_id))
+    [item] = client.get("/api/v1/admin/queue", headers=STEWARD).json()["undecided_blind_rounds"]
+    assert item["id"] == claim_id and item["blind_round"]["overdue"] is True
+    assert item["blind_round"]["votes"] == {"agree": 0, "disagree": 0} and item["blind_round"]["age_days"] >= 4

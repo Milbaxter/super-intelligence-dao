@@ -7,7 +7,9 @@
 #   3. online, consistent SQLite backup of the live DB (keeps the newest 10 pre-deploy backups)
 #   4. reset to origin/main, pip install -e, restart (sudo rule: sidao may run exactly
 #      `/usr/bin/systemctl restart super-intelligence-dao`)
-#   5. smoke check /api/v1/stats; on failure roll back the CODE to the previous commit and exit non-zero
+#   5. smoke check /api/v1/stats; on failure roll back the CODE to the previous commit and exit non-zero:
+#      1 = rolled back and healthy, 2 = unhealthy after rollback, 3 = rollback install/restart failed but the
+#      service still passes the smoke check
 #
 # The DB is never restored automatically: schema migrations run on app start and are forward-only, so after a
 # failed deploy the old code may be running against a migrated DB. If that is a problem, restore by hand
@@ -115,10 +117,19 @@ fi
 
 log "deploy of ${NEW:0:7} FAILED; rolling back code to ${PREV:0:7}"
 journalctl -u "$SERVICE" -n 30 --no-pager 2>/dev/null || true
-if install_and_restart "$PREV" && smoke_check; then
-  log "rolled back to ${PREV:0:7}; service is healthy"
+ROLLBACK_INSTALLED=1
+install_and_restart "$PREV" || ROLLBACK_INSTALLED=0
+if smoke_check; then  # checked even if the rollback's reset/pip/restart failed: the old process may still be serving
+  if ((ROLLBACK_INSTALLED)); then
+    log "rolled back to ${PREV:0:7}; service is healthy"
+    restore_hint
+    exit 1
+  fi
+  log "rollback to ${PREV:0:7} did not complete (git reset, pip install or restart failed), but the service passes"
+  log "the smoke check: the process started before the rollback is still serving. Checkout is now at"
+  log "$(git rev-parse --short HEAD 2>/dev/null || echo '?'); fix the install by hand before the next restart."
   restore_hint
-  exit 1
+  exit 3
 fi
 log "ROLLBACK FAILED: service is not healthy on ${PREV:0:7} either. Manual intervention needed."
 restore_hint

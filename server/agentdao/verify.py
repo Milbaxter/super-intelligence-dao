@@ -304,20 +304,26 @@ def value_in_text(value, text: str) -> bool:
 _NUM_RE = re.compile(r"(?<![\w.-])(\d+(?:\.(\d+))?)(?!\w|\.\d)\s*(%?)")
 
 
-def quote_ambiguity(quote: str, value) -> bool:
-    """True when the quote holds ≥ AMBIGUOUS_QUOTE_MIN_NUMBERS numbers in the same format as `value`
-    (same decimal places and %-ness), i.e. another candidate the claim could have meant ("85.9% and 87.7%",
-    a flattened table row): the column/row label must then be given in conditions.notes."""
+def quote_candidates(quote: str, value) -> int:
+    """How many numbers in the quote share `value`'s format (same decimal places and %-ness), the value itself
+    included; 0 if the value isn't found. ≥ 2 means another candidate the claim could have meant ("85.9% and 87.7%",
+    a flattened table row)."""
     if isinstance(value, bool) or not isinstance(value, (int, float)):
-        return False
+        return 0
     text = quote.translate(_QUOTE_TRANS).replace(",", "")  # unicode dashes → '-' so "GLM‑5.3" is an identifier too
     toks = [(float(m.group(1)), len(m.group(2) or ""), m.group(3)) for m in _NUM_RE.finditer(text)]
     v = float(value)
     mine = [t for t in toks if any(abs(t[0] - x) < 1e-9 for x in (v, v * 100, v / 100))]
     if not mine:
-        return False
+        return 0
     fmt = mine[0][1:]
-    return sum(1 for t in toks if t[1:] == fmt) >= config.AMBIGUOUS_QUOTE_MIN_NUMBERS
+    return sum(1 for t in toks if t[1:] == fmt)
+
+
+def quote_ambiguity(quote: str, value) -> bool:
+    """True when the quote holds ≥ AMBIGUOUS_QUOTE_MIN_NUMBERS same-format numbers (claim flagged `ambiguous_quote`;
+    from AMBIGUOUS_QUOTE_REQUIRE_NOTES_AT on, conditions.notes naming the column/row is required)."""
+    return quote_candidates(quote, value) >= config.AMBIGUOUS_QUOTE_MIN_NUMBERS
 
 
 # --------------------------------------------------------------------- checker

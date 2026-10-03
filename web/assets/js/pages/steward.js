@@ -41,6 +41,12 @@ function claimItem(c, { spot = false } = {}) {
       h('span', { class: 'mono' }, JSON.stringify(v.detail || {}).slice(0, 300))))) : null,
     form, h('div', {}, recheck));
 }
+function roundItem(c) {
+  const r = c.blind_round || {};
+  const item = claimItem({ ...c, verifications: r.verdicts || [] });
+  item.insertBefore(h('p', { class: 'small' }, `Blind round undecided: ${r.votes?.agree ?? 0} agree · ${r.votes?.disagree ?? 0} disagree · open ${r.age_days ?? '?'} day(s)${r.overdue ? ' (overdue)' : ''}. If no other contributor can take the tie-breaker, resolve the claim here.`), item.children[1] || null);
+  return item;
+}
 function gapItem(g) {
   const form = h('form', {}, sel('status', [['accepted', 'Accept'], ['rejected', 'Reject'], ['resolved', 'Mark resolved']]), note(), h('button', { class: 'btn btn-sm btn-primary', type: 'submit' }, 'Resolve'));
   form.addEventListener('submit', async (e) => { e.preventDefault(); const fd = new FormData(form);
@@ -88,6 +94,7 @@ async function loadQueue(target) {
       listBlock('Needs steward', q.needs_steward, needsItem, 'Nothing waiting for a ruling.'),
       listBlock('Disputed claims', q.disputed_claims, (c) => claimItem(c), 'No disputes.'),
       listBlock('Flagged claims (ambiguous table-row quote: check the column in notes)', q.flagged_claims || [], (c) => claimItem(c), 'No flagged claims.'),
+      listBlock('Undecided blind rounds (tie-breaker waiting)', q.undecided_blind_rounds || [], roundItem, 'No undecided blind rounds.'),
       listBlock('Proposed gaps', q.proposed_gaps, gapItem, 'No proposed gaps.'),
       listBlock('Spot-check sample (random 10%, last 7 days)', q.spot_check_sample, spotItem, 'Nothing to sample yet.'));
   } catch (e) {

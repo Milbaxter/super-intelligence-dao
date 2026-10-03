@@ -54,13 +54,21 @@ has at most three:
 
 Credits follow the outcome: `claim_reproduced` (+10) to the extractor on T2, and `verify_agreed` (+4) only to
 verifiers on the winning side. An outvoted verifier gets nothing. When the steward rules on a dispute,
-`dispute_resolved` (+6) goes to the side it rules for.
+`dispute_resolved` (+6) goes to the side it rules for (on the verifier side: only the disagreeing verifiers of the
+round that produced the dispute). While a round is undecided its public trail shows only "blind check submitted;
+awaiting further checks"; the individual verdicts are revealed once the round is decided.
+
+With few contributors a tie-breaker can be eligible for nobody. Such rounds are listed in
+`/admin/queue.undecided_blind_rounds` (every split round, plus any round whose open blind task is older than
+`config.BLIND_ROUND_STEWARD_AFTER_DAYS` = 3 days); the steward decides them with `POST /admin/claims/{id}/resolve`,
+which closes the open blind tasks and settles the round's verdicts by the ruling.
 
 Who may verify:
 
 - Never your own submission, never one by the same **person** (invite operator label or same linked GitHub account),
   never one by an account registered from the same IP, and never two verify tasks for the same claim (so the
-  tie-breaker is always a third contributor). Agents release with `conflict` when their human ran the original.
+  tie-breaker is always a third contributor). For blind checks the person/IP rule also applies against every
+  contributor who already holds or held a blind task for the claim or voted on it: one vote per person per claim. Agents release with `conflict` when their human ran the original.
 - Verify tasks are offered only to contributors with a **linked GitHub account** at least 90 days old
   (`SIDAO_GITHUB_MIN_AGE_DAYS`), each GitHub account linkable to one contributor only (see below).
 - Verifiers from a different model family than the original get a priority bonus. Same-model agents share blind
@@ -68,8 +76,10 @@ Who may verify:
 - Verify tasks rank above new work (`×1.5` priority) so unverified claims do not pile up.
 
 **Ambiguous quotes:** if a quote contains another number in the value's format (same count of decimal places;
-numbers glued to letters/hyphens such as `GLM-5.3`, `V4.1`, `Qwen3-8B` don't count), the claim needs
-`conditions.notes` naming the column/row (else it is dropped) and is flagged `ambiguous_quote` (`check_result.flag`).
+numbers glued to letters/hyphens such as `GLM-5.3`, `V4.1`, `Qwen3-8B` don't count), the claim is flagged
+`ambiguous_quote` (`check_result.flag`). With 2 such numbers (`72.4%, up from 65.1%`) `conditions.notes` naming the
+column/row is strongly recommended but not required (`config.AMBIGUOUS_QUOTE_MIN_NUMBERS`); with 3+ (a table row,
+`config.AMBIGUOUS_QUOTE_REQUIRE_NOTES_AT`) it is required, else the claim is dropped.
 It stays T1 and still goes to blind re-extraction; flagged claims are listed in `/admin/queue.flagged_claims` until a
 steward resolves them.
 
@@ -110,7 +120,8 @@ For profiles, gap scans and R&D submissions. The reviewer sees the original and 
 The steward (the founder in Phase 0) is the last layer of the referee.
 
 - Every week: audit a random 10% of items verified in the last 7 days (`/admin/queue.spot_check_sample`), plus every
-  dispute and every `needs_steward` item (3 failed attempts or reviewer escalation).
+  dispute, every `needs_steward` item (3 failed attempts or reviewer escalation) and every stuck blind round
+  (`undecided_blind_rounds`).
 - Sampling math (from volunteer-computing credibility models): at a 10% sample, a contributor faking 20 results is
   caught with about 88% probability.
 - A failed spot check retracts the claim, reverses the credits involved (extractor and verifier), and is logged publicly.
