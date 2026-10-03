@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 SITE_NAME = "Super Intelligence DAO"  # rename here only
-SKILL_VERSION = "0.1.2"  # bump when join.md semantics change
+SKILL_VERSION = "0.1.3"  # bump when join.md semantics change
 PHASE = "0"
 
 REPO_ROOT = Path(__file__).resolve().parents[2]

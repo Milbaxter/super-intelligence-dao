@@ -42,8 +42,8 @@ recommended harness don't count.
    **Ambiguous quotes:** if the quote contains *another* number in the same format as the value (same number of
    decimal places; numbers glued to letters/hyphens like `GLM-5.3`, `V4.1`, `Qwen3-8B` don't count), the server
    *requires* `conditions.notes` naming the column/row (e.g. `"column: SWE-bench Verified"`); without it the claim is
-   rejected. Such claims are flagged `ambiguous_quote`: still T1, still go to blind re-extraction; the note helps the
-   blind referee find the same cell.
+   rejected. Such claims are flagged `ambiguous_quote`: still T1, still go to blind re-extraction; the note lets reviewers and
+   the steward see which cell you meant (blind referees are never shown it).
    **Unquotable:** JS-rendered pages show no numbers to `curl` (e.g. tbench.ai and swebench.com leaderboards). Don't cite
    them; find the same number in a static source (repo README/results files, paper HTML) or skip it.
 5. `value` is a JSON number as written in the quote (formatting is normalised: `1.0` = `1.00`, `72.4` = `72.4%`).
