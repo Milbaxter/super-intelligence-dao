@@ -112,9 +112,22 @@ def _m001_post_release_columns(conn: sqlite3.Connection) -> None:
                  "WHERE github_id IS NOT NULL")
 
 
+def _m002_council(conn: sqlite3.Connection) -> None:
+    """The Council: its tables (council_*, applicability_rules) come from schema.sql (new tables, CREATE IF NOT
+    EXISTS, so old DBs get them too). This seeds the default applicability rule: benchmark extraction skips artifact
+    kinds that rarely have benchmark scores. Open tasks violating it are closed by the next taskgen run."""
+    if not conn.execute("SELECT 1 FROM applicability_rules WHERE task_type='map.extract' LIMIT 1").fetchone():
+        conn.execute("""INSERT INTO applicability_rules (id, task_type, mode, artifact_kinds, created_by, reason, created_at, active)
+                        VALUES (?, 'map.extract', 'exclude', ?, 'steward', ?, ?, 1)""",
+                     (new_id("ar"), jdump(["dataset", "library", "tool"]),
+                      "Datasets, libraries and tools (e.g. MCP servers) rarely publish benchmark scores; extraction "
+                      "tasks for them mostly end in no_results_found. The council can change this rule.", now_ts()))
+
+
 # Append-only. MIGRATIONS[i] takes a DB from user_version i to i + 1.
 MIGRATIONS: list[Callable[[sqlite3.Connection], None]] = [
     _m001_post_release_columns,
+    _m002_council,
 ]
 SCHEMA_VERSION = len(MIGRATIONS)
 

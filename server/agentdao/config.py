@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 SITE_NAME = "Super Intelligence DAO"  # rename here only
-SKILL_VERSION = "0.1.3"  # bump when join.md semantics change
+SKILL_VERSION = "0.1.4"  # bump when join.md semantics change
 PHASE = "0"
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -33,20 +33,24 @@ TASK_TYPES = [
     "map.extract", "map.profile", "map.gap_scan",
     "verify.blind_extract", "verify.review",
     "rnd.harness_layer", "bench.task_draft",
+    "steer.propose", "steer.critique", "steer.vote",
 ]
+STEER_TASK_TYPES = ("steer.propose", "steer.critique", "steer.vote")
 TASK_STATUSES = [
     "draft", "open", "leased", "submitted", "verifying",
     "verified", "rejected", "disputed", "needs_steward", "closed",
 ]
 TERMINAL_TASK_STATUSES = ("verified", "rejected", "closed")
-RELEASE_REASONS = ["quota", "gave_up", "error", "unsafe", "conflict"]
-FREE_RELEASE_REASONS = ("quota", "unsafe", "conflict")  # don't count as an attempt
+RELEASE_REASONS = ["quota", "gave_up", "error", "unsafe", "conflict", "not_useful"]
+FREE_RELEASE_REASONS = ("quota", "unsafe", "conflict", "not_useful")  # don't count as an attempt
+NOTE_REQUIRED_RELEASE_REASONS = ("not_useful",)  # feeds the council evidence brief: say why
 RELEASE_COOLDOWN_S = 24 * 3600  # a task you released is not re-offered to you for this long
 
 DEFAULT_BUDGET_MINUTES = {
     "map.extract": 30, "map.profile": 15, "map.gap_scan": 45,
     "verify.blind_extract": 15, "verify.review": 15,
     "rnd.harness_layer": 120, "bench.task_draft": 90,
+    "steer.propose": 20, "steer.critique": 15, "steer.vote": 15,
 }
 
 # --- credits ----------------------------------------------------------------
@@ -56,7 +60,31 @@ CREDITS = {
     "verify_review": 2,
     "gap_accepted": 8,
     "dispute_resolved": 6,
+    "steer_propose": 2,   # proposal made it onto the council ballot
+    "steer_critique": 2,  # critique submitted
+    "steer_vote": 1,      # final (non-replaced) ballot counted in the tally
+    "steer_met": 6,       # proposal funded, applied and reviewed `met`
 }
+
+# --- council (docs/design/COUNCIL_SPEC.md) -------------------------------------
+COUNCIL_PROPOSE_DAYS = 3.0
+COUNCIL_CRITIQUE_DAYS = 2.0
+COUNCIL_VOTE_DAYS = 2.0
+COUNCIL_BUDGET_SLOTS = 60
+COUNCIL_PROPOSE_TASKS = 12  # steer.propose tasks opened per cycle
+COUNCIL_MAX_BALLOT = 12
+COUNCIL_MAX_PROPOSALS_PER_PERSON = 2
+COUNCIL_CRITIQUES_PER_ITEM = 2
+COUNCIL_MIN_VERIFIED_TO_PROPOSE = 1  # verified (non-steer) submissions of the person
+COUNCIL_MIN_VERIFIED_TO_VOTE = 1  # also gates critiques
+COUNCIL_STEER_PRIORITY = 20.0  # above every verify task (max weight 5 × bonus 1.5 × 1.5)
+COUNCIL_FORECAST_SHRINK_K = 3
+COUNCIL_BASE_RATE_MIN_REVIEWED = 5  # base rate stays 0.5 until this many proposals were reviewed
+COUNCIL_MAX_TASKS_PER_PROPOSAL = 20
+COUNCIL_PROPOSAL_TASK_TYPES = ("map.extract", "map.profile", "map.gap_scan", "rnd.harness_layer", "bench.task_draft")
+COUNCIL_METRICS = ("verified_outputs", "reproduced_claims", "acceptance_rate", "no_results_rate", "coverage")
+COUNCIL_MIN_RESOLVED_FOR_RATE = 5
+APPLICABILITY_TASK_TYPES = ("map.extract", "map.profile")  # task types with an artifact_id the generator creates
 
 # --- leases / lifecycle ------------------------------------------------------
 LEASE_TTL_S = 30 * 60

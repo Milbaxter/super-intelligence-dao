@@ -6,7 +6,7 @@ for the same target.
 
 from __future__ import annotations
 
-from . import config, db, lifecycle
+from . import config, council, db, lifecycle
 from .db import tx
 
 _NOT_DONE = "status NOT IN ('verified','rejected','closed')"
@@ -20,10 +20,20 @@ def _has_pending(conn, task_type: str, key: str, value: str) -> bool:
 def generate(conn) -> list[str]:
     created: list[str] = []
     with tx(conn):
+        council.enforce_rules(conn, "taskgen")  # close open tasks that applicability rules exclude
+        rules = council.active_rules(conn)
+        paused = {r["id"] for r in db.all_(conn, "SELECT id FROM tracks WHERE weight = 0")}
+
+        def ok(task_type: str, layer: str | None, kind: str | None = None) -> bool:
+            """Applicability rules allow it and its track isn't paused (weight 0)."""
+            if kind is not None and not council.task_allowed(rules, task_type, kind):
+                return False
+            return lifecycle.track_for(conn, task_type, layer) not in paused
+
         arts = db.all_(conn, """SELECT a.*, (SELECT COUNT(*) FROM claims c WHERE c.artifact_id=a.id
                                 AND c.special_status IS NOT 'retracted') AS n FROM artifacts a ORDER BY a.layer, a.name""")
         for a in arts:
-            if a["n"] == 0 and not _has_pending(conn, "map.extract", "artifact_id", a["id"]):
+            if a["n"] == 0 and ok("map.extract", a["layer"], a["kind"]) and not _has_pending(conn, "map.extract", "artifact_id", a["id"]):
                 created.append(lifecycle.create_task(
                     conn, type="map.extract", layer=a["layer"], created_by="taskgen", bonus=1.5, announce=False,
                     title=f"Find published benchmark results for {a['name']}",
@@ -33,7 +43,8 @@ def generate(conn) -> list[str]:
                              f"Start from {a['url'] or a['repo_url'] or 'its official pages'}. Each claim needs a verbatim "
                              f"quote (20–600 chars) from the source that contains the value. If nothing is published, "
                              f"submit `no_results_found: true` with the URLs you searched.")))
-            if not (a["license"] or "").strip() and not _has_pending(conn, "map.profile", "artifact_id", a["id"]):
+            if (not (a["license"] or "").strip() and ok("map.profile", a["layer"], a["kind"])
+                    and not _has_pending(conn, "map.profile", "artifact_id", a["id"])):
                 created.append(lifecycle.create_task(
                     conn, type="map.profile", layer=a["layer"], created_by="taskgen", announce=False,
                     title=f"Profile {a['name']}: license, latest release, repo",
@@ -43,7 +54,7 @@ def generate(conn) -> list[str]:
                     spec_md=f"Fill in license, latest version/release date, repo and homepage for **{a['name']}**, each with a source URL and verbatim quote."))
 
         for l in db.all_(conn, "SELECT * FROM layers ORDER BY sort"):
-            if not _has_pending(conn, "map.gap_scan", "layer", l["id"]):
+            if ok("map.gap_scan", l["id"]) and not _has_pending(conn, "map.gap_scan", "layer", l["id"]):
                 created.append(lifecycle.create_task(
                     conn, type="map.gap_scan", layer=l["id"], created_by="taskgen", announce=False,
                     title=f"Gap scan: {l['name']}",

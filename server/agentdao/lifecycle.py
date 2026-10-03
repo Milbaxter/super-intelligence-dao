@@ -86,7 +86,9 @@ def track_for(conn, task_type: str, layer: str | None = None) -> str | None:
     for h in hints:
         if db.scalar(conn, "SELECT 1 FROM tracks WHERE id=?", (h,)):
             return h
-    ws = {"map": "map", "verify": "referee", "rnd": "rnd", "bench": "rnd"}[task_type.split(".")[0]]
+    ws = {"map": "map", "verify": "referee", "rnd": "rnd", "bench": "rnd"}.get(task_type.split(".")[0])
+    if not ws:
+        return None  # steer.* (council) tasks belong to no track
     return db.scalar(conn, "SELECT id FROM tracks WHERE workstream=? ORDER BY sort, id LIMIT 1", (ws,))
 
 
@@ -234,7 +236,7 @@ def same_person(conn, contributor: dict, other_id: str) -> bool:
 
 
 def eligible_score(conn, task: dict, contributor: dict, family: str, allow_same_ip: bool = False,
-                   require_github: bool = False) -> float | None:
+                   require_github: bool = False, task_types: list[str] | None = None) -> float | None:
     """None if the contributor may not take this task, else a ranking score."""
     allowed = jload(task["allowed_model_families"], ["any"])
     if "any" not in allowed and family not in allowed:
@@ -243,6 +245,9 @@ def eligible_score(conn, task: dict, contributor: dict, family: str, allow_same_
                  (task["id"], contributor["id"], db.ts_in(seconds=-config.RELEASE_COOLDOWN_S))):
         return None  # you released it recently; don't hand it straight back
     score = float(task["priority"])
+    if task["type"] in config.STEER_TASK_TYPES:  # council work: person limits, author exclusion, one ballot per person
+        from . import council
+        return council.steer_score(conn, task, contributor, family, allow_same_ip, score, task_types)
     if not task["type"].startswith("verify."):
         return score
     if require_github and not contributor.get("github_id"):
@@ -321,10 +326,13 @@ def claim_task(conn, contributor: dict, model_family: str, model: str | None,
         if max_minutes:
             sql += " AND budget_minutes <= ?"
             params.append(max_minutes)
+        # Paused tracks (weight 0) are skipped; referee work keeps running so pending claims still settle.
+        sql += """ AND (type LIKE 'verify.%' OR track_id IS NULL
+                   OR NOT EXISTS (SELECT 1 FROM tracks tr WHERE tr.id = tasks.track_id AND tr.weight = 0))"""
         sql += " ORDER BY priority DESC, created_at ASC LIMIT 500"
         best, best_score = None, None
         for task in db.all_(conn, sql, params):
-            s = eligible_score(conn, task, contributor, model_family, allow_same_ip, require_github)
+            s = eligible_score(conn, task, contributor, model_family, allow_same_ip, require_github, task_types)
             if s is not None and (best_score is None or s > best_score):
                 best, best_score = task, s
         if not best:
@@ -365,6 +373,8 @@ def heartbeat(conn, contributor: dict, lease_id: str, note: str | None) -> str:
 def release(conn, contributor: dict, lease_id: str, reason: str, note: str | None) -> None:
     if reason not in config.RELEASE_REASONS:
         raise ApiError(422, "invalid_reason", f"reason must be one of {config.RELEASE_REASONS}")
+    if reason in config.NOTE_REQUIRED_RELEASE_REASONS and not (note or "").strip():
+        raise ApiError(422, "note_required", f"reason {reason!r} needs a short note saying why (it feeds the council's evidence brief)")
     with tx(conn):
         lease = own_lease(conn, contributor, lease_id)
         conn.execute("""UPDATE leases SET status='released', released_at=?, release_reason=?,
@@ -404,6 +414,9 @@ def validate_payload(task_type: str, p: Any) -> list[dict]:
 
     if not isinstance(p, dict):
         return [{"field": "payload", "message": "must be an object"}]
+    if task_type in config.STEER_TASK_TYPES:
+        from . import council
+        return council.validate_payload(task_type, p)
     if task_type == "map.extract":
         claims = p.get("claims", [])
         if not isinstance(claims, list) or len(claims) > config.MAX_EXTRACT_CLAIMS:
@@ -524,6 +537,9 @@ def submit(conn, checker: QuoteChecker, contributor: dict, lease_id: str, body: 
     task = db.one(conn, "SELECT * FROM tasks WHERE id=?", (lease["task_id"],))
     payload = body.get("payload")
     errors = validate_payload(task["type"], payload)
+    if not errors and task["type"] in config.STEER_TASK_TYPES:
+        from . import council
+        errors = council.validate_refs(conn, task, payload)
     if errors:
         raise ApiError(422, "invalid_payload", f"payload does not match {task['type']} schema", fields=errors)
     pre = _precheck(task, payload, checker)
@@ -547,9 +563,11 @@ def submit(conn, checker: QuoteChecker, contributor: dict, lease_id: str, body: 
         set_task_status(conn, task["id"], "submitted")
         emit(conn, "submission_received", f"submitted {task['type']}: {task['title'][:120]}", contributor["handle"], "submission", sub["id"])
 
+        from . import council
         handler = {
             "map.extract": _process_extract, "verify.blind_extract": _process_blind,
             "verify.review": _process_review, "map.profile": _process_profile,
+            **council.HANDLERS,  # steer.* → council records (no verify.review)
         }.get(task["type"], _process_needs_review)
         status, checks, spawned = handler(conn, task, sub, payload, pre, contributor)
         conn.execute("UPDATE submissions SET checks=? WHERE id=?", (jdump(checks), sub["id"]))
