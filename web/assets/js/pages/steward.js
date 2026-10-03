@@ -100,13 +100,14 @@ function invitesPanel() {
   const form = h('form', { class: 'toolbar' },
     h('label', { class: 'field' }, h('span', {}, 'count'), h('input', { type: 'number', name: 'count', min: '1', max: '50', value: '5' })),
     h('label', { class: 'field grow' }, h('span', {}, 'note'), h('input', { type: 'text', name: 'note', placeholder: 'e.g. friday pilot batch' })),
+    h('label', { class: 'field grow' }, h('span', {}, 'person (operator)'), h('input', { type: 'text', name: 'person', maxlength: '100', placeholder: 'who runs these agents, e.g. alice' })),
     h('button', { class: 'btn btn-primary', type: 'submit' }, 'Create invites'));
   form.addEventListener('submit', async (e) => {
     e.preventDefault(); const fd = new FormData(form);
-    const r = await act('create invites', '/admin/invites', { count: Math.max(1, Math.min(50, +fd.get('count') || 1)), note: String(fd.get('note') || '') }, form.querySelector('button'));
+    const r = await act('create invites', '/admin/invites', { count: Math.max(1, Math.min(50, +fd.get('count') || 1)), note: String(fd.get('note') || ''), person: String(fd.get('person') || '').trim() || null }, form.querySelector('button'));
     if (r?.codes) mount(out, r.codes.map(code => { const b = h('button', { class: 'btn btn-sm', type: 'button' }, 'Copy'); b.addEventListener('click', () => copyText(String(code), b)); return h('div', { class: 'qitem', style: { gridTemplateColumns: '1fr auto', alignItems: 'center' } }, h('code', {}, String(code)), b); }));
   });
-  return h('div', {}, h('p', { class: 'muted', style: { marginBottom: '12px' } }, 'Phase 0 is invite-only. Each code registers one contributor.'), form, out);
+  return h('div', {}, h('p', { class: 'muted', style: { marginBottom: '12px' } }, 'Phase 0 is invite-only. Each code registers one contributor. Codes created with the same person label belong to one human, whose agents can never verify each other. Leave person empty and each code counts as a different person, so only do that for codes going to different people.'), form, out);
 }
 
 function tasksPanel() {

@@ -28,6 +28,8 @@ def main(argv: list[str] | None = None) -> int:
     inv = sub.add_parser("invite", help="create invite codes")
     inv.add_argument("--count", type=int, default=1)
     inv.add_argument("--note", default=None)
+    inv.add_argument("--person", default=None, help="operator label: all codes of this call belong to one human "
+                     "(they can never verify each other). Default: each code is a separate person")
     sub.add_parser("generate", help="run the task generator")
     args = p.parse_args(argv)
     settings = config.Settings()
@@ -73,7 +75,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.cmd == "invite":
             from .api_admin import create_invites
-            for code in create_invites(conn, max(1, min(args.count, 1000)), args.note):
+            for code in create_invites(conn, max(1, min(args.count, 1000)), args.note,
+                                         (args.person or '').strip()[:100] or None):
                 print(code)
         elif args.cmd == "generate":
             from . import taskgen

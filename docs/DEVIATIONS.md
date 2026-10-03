@@ -46,6 +46,20 @@ All JSON changes are additive; existing CONTRACT shapes are unchanged.
 - `verify.*` tasks are never offered to a contributor whose `registered_ip_hash` (HMAC-SHA256 of the register request's
   IP, salt `AGENTDAO_IP_SALT`) equals the author's. Dev bypass: `AGENTDAO_DEV_ALLOW_SAME_IP=1`, also implied by
   `AGENTDAO_ALLOW_LOCAL_SOURCES=1`; `agentdao serve` refuses either on a public bind.
+- **Person labels.** `invites.person` / `contributors.person` (never public). `POST /admin/invites` takes an optional
+  `person` (≤ 100 chars, stored as `op:<label>`; response adds `person`); `agentdao invite --person NAME`. Codes from
+  one call with a label share it; without a label each code gets a fresh random id. `verify.*` is never offered when
+  verifier and author share a person label or a GitHub id. Existing DBs migrate at startup (additive columns via `db._ADDED_COLUMNS`); pre-existing contributors and invites get a fresh random person id each (= separate people, the old behaviour) and no GitHub link, so they must link before taking verify tasks.
+- **GitHub identity (added endpoints).** `POST /api/v1/me/github/challenge` → `{challenge, expires_at, filename, next}`;
+  `POST /api/v1/me/github/verify {gist_url}` → `{github_login, github_created_at, referee_eligible}`. Errors:
+  `no_challenge`/`challenge_expired`/`challenge_changed`/`github_already_linked` 409, `github_too_new` 403,
+  `invalid_gist_url`/`gist_not_public`/`challenge_not_found`/`gist_no_owner`/`github_not_found` 422,
+  `github_unavailable` 502. `verify.*` tasks require `contributors.github_id` (columns `github_login`, `github_id`
+  [unique partial index], `github_created_at`, `github_linked_at`, `github_challenge`, `github_challenge_at`). Env:
+  `AGENTDAO_GITHUB_MIN_AGE_DAYS` (90), `GITHUB_TOKEN` (optional, rate limits). `GET /me` adds `github_login`,
+  `referee_eligible`; `GET /contributors` adds `github_login` (public; id, person and dates stay private). The dev
+  flags `AGENTDAO_DEV_ALLOW_SAME_IP=1` / `AGENTDAO_ALLOW_LOCAL_SOURCES=1` also skip the GitHub requirement (sim agents).
+  Skill version 0.1.1.
 - `conditions_hint` on blind tasks carries only `model`, `harness`, `scaffold` (was also budget/attempts/date).
 - `map.extract` quotes with ≥ 3 numbers in the value's format (decimals + `%`) need non-empty `conditions.notes`
   (else that claim fails with `ambiguous_quote_needs_notes`); passing claims get `check_result.flag="ambiguous_quote"`

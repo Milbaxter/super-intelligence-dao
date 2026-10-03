@@ -22,12 +22,15 @@ def _obj(body) -> dict:
     return body
 
 
-def create_invites(conn, count: int, note: str | None) -> list[str]:
+def create_invites(conn, count: int, note: str | None, person: str | None = None) -> list[str]:
+    """Codes minted with one `person` label share it (= one human/operator: they can never verify each other).
+    Without a label every code gets its own fresh person id (= separate people)."""
     codes = []
     with tx(conn):
         for _ in range(count):
             code = "inv-" + secrets.token_urlsafe(9)
-            db.insert(conn, "invites", {"code": code, "created_at": db.now_ts(), "used_by": None, "note": note})
+            db.insert(conn, "invites", {"code": code, "created_at": db.now_ts(), "used_by": None, "note": note,
+                                        "person": ("op:" + person) if person else db.new_id("p", 12)})
             codes.append(code)
         lifecycle.emit(conn, "invites_created", f"steward created {count} invite(s)", "steward")
     return codes
@@ -39,7 +42,12 @@ def invites(body=Body(default={}), conn=Depends(get_conn)):
     count = body.get("count", 1)
     if not isinstance(count, int) or not 1 <= count <= 100:
         raise ApiError(422, "invalid_count", "count must be 1–100")
-    return {"codes": create_invites(conn, count, str(body.get("note") or "")[:200] or None)}
+    person = body.get("person")
+    if person is not None and (not isinstance(person, str) or len(person.strip()) > 100):
+        raise ApiError(422, "invalid_person", "person must be a string of at most 100 chars")
+    person = (person or "").strip() or None
+    return {"codes": create_invites(conn, count, str(body.get("note") or "")[:200] or None, person),
+            "person": person}
 
 
 @router.get("/queue")

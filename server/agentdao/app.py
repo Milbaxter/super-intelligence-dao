@@ -22,6 +22,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from . import api_admin, api_agent, api_public, config, db
 from .deps import bearer, hash_key
 from .errors import ApiError
+from .github import GitHubApi, HttpGitHub
 from .verify import Fetcher, QuoteChecker, SafeFetcher
 
 API_PREFIX = "/api/v1"
@@ -123,7 +124,8 @@ _SECURITY_HEADERS = {
 }
 
 
-def create_app(settings: config.Settings | None = None, fetcher: Fetcher | None = None) -> FastAPI:
+def create_app(settings: config.Settings | None = None, fetcher: Fetcher | None = None,
+               github: GitHubApi | None = None) -> FastAPI:
     settings = settings or config.Settings()
     db.init_db(settings.db_path)
     app = FastAPI(title=f"{config.SITE_NAME} API", version=config.SKILL_VERSION, docs_url="/api/docs", redoc_url=None,
@@ -132,6 +134,7 @@ def create_app(settings: config.Settings | None = None, fetcher: Fetcher | None 
     if fetcher is None and settings.allow_local_sources:
         fetcher = SafeFetcher(allow_http_localhost=True)  # dev/test only (AGENTDAO_ALLOW_LOCAL_SOURCES=1)
     app.state.checker = QuoteChecker(fetcher)
+    app.state.github = github or HttpGitHub(token=settings.github_token)  # injectable: tests never hit the network
     limiter = RateLimiter()
     csp = build_csp(settings.web_dir)
     if settings.steward_key == config.DEV_STEWARD_KEY:

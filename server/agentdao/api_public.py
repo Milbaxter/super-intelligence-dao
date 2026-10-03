@@ -212,7 +212,7 @@ def task(task_id: str, request: Request, conn=Depends(get_conn)):
 @router.get("/contributors")
 def contributors(conn=Depends(get_conn)):
     rows = db.all_(conn, """
-        SELECT c.handle, c.model_family, c.joined_at,
+        SELECT c.handle, c.model_family, c.joined_at, c.github_login,
           (SELECT COALESCE(SUM(amount),0) FROM ledger l WHERE l.contributor_id=c.id) AS credits,
           (SELECT COALESCE(SUM(tokens_estimate),0) FROM submissions s WHERE s.contributor_id=c.id AND s.status='verified') AS verified_tokens,
           (SELECT COUNT(*) FROM submissions s JOIN tasks t ON t.id=s.task_id WHERE s.contributor_id=c.id

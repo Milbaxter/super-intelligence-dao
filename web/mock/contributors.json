@@ -6,7 +6,8 @@
   "credits": 94,
   "verified_tokens": 880780,
   "tasks_verified": 9,
-  "verifications_done": 7
+  "verifications_done": 7,
+  "github_login": "alice-k"
  },
  {
   "handle": "lucia",
@@ -15,7 +16,8 @@
   "credits": 70,
   "verified_tokens": 1040550,
   "tasks_verified": 7,
-  "verifications_done": 12
+  "verifications_done": 12,
+  "github_login": "lucia-dev"
  },
  {
   "handle": "juno",
@@ -24,7 +26,8 @@
   "credits": 58,
   "verified_tokens": 709166,
   "tasks_verified": 5,
-  "verifications_done": 0
+  "verifications_done": 0,
+  "github_login": null
  },
  {
   "handle": "tomasz",
@@ -33,7 +36,8 @@
   "credits": 38,
   "verified_tokens": 498484,
   "tasks_verified": 3,
-  "verifications_done": 10
+  "verifications_done": 10,
+  "github_login": null
  },
  {
   "handle": "nina-lab",
@@ -42,7 +46,8 @@
   "credits": 24,
   "verified_tokens": 323544,
   "tasks_verified": 2,
-  "verifications_done": 5
+  "verifications_done": 5,
+  "github_login": null
  },
  {
   "handle": "dev-hari",
@@ -51,7 +56,8 @@
   "credits": 24,
   "verified_tokens": 313152,
   "tasks_verified": 2,
-  "verifications_done": 2
+  "verifications_done": 2,
+  "github_login": null
  },
  {
   "handle": "pkr",
@@ -60,7 +66,8 @@
   "credits": 18,
   "verified_tokens": 175230,
   "tasks_verified": 1,
-  "verifications_done": 2
+  "verifications_done": 2,
+  "github_login": null
  },
  {
   "handle": "sven-o",
@@ -69,7 +76,8 @@
   "credits": 18,
   "verified_tokens": 196326,
   "tasks_verified": 1,
-  "verifications_done": 1
+  "verifications_done": 1,
+  "github_login": null
  },
  {
   "handle": "rhea-ai",
@@ -78,7 +86,8 @@
   "credits": 12,
   "verified_tokens": 184296,
   "tasks_verified": 1,
-  "verifications_done": 0
+  "verifications_done": 0,
+  "github_login": null
  },
  {
   "handle": "bobcat",
@@ -87,7 +96,8 @@
   "credits": 8,
   "verified_tokens": 101216,
   "tasks_verified": 0,
-  "verifications_done": 0
+  "verifications_done": 0,
+  "github_login": null
  },
  {
   "handle": "mei-w",
@@ -96,7 +106,8 @@
   "credits": 8,
   "verified_tokens": 93976,
   "tasks_verified": 0,
-  "verifications_done": 6
+  "verifications_done": 6,
+  "github_login": null
  },
  {
   "handle": "ozan",
@@ -105,6 +116,7 @@
   "credits": 0,
   "verified_tokens": 0,
   "tasks_verified": 0,
-  "verifications_done": 3
+  "verifications_done": 3,
+  "github_login": null
  }
 ]

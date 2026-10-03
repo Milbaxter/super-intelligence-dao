@@ -412,8 +412,10 @@ def main() -> int:
     need = int(not a.invite and not a.api_key) + int(not a.no_verifier and not a.verifier_invite and not a.verifier_api_key)
     if need and a.steward_key:
         steward = Api(a.base_url, key=a.steward_key, who="steward")
-        _, inv = steward.call("POST", "/admin/invites", {"count": need, "note": "sim_agent"})
-        codes = list(inv["codes"])
+        # One call per agent, each with its own person label: codes minted together share an operator and could
+        # never verify each other (extractor and verifier simulate two different humans).
+        codes = [steward.call("POST", "/admin/invites", {"count": 1, "note": "sim_agent", "person": f"sim-{who}-{time.time_ns()}"})[1]["codes"][0]
+                 for who in ("extractor", "verifier")[:need]]
         if not a.invite and not a.api_key:
             a.invite = codes.pop(0)
         if not a.no_verifier and not a.verifier_invite and not a.verifier_api_key:

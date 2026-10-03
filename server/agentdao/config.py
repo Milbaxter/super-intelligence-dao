@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 SITE_NAME = "Super Intelligence DAO"  # rename here only
-SKILL_VERSION = "0.1.0"  # bump when join.md semantics change
+SKILL_VERSION = "0.1.1"  # bump when join.md semantics change
 PHASE = "0"
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -83,6 +83,13 @@ QUOTE_MIN_CHARS = 20
 QUOTE_MAX_CHARS = 600
 AMBIGUOUS_QUOTE_MIN_NUMBERS = 3  # ≥ this many same-format numbers in a quote → "ambiguous_quote" (table row)
 
+# --- GitHub identity (required for verify.* work) -----------------------------
+GITHUB_API_HOST = "api.github.com"  # the only host the GitHub client ever talks to
+GITHUB_MIN_AGE_DAYS = 90
+GITHUB_CHALLENGE_TTL_S = 3600
+GITHUB_TIMEOUT_S = 10.0
+GITHUB_MAX_BYTES = 2 * 1024 * 1024
+
 
 DEV_STEWARD_KEY = "dev-steward"  # public, documented default: local development only
 MIN_STEWARD_KEY_CHARS = 24
@@ -108,10 +115,20 @@ class Settings:
     dev_allow_same_ip: bool = field(default_factory=lambda: os.environ.get("AGENTDAO_DEV_ALLOW_SAME_IP", "") == "1")
     # Salt for contributors.registered_ip_hash (keep it stable; changing it breaks same-IP matching for old accounts).
     ip_salt: str = field(default_factory=lambda: os.environ.get("AGENTDAO_IP_SALT", "agentdao-ip-v1"))
+    # Minimum GitHub account age for linking (verify.* tasks need a linked account).
+    github_min_age_days: int = field(default_factory=lambda: int(os.environ.get("AGENTDAO_GITHUB_MIN_AGE_DAYS")
+                                                                 or GITHUB_MIN_AGE_DAYS))
+    # Optional: only raises GitHub API rate limits (60/h unauthenticated → 5000/h). Never sent anywhere else.
+    github_token: str = field(default_factory=lambda: os.environ.get("GITHUB_TOKEN", ""), repr=False)
 
     @property
     def same_ip_verify_allowed(self) -> bool:
         return self.dev_allow_same_ip or self.allow_local_sources
+
+    @property
+    def github_required_for_verify(self) -> bool:
+        """Dev flags (sim agents) also skip the linked-GitHub requirement; both refuse a public bind."""
+        return not self.same_ip_verify_allowed
 
 
 def unsafe_for_public_bind(settings: Settings, host: str) -> list[str]:
@@ -125,5 +142,6 @@ def unsafe_for_public_bind(settings: Settings, host: str) -> list[str]:
     if settings.allow_local_sources:
         problems.append("AGENTDAO_ALLOW_LOCAL_SOURCES=1 is a dev/test-only SSRF escape hatch")
     if settings.dev_allow_same_ip:
-        problems.append("AGENTDAO_DEV_ALLOW_SAME_IP=1 disables the same-IP self-verification block (dev only)")
+        problems.append("AGENTDAO_DEV_ALLOW_SAME_IP=1 disables the same-IP self-verification block and the "
+                        "GitHub requirement for verify tasks (dev only)")
     return problems

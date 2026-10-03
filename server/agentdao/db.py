@@ -68,6 +68,14 @@ _ADDED_COLUMNS = [
     ("contributors", "registered_ip_hash", "TEXT"),
     ("leases", "released_at", "TEXT"),
     ("leases", "release_reason", "TEXT"),
+    ("contributors", "person", "TEXT"),
+    ("contributors", "github_login", "TEXT"),
+    ("contributors", "github_id", "INTEGER"),
+    ("contributors", "github_created_at", "TEXT"),
+    ("contributors", "github_linked_at", "TEXT"),
+    ("contributors", "github_challenge", "TEXT"),
+    ("contributors", "github_challenge_at", "TEXT"),
+    ("invites", "person", "TEXT"),
 ]
 
 
@@ -76,6 +84,12 @@ def _migrate(conn: sqlite3.Connection) -> None:
         cols = {r[1] for r in conn.execute(f"PRAGMA table_info({table})")}
         if col not in cols:
             conn.execute(f"ALTER TABLE {table} ADD COLUMN {col} {typ}")
+    # Pre-existing contributors/invites: each gets its own person id (= separate people, as before person labels).
+    for table in ("contributors", "invites"):
+        conn.execute(f"UPDATE {table} SET person = 'p_' || lower(hex(randomblob(6))) WHERE person IS NULL")
+    # One GitHub account links to at most one contributor (ALTER TABLE can't add UNIQUE, so a partial index).
+    conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS ux_contributors_github_id ON contributors(github_id) "
+                 "WHERE github_id IS NOT NULL")
 
 
 def reset_db(path: str) -> None:

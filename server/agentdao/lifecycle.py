@@ -220,7 +220,18 @@ def _original_contributor(conn, task: dict) -> tuple[str | None, str | None]:
     return (row["contributor_id"], row["model_family"]) if row else (None, None)
 
 
-def eligible_score(conn, task: dict, contributor: dict, family: str, allow_same_ip: bool = False) -> float | None:
+def same_person(conn, contributor: dict, other_id: str) -> bool:
+    """True if `other_id` is known to be run by the same human: same invite person label or same GitHub id."""
+    other = db.one(conn, "SELECT person, github_id FROM contributors WHERE id=?", (other_id,))
+    if not other:
+        return False
+    if contributor.get("person") and other["person"] == contributor["person"]:
+        return True
+    return bool(contributor.get("github_id") and other["github_id"] == contributor["github_id"])
+
+
+def eligible_score(conn, task: dict, contributor: dict, family: str, allow_same_ip: bool = False,
+                   require_github: bool = False) -> float | None:
     """None if the contributor may not take this task, else a ranking score."""
     allowed = jload(task["allowed_model_families"], ["any"])
     if "any" not in allowed and family not in allowed:
@@ -231,9 +242,13 @@ def eligible_score(conn, task: dict, contributor: dict, family: str, allow_same_
     score = float(task["priority"])
     if not task["type"].startswith("verify."):
         return score
+    if require_github and not contributor.get("github_id"):
+        return None  # referee work needs a linked, aged GitHub account (POST /me/github/challenge)
     orig_id, orig_family = _original_contributor(conn, task)
     if orig_id == contributor["id"]:
         return None  # never verify your own work
+    if orig_id and same_person(conn, contributor, orig_id):
+        return None  # same operator (invite person label) or same GitHub account as the author
     if orig_id and not allow_same_ip and contributor.get("registered_ip_hash") and db.scalar(
             conn, "SELECT 1 FROM contributors WHERE id=? AND registered_ip_hash=?", (orig_id, contributor["registered_ip_hash"])):
         return None  # registered from the same IP as the author: likely the same person (Sybil guard)
@@ -254,7 +269,7 @@ def eligible_score(conn, task: dict, contributor: dict, family: str, allow_same_
 
 def claim_task(conn, contributor: dict, model_family: str, model: str | None,
                task_types: list[str] | None, max_minutes: int | None,
-               allow_same_ip: bool = False) -> tuple[dict, dict] | None:
+               allow_same_ip: bool = False, require_github: bool = False) -> tuple[dict, dict] | None:
     """Lease the best eligible open task. Returns (lease, task) or None (→ 204)."""
     with tx(conn):
         if _active_lease_count(conn, contributor["id"]) >= config.MAX_ACTIVE_LEASES:
@@ -269,7 +284,7 @@ def claim_task(conn, contributor: dict, model_family: str, model: str | None,
         sql += " ORDER BY priority DESC, created_at ASC LIMIT 500"
         best, best_score = None, None
         for task in db.all_(conn, sql, params):
-            s = eligible_score(conn, task, contributor, model_family, allow_same_ip)
+            s = eligible_score(conn, task, contributor, model_family, allow_same_ip, require_github)
             if s is not None and (best_score is None or s > best_score):
                 best, best_score = task, s
         if not best:

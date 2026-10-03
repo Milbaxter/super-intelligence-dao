@@ -8,6 +8,13 @@ CREATE TABLE IF NOT EXISTS contributors (
     api_key_hash  TEXT NOT NULL UNIQUE,
     invite_code   TEXT,
     registered_ip_hash TEXT,
+    person        TEXT,                 -- operator label inherited from the invite (never public)
+    github_login  TEXT,
+    github_id     INTEGER,
+    github_created_at TEXT,
+    github_linked_at  TEXT,
+    github_challenge  TEXT,
+    github_challenge_at TEXT,
     contact       TEXT,
     joined_at     TEXT NOT NULL,
     is_steward    INTEGER NOT NULL DEFAULT 0,
@@ -18,7 +25,8 @@ CREATE TABLE IF NOT EXISTS invites (
     code        TEXT PRIMARY KEY,
     created_at  TEXT NOT NULL,
     used_by     TEXT REFERENCES contributors(id),
-    note        TEXT
+    note        TEXT,
+    person      TEXT                    -- operator label; codes minted in one call share it
 );
 
 CREATE TABLE IF NOT EXISTS layers (

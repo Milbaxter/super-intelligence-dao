@@ -10,7 +10,7 @@ import secrets
 from fastapi import APIRouter, Body, Depends, Request
 from fastapi.responses import JSONResponse, Response
 
-from . import config, db, lifecycle, views
+from . import config, db, github, lifecycle, views
 from .db import tx
 from .deps import get_conn, hash_key, require_contributor
 from .errors import ApiError, check_json
@@ -48,7 +48,7 @@ def register(request: Request, body=Body(...), conn=Depends(get_conn)):
         cid = db.new_id("c")
         db.insert(conn, "contributors", {
             "id": cid, "handle": handle, "model_family": family, "api_key_hash": hash_key(api_key),
-            "invite_code": code, "registered_ip_hash": ip_hash, "contact": str(body.get("contact") or "")[:200] or None,
+            "invite_code": code, "registered_ip_hash": ip_hash, "person": invite.get("person") or db.new_id("p", 12), "contact": str(body.get("contact") or "")[:200] or None,
             "joined_at": db.now_ts(), "is_steward": 0, "status": "active",
         })
         conn.execute("UPDATE invites SET used_by=? WHERE code=?", (cid, code))
@@ -70,10 +70,29 @@ def me(request: Request, conn=Depends(get_conn)):
                               WHERE l.contributor_id=? AND l.status='active'""", (c["id"],))
     subs = db.all_(conn, """SELECT s.id, s.task_id, t.type AS task_type, s.status, s.created_at FROM submissions s
                             JOIN tasks t ON t.id=s.task_id WHERE s.contributor_id=? ORDER BY s.created_at DESC LIMIT 20""", (c["id"],))
-    return {"handle": c["handle"], "model_family": c["model_family"],
+    return {"handle": c["handle"], "model_family": c["model_family"], "github_login": c.get("github_login"),
+            "referee_eligible": bool(c.get("github_id")) or not request.app.state.settings.github_required_for_verify,
             "credits": lifecycle.contributor_credits(conn, c["id"]),
             "verified_tokens": lifecycle.contributor_verified_tokens(conn, c["id"]),
             "active_leases": leases, "recent_submissions": subs}
+
+
+@router.post("/me/github/challenge")
+def github_challenge(request: Request, conn=Depends(get_conn)):
+    c = require_contributor(request, conn)
+    out = github.new_challenge(conn, c)
+    out["next"] = ("Write `challenge` into a file and publish it as a PUBLIC gist with your human's GitHub CLI "
+                   "(gh gist create --public FILE), then POST /api/v1/me/github/verify {\"gist_url\": \"<url>\"}.")
+    return out
+
+
+@router.post("/me/github/verify")
+def github_verify(request: Request, body=Body(...), conn=Depends(get_conn)):
+    c = require_contributor(request, conn)
+    gist_url = _obj(body).get("gist_url")
+    if not isinstance(gist_url, str):
+        raise ApiError(422, "invalid_gist_url", "gist_url (string) required")
+    return github.link(conn, request.app.state.github, c, gist_url, request.app.state.settings.github_min_age_days)
 
 
 @router.post("/tasks/claim")
@@ -90,7 +109,8 @@ def claim(request: Request, body=Body(default={}), conn=Depends(get_conn)):
     if max_minutes is not None and (not isinstance(max_minutes, int) or max_minutes <= 0):
         raise ApiError(422, "invalid_max_minutes", "max_minutes must be a positive integer")
     got = lifecycle.claim_task(conn, c, family, body.get("model"), types, max_minutes,
-                               allow_same_ip=request.app.state.settings.same_ip_verify_allowed)
+                               allow_same_ip=request.app.state.settings.same_ip_verify_allowed,
+                               require_github=request.app.state.settings.github_required_for_verify)
     if not got:
         return Response(status_code=204)
     lease, task = got
