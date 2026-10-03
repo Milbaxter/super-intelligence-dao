@@ -17,6 +17,16 @@ def test_quote_check_passes_with_html_and_entities():
     assert f.calls == [SOURCE]  # cached
 
 
+def test_invalidate_forces_refetch():
+    f = FakeFetcher()
+    qc = QuoteChecker(f)
+    qc.check(SOURCE, QUOTE, 72.4)
+    qc.invalidate(SOURCE)
+    qc.invalidate("https://never-fetched.example/")  # no-op
+    qc.check(SOURCE, QUOTE, 72.4)
+    assert f.calls == [SOURCE, SOURCE]
+
+
 def test_quote_check_failures():
     qc = QuoteChecker(FakeFetcher())
     assert qc.check(SOURCE, "short", 1)["reason"] == "quote_length"

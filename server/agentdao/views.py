@@ -5,19 +5,28 @@ from __future__ import annotations
 from . import config, db
 from .db import jload
 
-# A claim whose blind re-extraction is still open/leased must not reveal anything that
-# carries the value: value, quote, check_result and trail details are withheld.
-BLIND_PENDING_STATUSES = ("draft", "open", "leased", "submitted")
+# A claim whose blind round is undecided must not reveal anything that carries the value: value, quote,
+# check_result and trail details are withheld. Undecided = a blind task for it is still on the board
+# (draft/open/leased/submitted), holds a verdict of the open round ('verifying': the task mirrors its verifier
+# submission, which stays 'verifying' until the round is decided, see lifecycle._round_votes), or is stuck in
+# 'needs_steward' (max attempts hit, or the round was handed to the steward) — a steward may put it back on the
+# board, so the value must stay hidden until the steward resolves the claim.
+BLIND_PENDING_STATUSES = ("draft", "open", "leased", "submitted", "verifying", "needs_steward")
 _BLIND_PENDING_IN = ",".join(f"'{s}'" for s in BLIND_PENDING_STATUSES)
+# Belt and braces: a verdict whose verifier submission is still 'verifying' also marks an undecided round.
+_ROUND_OPEN_CLAIMS_SQL = """SELECT v.claim_id FROM verifications v JOIN submissions s ON s.id = v.verifier_submission_id
+                            WHERE v.verdict IN ('agree','disagree') AND s.status='verifying'"""
 # Target claim ids whose value is currently withheld ("awaiting referee" on public pages).
-BLIND_PENDING_CLAIMS_SQL = f"""SELECT DISTINCT target_claim_id FROM tasks WHERE type='verify.blind_extract'
-                               AND status IN ({_BLIND_PENDING_IN})"""
-_BLIND_PENDING_SQL = f"""SELECT 1 FROM tasks WHERE type='verify.blind_extract' AND target_claim_id=?
-                        AND status IN ({_BLIND_PENDING_IN}) LIMIT 1"""
+BLIND_PENDING_CLAIMS_SQL = f"""SELECT target_claim_id FROM tasks WHERE type='verify.blind_extract'
+                               AND status IN ({_BLIND_PENDING_IN}) UNION {_ROUND_OPEN_CLAIMS_SQL}"""
+_BLIND_PENDING_SQL = f"""SELECT EXISTS(SELECT 1 FROM tasks WHERE type='verify.blind_extract' AND target_claim_id=:id
+                                       AND status IN ({_BLIND_PENDING_IN}))
+                         OR EXISTS({_ROUND_OPEN_CLAIMS_SQL} AND v.claim_id=:id)"""
 
 
 def blind_pending(conn, claim_id: str) -> bool:
-    return bool(db.scalar(conn, _BLIND_PENDING_SQL, (claim_id,)))
+    """True while the claim's blind round is undecided (see BLIND_PENDING_STATUSES)."""
+    return bool(db.scalar(conn, _BLIND_PENDING_SQL, {"id": claim_id}))
 
 
 def display_status(row: dict, now: str | None = None) -> str:
