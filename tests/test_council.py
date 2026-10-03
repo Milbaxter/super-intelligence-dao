@@ -110,7 +110,7 @@ def test_mes_majority_bloc_cannot_take_everything():
     r = council.equal_shares(bloc + minority, items, 10)
     assert {k for k, v in r.items() if v["funded"]} == {"A1", "A2", "B1"}
     assert r["A1"]["rho"] == 0.5 and r["A2"]["rho"] == 0.5 and r["B1"]["rho"] == 0.75
-    assert r["B1"]["why"] == "Funded: 4 of 10 voters approved; each paid 0.8 slots"
+    assert r["B1"]["why"] == "Funded: 4 of 10 voters approved; each paid 0.75 slots"
     # A3: 60% approval but only 1 slot left (cost 3); B2: the minority had 1 slot left and 40% < 50%.
     assert r["A3"]["why"] == ("Not funded: its 6 approvers had spent their shares on items they also approved "
                               "(0 slots left, cost 3); completion step: cost 3 > remaining budget 1")

@@ -61,7 +61,7 @@ def _rho(shares: list[float], cost: float) -> float:
 
 
 def _n(x: float) -> str:
-    return f"{round(x, 1):g}"
+    return f"{round(x, 2 if abs(x) < 1 else 1):g}"  # 0.125 → "0.12", 4.33 → "4.3"
 
 
 def _slots(x: float) -> str:
