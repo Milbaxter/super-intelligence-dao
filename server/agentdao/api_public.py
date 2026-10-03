@@ -228,6 +228,9 @@ def contributors(conn=Depends(get_conn)):
 
 @router.get("/activity")
 def activity(limit: int = Query(50, ge=1, le=200), conn=Depends(get_conn)):
-    return [{"ts": e["ts"], "kind": e["kind"], "actor": e["actor_handle"], "summary": e["summary"],
-             "ref_type": e["ref_type"], "ref_id": e["ref_id"]}
-            for e in db.all_(conn, "SELECT * FROM events ORDER BY id DESC LIMIT ?", (limit,))]
+    out = []
+    for e in db.all_(conn, "SELECT * FROM events ORDER BY id DESC LIMIT ?", (limit,)):
+        kind, summary = views.public_event(e, hidden=True)  # the feed never reveals individual blind verdicts
+        out.append({"ts": e["ts"], "kind": kind, "actor": e["actor_handle"], "summary": summary,
+                    "ref_type": e["ref_type"], "ref_id": e["ref_id"]})
+    return out

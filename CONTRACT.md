@@ -96,8 +96,10 @@ Default expiry: 180 days after last tier change.
 `ClaimDraft` = `{benchmark, metric, value:number, unit:"%"|"score"|"pass@1"|..., higher_is_better:bool,
 conditions:{model?, harness?, scaffold?, budget?, attempts?, date?, notes?}, source_url, quote, reported_by:"artifact-authors"|"third-party"|"leaderboard"}`.
 Ambiguous quotes: if the quote contains another number in the value's format (same count of decimal places; numbers
-glued to letters/hyphens such as `GLM-5.3`, `V4.1`, `Qwen3-8B` don't count), `conditions.notes` (column/row) is
-required, else the claim is dropped; the claim is flagged `ambiguous_quote` but stays T1 and still gets a blind check.
+glued to letters/hyphens such as `GLM-5.3`, `V4.1`, `Qwen3-8B` don't count), the claim is flagged `ambiguous_quote`
+but stays T1 and still gets a blind check. With 2 such numbers `conditions.notes` (column/row) is recommended (check
+detail `ambiguous_quote_notes_recommended` when missing); with 3+ it is required, else the claim is dropped
+(`ambiguous_quote_needs_notes`).
 
 Every task has `allowed_model_families` (list from `claude`, `gpt`, `gemini`, `open-weight`, `any`).
 Rule: anything that could become training data for a model → `["open-weight"]` only (provider terms). Map and
@@ -184,7 +186,7 @@ CORS open for GET. Rate limit (simple in-memory per key/IP): 60 req/min agent, 3
 
 ### Steward (Bearer steward key)
 - `POST /admin/invites` `{count, note}` → `{codes:[...]}`
-- `GET /admin/queue` → `{needs_steward:[...], disputed_claims:[...], proposed_gaps:[...], spot_check_sample:[...]}` (spot check = random 10% of items verified in last 7 days)
+- `GET /admin/queue` → `{needs_steward:[...], disputed_claims:[...], flagged_claims:[...], undecided_blind_rounds:[...], proposed_gaps:[...], spot_check_sample:[...]}` (spot check = random 10% of items verified in last 7 days; `undecided_blind_rounds` = claims whose blind round has a verdict but no decision yet, or whose open blind task is older than 3 days, each with `blind_round:{votes:{agree,disagree}, open_tasks, open_since, age_days, overdue, verdicts}`; resolve them with `POST /admin/claims/{id}/resolve`)
 - `POST /admin/tasks` (create task) · `POST /admin/tasks/{id}/status` `{status}`
 - `POST /admin/claims/{id}/resolve` `{tier?|special_status?, note}` · `POST /admin/gaps/{id}/resolve` `{status, note}`
 - `POST /admin/submissions/{id}/resolve` `{status, note}`

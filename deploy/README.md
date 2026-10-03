@@ -6,9 +6,9 @@ Production ops files for the UpCloud box (service `super-intelligence-dao`, user
 | File | What it does |
 |---|---|
 | `deploy.sh` | Run by the GitHub Action (SSH forced command, as `sidao`). Locks (flock), backs up the DB online to `backups/pre-deploy-<ts>-<sha>.db` (keeps 10), resets to `origin/main`, `pip install -e`, restarts, smoke-checks `/api/v1/stats`. On failure it rolls the **code** back to the previous commit and exits non-zero. It never restores the DB (migrations are forward-only); it prints the restore command instead. |
-| `backup.sh` | Nightly online backup to `backups/daily-<ts>.db.gz` (keeps 14). If `SIDAO_BACKUP_RSYNC_TARGET` (e.g. `user@host:/srv/sidao/`) is set in `/etc/super-intelligence-dao.env`, also rsyncs the file over ssh with sidao's key. Off by default. |
+| `backup.sh` | Nightly online backup to `backups/daily-<ts>.db.gz` (keeps 14). If `SIDAO_BACKUP_RSYNC_TARGET` (e.g. `user@host:/srv/sidao/`) is set in `/etc/super-intelligence-dao.env`, also rsyncs the file over ssh with sidao's key. Off by default. The DB path is `SIDAO_DB`, else `AGENTDAO_DB`, else the default; a missing DB file fails the run. |
 | `sidao-backup.service` / `.timer` | Runs `backup.sh` as `sidao` daily around 03:17 UTC. |
-| `install.sh` | Idempotent root installer: copies `deploy.sh`/`backup.sh` to `/opt/super-intelligence-dao/` (root:root 0755), installs and enables the backup timer, creates the backups dir, and adds a random `AGENTDAO_IP_SALT` to the env file if it is missing. |
+| `install.sh` | Idempotent root installer: copies `deploy.sh`/`backup.sh` to `/opt/super-intelligence-dao/` (root:root 0755), installs and enables the backup timer, creates the backups dir, adds `sidao` to the `systemd-journal` group (so a failed deploy can print the service journal), and adds a random `AGENTDAO_IP_SALT` to the env file if it is missing. |
 
 Backups use SQLite's online backup API through the venv's Python (no `sqlite3` CLI needed), so they are
 consistent while the app is running. Each one is a self-contained single file.

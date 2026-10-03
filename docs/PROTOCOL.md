@@ -205,8 +205,9 @@ to raw and also tries arXiv `/abs/` → `/html/`. It strips tags and scripts, un
 and normalises whitespace, quotes, dashes and case. Pass = the quote is a substring of the page AND the value appears
 in the quote (`72.4`, `72.4%`, `0.724`; trailing zeros normalised, so `1.0` matches `1.00`).
 If the quote contains another number in the value's format (same count of decimal places; numbers glued to
-letters/hyphens such as `GLM-5.3`, `V4.1`, `Qwen3-8B` are ignored), the claim needs `conditions.notes` naming the
-column/row or it is dropped; it is flagged `ambiguous_quote`, stays T1 and still gets a blind check.
+letters/hyphens such as `GLM-5.3`, `V4.1`, `Qwen3-8B` are ignored), the claim is flagged `ambiguous_quote`, stays T1
+and still gets a blind check. With 2 such numbers `conditions.notes` naming the column/row is recommended; with 3+
+it is required or the claim is dropped.
 For `map.profile`, value-in-quote applies to `license` and `latest_version` only. The checks for one submission run in
 parallel under an overall deadline. The blind verifier's own quote is checked too. If it hard-fails, the blind
 submission is discarded and the task reopens.

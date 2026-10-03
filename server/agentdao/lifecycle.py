@@ -20,10 +20,10 @@ import re
 import sqlite3
 from typing import Any
 
-from . import config, db
+from . import config, db, views
 from .db import jdump, jload, tx
 from .errors import ApiError, not_found
-from .verify import SOFT_FAIL_REASONS, QuoteChecker, quote_ambiguity
+from .verify import SOFT_FAIL_REASONS, QuoteChecker, quote_candidates
 
 PENDING_TASK_STATUSES = ("draft", "open", "leased", "submitted", "verifying")
 # Blind tasks get only the coarse identifiers needed to find the right number — never notes/column/attempts/date,
@@ -260,6 +260,16 @@ def eligible_score(conn, task: dict, contributor: dict, family: str, allow_same_
             WHERE l.contributor_id=? AND t.target_claim_id=? AND t.id != ?""",
             (contributor["id"], task["target_claim_id"], task["id"])):
         return None  # at most one verify task per claim per contributor
+    if task["type"] == "verify.blind_extract" and task["target_claim_id"]:
+        for other_id in _blind_participants(conn, task["target_claim_id"]):
+            if other_id == contributor["id"]:
+                continue  # own earlier lease on this very task: the release cooldown above applies
+            if same_person(conn, contributor, other_id):
+                return None  # same operator already checked (or holds a check on) this claim: one vote per person
+            if not allow_same_ip and contributor.get("registered_ip_hash") and db.scalar(
+                    conn, "SELECT 1 FROM contributors WHERE id=? AND registered_ip_hash=?",
+                    (other_id, contributor["registered_ip_hash"])):
+                return None  # same registered IP as an earlier/current verifier of this claim (Sybil guard)
     if task["type"] == "verify.review" and task["parent_submission_id"] and db.scalar(conn, """
             SELECT 1 FROM leases l JOIN tasks t ON t.id = l.task_id
             WHERE l.contributor_id=? AND t.type='verify.review' AND t.parent_submission_id=? AND t.id != ?""",
@@ -268,6 +278,15 @@ def eligible_score(conn, task: dict, contributor: dict, family: str, allow_same_
     if orig_family and orig_family != family:
         score += config.FAMILY_DIVERSITY_BONUS
     return score
+
+
+def _blind_participants(conn, claim_id: str) -> list[str]:
+    """Contributors who hold/held a lease (any status) on a blind task for the claim or submitted a verdict on it."""
+    return [r["cid"] for r in db.all_(conn, """
+        SELECT l.contributor_id AS cid FROM leases l JOIN tasks t ON t.id = l.task_id
+        WHERE t.type='verify.blind_extract' AND t.target_claim_id=?
+        UNION SELECT s.contributor_id FROM verifications v JOIN submissions s ON s.id = v.verifier_submission_id
+        WHERE v.claim_id=?""", (claim_id, claim_id))]
 
 
 NO_TASK_REASONS = ("no_open_tasks", "no_tasks_of_requested_types", "all_over_max_minutes", "none_eligible_for_you")
@@ -556,12 +575,17 @@ def _process_extract(conn, task, sub, payload, pre, contributor):
         soft = not res["passed"] and res["reason"] in SOFT_FAIL_REASONS
         if not res["passed"] and not soft:
             checks.append({"name": name, "passed": False, "detail": res["reason"], "result": res}); continue
-        if res["passed"] and quote_ambiguity(c["quote"], c["value"]):
+        n_cand = quote_candidates(c["quote"], c["value"]) if res["passed"] else 0
+        ambiguity_note = None
+        if n_cand >= config.AMBIGUOUS_QUOTE_MIN_NUMBERS:
             notes = (c.get("conditions") or {}).get("notes")
             if not isinstance(notes, str) or not notes.strip():
-                checks.append({"name": name, "passed": False, "detail": "ambiguous_quote_needs_notes",
-                               "message": "quote has several same-format numbers (table row?): put the column header "
-                                          "in conditions.notes and resubmit"}); continue
+                if n_cand >= config.AMBIGUOUS_QUOTE_REQUIRE_NOTES_AT:
+                    checks.append({"name": name, "passed": False, "detail": "ambiguous_quote_needs_notes",
+                                   "message": "quote has several same-format numbers (table row?): put the column header "
+                                              "in conditions.notes and resubmit"}); continue
+                ambiguity_note = ("quote has another same-format number: the claim was accepted but flagged "
+                                  "ambiguous_quote; naming the column/row in conditions.notes is strongly recommended")
             res = {**res, "flag": "ambiguous_quote"}
         bench_id = _resolve_benchmark(conn, c["benchmark"], sub["id"])
         if db.scalar(conn, "SELECT 1 FROM claims WHERE artifact_id=? AND benchmark_id=? AND metric=? AND source_url=? AND abs(value - ?) < 1e-9",
@@ -569,8 +593,10 @@ def _process_extract(conn, task, sub, payload, pre, contributor):
             checks.append({"name": name, "passed": False, "detail": "duplicate of an existing claim"}); continue
         tier = "source-checked" if res["passed"] else "reported"
         claim = _insert_claim(conn, artifact_id, bench_id, c, tier, res, sub["id"])
-        checks.append({"name": name, "passed": res["passed"], "detail": res["reason"], "claim_id": claim["id"], "tier": tier,
-                       **({"flag": res["flag"]} if res.get("flag") else {})})
+        checks.append({"name": name, "passed": res["passed"], "claim_id": claim["id"], "tier": tier,
+                       "detail": "ambiguous_quote_notes_recommended" if ambiguity_note else res["reason"],
+                       **({"flag": res["flag"]} if res.get("flag") else {}),
+                       **({"message": ambiguity_note} if ambiguity_note else {})})
         emit(conn, "claim_created", f"new {tier} claim: {artifact_id} on {bench_id}", contributor["handle"], "claim", claim["id"],
              {"check_result": res})
         if res["passed"]:
@@ -687,8 +713,10 @@ def _process_blind(conn, task, sub, payload, pre, contributor):
         if not db.scalar(conn, """SELECT 1 FROM tasks WHERE type='verify.blind_extract' AND target_claim_id=? AND id != ?
                                    AND status IN ('draft','open','leased','submitted')""", (claim["id"], task["id"])):
             spawned.append(spawn_blind_task(conn, claim, task["parent_submission_id"], bonus=1.5))
-        emit(conn, "claim_blind_split", f"blind re-extraction did not match; tie-breaker check spawned: {what}",
-             contributor["handle"], "claim", claim["id"], detail)
+        # Public summary stays neutral (no agree/disagree, no "tie-breaker"): the next blind verifier may read it.
+        # The verdict lives in `detail`, which public views reveal only once the round is decided.
+        emit(conn, "claim_blind_check", f"{views.BLIND_CHECK_PENDING_SUMMARY}: {what}",
+             contributor["handle"], "claim", claim["id"], {**detail, "verdict": "agree" if agree else "disagree"})
         checks.append({"name": "tiebreak", "passed": True,
                        "detail": "verdict recorded; another independent blind check will decide"})
     if claim["submission_id"]:
@@ -883,16 +911,17 @@ def steward_resolve_claim(conn, claim_id: str, tier: str | None, special_status:
 
 
 def _settle_dispute(conn, claim: dict, extractor_wins: bool) -> None:
+    # Only the round that produced the dispute counts: disagreements from earlier (decided) rounds earn nothing here.
+    votes = _round_votes(conn, claim["id"], "disputed")
     if extractor_wins:
         orig = db.scalar(conn, "SELECT contributor_id FROM submissions WHERE id=?", (claim["submission_id"],)) if claim["submission_id"] else None
         credit(conn, orig, "dispute_resolved", "claim", claim["id"])
     else:
-        for v in db.all_(conn, "SELECT verifier_submission_id FROM verifications WHERE claim_id=? AND verdict='disagree'", (claim["id"],)):
-            who = db.scalar(conn, "SELECT contributor_id FROM submissions WHERE id=?", (v["verifier_submission_id"],))
-            credit(conn, who, "dispute_resolved", "claim", claim["id"])
+        for v in votes:
+            if v["verdict"] == "disagree":
+                credit(conn, v["contributor_id"], "dispute_resolved", "claim", claim["id"])
     # Finalize the disputed round's verifier submissions; a vindicated agree-minority earns verify_agreed.
-    _settle_votes(conn, _round_votes(conn, claim["id"], "disputed"), winner="agree" if extractor_wins else "disagree",
-                  credit_winners=extractor_wins)
+    _settle_votes(conn, votes, winner="agree" if extractor_wins else "disagree", credit_winners=extractor_wins)
 
 
 def _settle_open_round(conn, claim: dict, new_special_status: str | None) -> None:

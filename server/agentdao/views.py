@@ -72,9 +72,30 @@ def claim_trail(conn, claim: dict, hidden: bool) -> list[dict]:
               "summary": f"claim recorded as {'seed data' if claim['seed'] else 'submission ' + str(claim['submission_id'])}",
               "detail": None}]
     for e in db.all_(conn, "SELECT * FROM events WHERE ref_type='claim' AND ref_id=? ORDER BY id", (claim["id"],)):
-        trail.append({"ts": e["ts"], "kind": e["kind"], "actor": e["actor_handle"], "summary": e["summary"],
+        kind, summary = public_event(e, hidden)
+        trail.append({"ts": e["ts"], "kind": kind, "actor": e["actor_handle"], "summary": summary,
                       "detail": None if hidden else jload(e["detail"])})
     return trail
+
+
+# A blind verdict that left its round undecided. "claim_blind_split" is the legacy kind, whose summary said
+# "did not match; tie-breaker spawned" — that would tell the tie-breaker which way the round is split.
+BLIND_CHECK_EVENT_KINDS = ("claim_blind_check", "claim_blind_split")
+BLIND_CHECK_PENDING_SUMMARY = "blind check submitted; awaiting further checks"
+
+
+def public_event(e: dict, hidden: bool) -> tuple[str, str]:
+    """(kind, summary) of an event as shown publicly. Blind-check events stay neutral while the claim's round is
+    undecided (`hidden`); afterwards the claim trail reveals the verdict (from the event detail)."""
+    if e["kind"] not in BLIND_CHECK_EVENT_KINDS:
+        return e["kind"], e["summary"]
+    what = e["summary"].rsplit(": ", 1)[-1] if ": " in e["summary"] else ""
+    verdict = None if hidden else (jload(e["detail"], {}) or {}).get("verdict")
+    if verdict in ("agree", "disagree"):
+        summary = f"blind check {'matched' if verdict == 'agree' else 'did not match'} the original"
+    else:
+        summary = BLIND_CHECK_PENDING_SUMMARY if hidden else "blind check submitted"
+    return "claim_blind_check", f"{summary}: {what}" if what else summary
 
 
 def task_summary(row: dict, conn=None) -> dict:
