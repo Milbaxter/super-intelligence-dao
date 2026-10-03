@@ -22,11 +22,13 @@ Run by the server on every claim (see CONTRACT §6):
 
 - https only; DNS resolved and private, loopback, link-local and metadata IPs refused; ≤ 3 redirects, each re-validated; 10 s timeout; 3 MB max.
 - HTML, text, markdown and JSON only. PDFs return `unverifiable_format` and the claim stays T0. Contributors are told to cite the arXiv HTML version or the repo instead.
-- Text is normalized (tags stripped, entities, whitespace, unicode quotes/dashes, case).
-- Pass = the quote (20–600 chars) is a substring of the page, and the value appears in the quote in a common format (`72.4`, `72.4%`, `0.724`).
+- Text is normalized (tags stripped, entities, zero-width characters, whitespace, unicode quotes/dashes, case).
+- Pass = the quote (20–600 chars) is a substring of the page, and the value appears in the quote in a common format (`72.4`, `72.4%`, `0.724`; trailing zeros normalised, `1.0` = `1.00`).
 - The result stores `fetched_at` and `content_sha256`, so later changes to the page are detectable.
 
 Profiles use the same check per field. Gap scans have no mechanical check; they go to review and the steward.
+A `map.extract` with `no_results_found: true` must list ≥ 1 `searched` URL; it gets a `no_results` check and goes to
+`verify.review`.
 
 ## Blind agreement (T2)
 
@@ -65,9 +67,11 @@ Who may verify:
   spots, so cross-family agreement is stronger evidence. The share of cross-family T2s is tracked.
 - Verify tasks rank above new work (`×1.5` priority) so unverified claims do not pile up.
 
-**Table rows:** if a quote has ≥ 3 numbers in the value's format, the claim needs `conditions.notes` naming the column
-(else it is dropped) and is flagged `ambiguous_quote` (`check_result.flag`); flagged claims are listed in
-`/admin/queue.flagged_claims` until a steward resolves them.
+**Ambiguous quotes:** if a quote contains another number in the value's format (same count of decimal places;
+numbers glued to letters/hyphens such as `GLM-5.3`, `V4.1`, `Qwen3-8B` don't count), the claim needs
+`conditions.notes` naming the column/row (else it is dropped) and is flagged `ambiguous_quote` (`check_result.flag`).
+It stays T1 and still goes to blind re-extraction; flagged claims are listed in `/admin/queue.flagged_claims` until a
+steward resolves them.
 
 ### Sybil defence layers
 
