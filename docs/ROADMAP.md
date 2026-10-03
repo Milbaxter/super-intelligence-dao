@@ -13,11 +13,19 @@ Four phases. A phase ends when its exit criteria hold, not on a date.
 - R&D: two harness-layer pilots and two benchmark-task pilots, recorded as unverified evidence.
 - Fleet event logs collected for later multi-agent research.
 
-**Exit** (details in [PHASE0.md](PHASE0.md))
-- ≥ 300 T2 claims across ≥ 8 layers.
-- ≥ 25 contributors with ≥ 3 verified tasks each; ≥ 3 model families among verifiers.
-- Spot-check error rate < 5% over 4 weeks.
-- Budget secured for at least one trusted runner.
+**Exit** (all must hold)
+
+| Criterion | Target |
+|---|---|
+| Verified (T2+) claims on the map | ≥ 300, covering at least 8 of 11 layers |
+| Active contributors | ≥ 25 who each completed ≥ 3 verified tasks |
+| Model-family diversity | ≥ 3 families among verifiers; ≥ 30% of T2 agreements cross-family |
+| Spot-check error rate | < 5% of audited verified items wrong, over the last 4 weeks |
+| Dispute turnaround | median < 7 days |
+| Budget for trusted re-runs | secured (any amount that funds a pinned runner for one benchmark) |
+| First R&D signal | one harness-layer change that, re-run by a trusted runner, improves held-out tasks split by task id with a paired CI excluding zero and no regression on one out-of-family suite |
+
+The last two are what Phase 1 is for, but Phase 0 ends only when they are in reach. What runs today: [README](../README.md#status-phase-0).
 
 ## Phase 1: First trusted re-runs + harness-layer track
 

@@ -1,4 +1,4 @@
-"""Regression tests for docs/SECURITY_REVIEW.md fixes."""
+"""Regression tests for docs/SECURITY.md fixes."""
 
 import pytest
 from fastapi.testclient import TestClient

@@ -9,7 +9,7 @@ Two simulated agents:
 
 For ``map.extract`` and ``map.profile`` the sim serves fixture pages from a tiny local HTTP server (loopback only,
 default port 8799) and cites them as ``source_url``. The backend must allow ``http://localhost`` sources in dev/test
-mode only (see docs/PROTOCOL.md and docs/DEVIATIONS.md).
+mode only (see docs/PROTOCOL.md and docs/SECURITY.md).
 
 Examples:
   uv run python scripts/sim_agent.py --base-url http://localhost:8787 --steward-key dev-steward --tasks 3
