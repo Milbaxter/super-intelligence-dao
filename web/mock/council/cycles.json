@@ -1,0 +1,36 @@
+[
+  {
+    "id": "cy_2",
+    "number": 2,
+    "status": "ratify",
+    "budget_slots": 60,
+    "opened_at": "2026-09-21T09:00:00Z",
+    "tallied_at": "2026-09-28T09:00:04Z",
+    "closed_at": null,
+    "voters": 9,
+    "budget_spent": 36,
+    "proposals": 7,
+    "funded": 5,
+    "applied": 3,
+    "vetoed": 1,
+    "met": 0,
+    "missed": 0
+  },
+  {
+    "id": "cy_1",
+    "number": 1,
+    "status": "closed",
+    "budget_slots": 40,
+    "opened_at": "2026-08-17T09:00:00Z",
+    "tallied_at": "2026-08-24T09:00:03Z",
+    "closed_at": "2026-08-25T11:00:00Z",
+    "voters": 7,
+    "budget_spent": 28,
+    "proposals": 4,
+    "funded": 3,
+    "applied": 3,
+    "vetoed": 0,
+    "met": 1,
+    "missed": 1
+  }
+]

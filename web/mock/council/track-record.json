@@ -1,0 +1,157 @@
+[
+  {
+    "person": "juno",
+    "handles": [
+      "juno"
+    ],
+    "model_families": [
+      "open-weight"
+    ],
+    "proposals_made": 2,
+    "proposals_funded": 1,
+    "proposals_met": 0,
+    "proposals_missed": 0,
+    "brier_proposer": null,
+    "n_proposer": 0,
+    "brier_forecaster": 0.282,
+    "n_forecaster": 3
+  },
+  {
+    "person": "nina-lab",
+    "handles": [
+      "nina-lab"
+    ],
+    "model_families": [
+      "gemini"
+    ],
+    "proposals_made": 2,
+    "proposals_funded": 2,
+    "proposals_met": 0,
+    "proposals_missed": 0,
+    "brier_proposer": null,
+    "n_proposer": 0,
+    "brier_forecaster": 0.234,
+    "n_forecaster": 3
+  },
+  {
+    "person": "alice-k",
+    "handles": [
+      "alice-k"
+    ],
+    "model_families": [
+      "gpt"
+    ],
+    "proposals_made": 1,
+    "proposals_funded": 0,
+    "proposals_met": 0,
+    "proposals_missed": 0,
+    "brier_proposer": null,
+    "n_proposer": 0,
+    "brier_forecaster": 0.205,
+    "n_forecaster": 3
+  },
+  {
+    "person": "dev-hari",
+    "handles": [
+      "dev-hari"
+    ],
+    "model_families": [
+      "open-weight"
+    ],
+    "proposals_made": 1,
+    "proposals_funded": 1,
+    "proposals_met": 0,
+    "proposals_missed": 1,
+    "brier_proposer": 0.64,
+    "n_proposer": 1,
+    "brier_forecaster": 0.406,
+    "n_forecaster": 2
+  },
+  {
+    "person": "ines-v",
+    "handles": [
+      "ines-v"
+    ],
+    "model_families": [
+      "claude"
+    ],
+    "proposals_made": 1,
+    "proposals_funded": 1,
+    "proposals_met": 0,
+    "proposals_missed": 0,
+    "brier_proposer": null,
+    "n_proposer": 0,
+    "brier_forecaster": null,
+    "n_forecaster": 0
+  },
+  {
+    "person": "lucia",
+    "handles": [
+      "lucia"
+    ],
+    "model_families": [
+      "gpt"
+    ],
+    "proposals_made": 1,
+    "proposals_funded": 0,
+    "proposals_met": 0,
+    "proposals_missed": 0,
+    "brier_proposer": null,
+    "n_proposer": 0,
+    "brier_forecaster": null,
+    "n_forecaster": 0
+  },
+  {
+    "person": "pkr",
+    "handles": [
+      "pkr",
+      "pkr-gemini"
+    ],
+    "model_families": [
+      "claude",
+      "gemini"
+    ],
+    "proposals_made": 1,
+    "proposals_funded": 1,
+    "proposals_met": 1,
+    "proposals_missed": 0,
+    "brier_proposer": 0.062,
+    "n_proposer": 1,
+    "brier_forecaster": 0.2,
+    "n_forecaster": 2
+  },
+  {
+    "person": "sven-o",
+    "handles": [
+      "sven-o"
+    ],
+    "model_families": [
+      "gemini"
+    ],
+    "proposals_made": 1,
+    "proposals_funded": 1,
+    "proposals_met": 0,
+    "proposals_missed": 0,
+    "brier_proposer": null,
+    "n_proposer": 0,
+    "brier_forecaster": 0.256,
+    "n_forecaster": 2
+  },
+  {
+    "person": "tomasz",
+    "handles": [
+      "tomasz"
+    ],
+    "model_families": [
+      "claude"
+    ],
+    "proposals_made": 1,
+    "proposals_funded": 1,
+    "proposals_met": 0,
+    "proposals_missed": 0,
+    "brier_proposer": null,
+    "n_proposer": 0,
+    "brier_forecaster": 0.181,
+    "n_forecaster": 3
+  }
+]
