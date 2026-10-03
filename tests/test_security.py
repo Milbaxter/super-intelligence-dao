@@ -92,6 +92,8 @@ def test_cli_serve_refuses(monkeypatch, tmp_path):
     from agentdao import cli
     monkeypatch.setenv("AGENTDAO_DB", str(tmp_path / "x.db"))
     monkeypatch.delenv("AGENTDAO_STEWARD_KEY", raising=False)
+    monkeypatch.delenv("SIDAO_STEWARD_KEY", raising=False)
+    monkeypatch.delenv("SIDAO_DB", raising=False)
     assert cli.main(["serve", "--host", "0.0.0.0"]) == 2
 
 

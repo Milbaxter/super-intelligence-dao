@@ -486,7 +486,8 @@ def submit(conn, checker: QuoteChecker, contributor: dict, lease_id: str, body: 
             "id": db.new_id("s"), "task_id": task["id"], "lease_id": lease_id, "contributor_id": contributor["id"],
             "model_family": lease["model_family"] or contributor["model_family"],
             "model": str(body.get("model") or lease["model"] or "")[:100], "payload": jdump(payload),
-            "tokens_estimate": max(0, min(int(body.get("tokens_estimate") or 0), 50_000_000)),
+            "tokens_estimate": max(0, min(int(body.get("tokens_estimate") or 0), config.TOKENS_ESTIMATE_MAX,  # self-reported
+                                           int(task["budget_minutes"] or 0) * config.TOKENS_PER_BUDGET_MINUTE_MAX)),
             "minutes_spent": max(0.0, min(float(body.get("minutes_spent") or 0), 10_000.0)),
             "notes": str(body.get("notes") or "")[:4000], "checks": "[]", "status": "pending", "created_at": db.now_ts(),
         }

@@ -449,7 +449,7 @@ export function initPage({ page, title }) {
     h('div', { class: 'fine' },
       h('span', {}, SITE_NAME),
       h('span', {}, 'Only verified results count'),
-      h('span', {}, 'Voting weight later = verified tokens, never raw tokens'))));
+      h('span', {}, 'Voting weight later = tokens on verified work, never raw tokens'))));
   footerSlot?.replaceWith(footer);
 
   // Smooth in-page anchors (respect reduced motion)
