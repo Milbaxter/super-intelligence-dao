@@ -77,9 +77,14 @@ def claim_trail(conn, claim: dict, hidden: bool) -> list[dict]:
     return trail
 
 
-def task_summary(row: dict) -> dict:
+def task_summary(row: dict, conn=None) -> dict:
+    # track_name: the human-readable track (a "multi-agent" layer task sits in map-harnesses, which confused agents).
+    # Taken from a joined `track_name` column, else looked up when a connection is given.
+    name = row.get("track_name")
+    if name is None and conn is not None and row.get("track_id"):
+        name = db.scalar(conn, "SELECT name FROM tracks WHERE id=?", (row["track_id"],))
     return {
-        "id": row["id"], "type": row["type"], "track_id": row["track_id"], "title": row["title"],
+        "id": row["id"], "type": row["type"], "track_id": row["track_id"], "track_name": name, "title": row["title"],
         "status": row["status"], "priority": row["priority"],
         "allowed_model_families": jload(row["allowed_model_families"], ["any"]),
         "budget_minutes": row["budget_minutes"], "attempts": row["attempts"], "created_at": row["created_at"],
@@ -91,7 +96,7 @@ def task_full(conn, row: dict, base_url: str) -> dict:
     subs = db.all_(conn, """SELECT s.id, c.handle AS contributor, s.status, s.created_at FROM submissions s
                             JOIN contributors c ON c.id = s.contributor_id WHERE s.task_id=? ORDER BY s.created_at""", (row["id"],))
     return {
-        **task_summary(row), "spec_md": row["spec_md"] or "", "inputs": jload(row["inputs"], {}),
+        **task_summary(row, conn), "spec_md": row["spec_md"] or "", "inputs": jload(row["inputs"], {}),
         "instructions_url": f"{base_url}/task-types/{row['type']}.md", "submissions": subs,
     }
 

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -88,7 +89,7 @@ QUOTE_MAX_CHARS = 600
 PRECHECK_WORKERS = 6  # concurrent quote checks per submission
 PRECHECK_DEADLINE_S = 60.0  # checks unfinished by then soft-fail as "timeout" (claim stays T0)
 MAX_EXTRACT_CLAIMS = 30  # claims per map.extract submission
-AMBIGUOUS_QUOTE_MIN_NUMBERS = 3  # ≥ this many same-format numbers in a quote → "ambiguous_quote" (table row)
+AMBIGUOUS_QUOTE_MIN_NUMBERS = 2  # ≥ this many same-format numbers in a quote → "ambiguous_quote" (needs conditions.notes)
 
 # --- GitHub identity (required for verify.* work) -----------------------------
 GITHUB_API_HOST = "api.github.com"  # the only host the GitHub client ever talks to
@@ -157,6 +158,23 @@ class Settings:
     def github_required_for_verify(self) -> bool:
         """Dev flags (sim agents) also skip the linked-GitHub requirement; both refuse a public bind."""
         return not self.same_ip_verify_allowed
+
+
+def render_agent_file(settings: Settings, rel: str) -> str | None:
+    """agent/<rel> with {{BASE_URL}}/{{SKILL_VERSION}}/{{SITE_NAME}} filled in; None if missing (or outside agent_dir)."""
+    path = (settings.agent_dir / rel).resolve()
+    if not path.is_relative_to(settings.agent_dir.resolve()) or not path.is_file():
+        return None
+    return (path.read_text(encoding="utf-8")
+            .replace("{{BASE_URL}}", settings.public_url)
+            .replace("{{SKILL_VERSION}}", SKILL_VERSION)
+            .replace("{{SITE_NAME}}", SITE_NAME))
+
+
+def skill_sha256(settings: Settings) -> str | None:
+    """sha256 of the rendered join.md, as served by /skill-version and pinned by claims (`skill_sha256`)."""
+    text = render_agent_file(settings, "join.md")
+    return hashlib.sha256(text.encode()).hexdigest() if text is not None else None
 
 
 def unsafe_for_public_bind(settings: Settings, host: str) -> list[str]:

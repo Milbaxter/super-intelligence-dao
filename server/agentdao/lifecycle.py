@@ -15,6 +15,7 @@ Network work (quote checks) is always done *before* opening the write transactio
 
 from __future__ import annotations
 
+import math
 import re
 import sqlite3
 from typing import Any
@@ -269,10 +270,28 @@ def eligible_score(conn, task: dict, contributor: dict, family: str, allow_same_
     return score
 
 
+NO_TASK_REASONS = ("no_open_tasks", "no_tasks_of_requested_types", "all_over_max_minutes", "none_eligible_for_you")
+
+
+def _no_task_reason(conn, task_types: list[str] | None, max_minutes: int | None) -> str:
+    """Most specific reason nothing was leasable (sent as the X-No-Task-Reason header with the 204)."""
+    sql, params = "SELECT COUNT(*) FROM tasks WHERE status='open'", []
+    if not db.scalar(conn, sql):
+        return "no_open_tasks"
+    if task_types:
+        sql += f" AND type IN ({','.join('?' for _ in task_types)})"
+        params += task_types
+        if not db.scalar(conn, sql, params):
+            return "no_tasks_of_requested_types"
+    if max_minutes and not db.scalar(conn, sql + " AND budget_minutes <= ?", [*params, max_minutes]):
+        return "all_over_max_minutes"
+    return "none_eligible_for_you"  # model family, release cooldown, own work, same person/IP, GitHub requirement
+
+
 def claim_task(conn, contributor: dict, model_family: str, model: str | None,
                task_types: list[str] | None, max_minutes: int | None,
-               allow_same_ip: bool = False, require_github: bool = False) -> tuple[dict, dict] | None:
-    """Lease the best eligible open task. Returns (lease, task) or None (→ 204)."""
+               allow_same_ip: bool = False, require_github: bool = False) -> tuple[dict, dict] | str:
+    """Lease the best eligible open task. Returns (lease, task), or a NO_TASK_REASONS string (→ 204)."""
     with tx(conn):
         if _active_lease_count(conn, contributor["id"]) >= config.MAX_ACTIVE_LEASES:
             raise ApiError(409, "lease_limit", f"You already hold {config.MAX_ACTIVE_LEASES} active leases; submit or release one first.")
@@ -290,7 +309,7 @@ def claim_task(conn, contributor: dict, model_family: str, model: str | None,
             if s is not None and (best_score is None or s > best_score):
                 best, best_score = task, s
         if not best:
-            return None
+            return _no_task_reason(conn, task_types, max_minutes)
         now = db.now_ts()
         hard = db.ts_in(seconds=config.LEASE_HARD_MAX_S)
         lease = {
@@ -373,10 +392,14 @@ def validate_payload(task_type: str, p: Any) -> list[dict]:
             claims = []
         if not isinstance(p.get("no_results_found", False), bool):
             err("no_results_found", "must be a boolean")
-        if not isinstance(p.get("searched", []), list):
+        searched = p.get("searched", [])
+        if not isinstance(searched, list):
             err("searched", "must be a list of urls")
+            searched = []
         if not claims and not p.get("no_results_found"):
             err("claims", "empty; set no_results_found=true if nothing was found")
+        if p.get("no_results_found") is True and not claims and not any(_url(u) for u in searched):
+            err("searched", "no_results_found needs at least one http(s) url you searched")
         for i, c in enumerate(claims):
             f = f"claims[{i}]"
             if not isinstance(c, dict):
@@ -488,13 +511,16 @@ def submit(conn, checker: QuoteChecker, contributor: dict, lease_id: str, body: 
 
     with tx(conn):
         lease = own_lease(conn, contributor, lease_id)  # re-check inside the lock
+        # Agents have no clock and over-report minutes: cap at the lease's real age (whole minutes, rounded up, ≥ 1).
+        elapsed = max(1, math.ceil((db.utcnow() - db.parse_ts(lease["created_at"])).total_seconds() / 60))
+        reported = body.get("minutes_spent")
         sub = {
             "id": db.new_id("s"), "task_id": task["id"], "lease_id": lease_id, "contributor_id": contributor["id"],
             "model_family": lease["model_family"] or contributor["model_family"],
             "model": str(body.get("model") or lease["model"] or "")[:100], "payload": jdump(payload),
             "tokens_estimate": max(0, min(int(body.get("tokens_estimate") or 0), config.TOKENS_ESTIMATE_MAX,  # self-reported
                                            int(task["budget_minutes"] or 0) * config.TOKENS_PER_BUDGET_MINUTE_MAX)),
-            "minutes_spent": max(0.0, min(float(body.get("minutes_spent") or 0), 10_000.0)),
+            "minutes_spent": float(elapsed if reported is None else max(0.0, min(float(reported), elapsed))),
             "notes": str(body.get("notes") or "")[:4000], "checks": "[]", "status": "pending", "created_at": db.now_ts(),
         }
         db.insert(conn, "submissions", sub)
@@ -557,6 +583,9 @@ def _process_extract(conn, task, sub, payload, pre, contributor):
     elif n_t0:
         status = "needs_steward"
     elif payload.get("no_results_found") and not payload.get("claims"):
+        n_urls = sum(1 for u in payload.get("searched", []) if _url(u))
+        checks.append({"name": "no_results", "passed": True,
+                       "detail": f"queued for verify.review; {n_urls} searched URLs listed"})
         spawned.append(spawn_review_task(conn, sub, task))
         status = "verifying"
     else:

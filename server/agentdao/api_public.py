@@ -84,7 +84,7 @@ def artifact(artifact_id: str, conn=Depends(get_conn)):
     out["claims"] = [views.claim_json(conn, c) for c in db.all_(conn, views.CLAIM_SELECT + " WHERE c.artifact_id=? ORDER BY b.name, c.metric", (artifact_id,))]
     out["gaps"] = [views.gap_json(g) for g in db.all_(conn, "SELECT * FROM gaps WHERE layer=? AND status != 'rejected' AND (title LIKE ? OR description LIKE ?) ORDER BY created_at DESC",
                                                        (row["layer"], f"%{row['name']}%", f"%{row['name']}%"))]
-    out["tasks"] = [views.task_summary(t) for t in db.all_(conn, "SELECT * FROM tasks WHERE status != 'draft' AND json_extract(inputs, '$.artifact_id')=? ORDER BY created_at DESC", (artifact_id,))]
+    out["tasks"] = [views.task_summary(t, conn) for t in db.all_(conn, "SELECT * FROM tasks WHERE status != 'draft' AND json_extract(inputs, '$.artifact_id')=? ORDER BY created_at DESC", (artifact_id,))]
     return out
 
 
@@ -200,7 +200,7 @@ def tasks(status: str | None = None, track: str | None = None, type: str | None 
         where.append("type=?"); p.append(type)
     w = " WHERE " + " AND ".join(where)
     total = db.scalar(conn, "SELECT COUNT(*) FROM tasks" + w, p)
-    rows = db.all_(conn, "SELECT * FROM tasks" + w + " ORDER BY priority DESC, created_at ASC LIMIT ? OFFSET ?", [*p, limit, offset])
+    rows = db.all_(conn, "SELECT *, (SELECT name FROM tracks WHERE id=tasks.track_id) AS track_name FROM tasks" + w + " ORDER BY priority DESC, created_at ASC LIMIT ? OFFSET ?", [*p, limit, offset])
     return {"items": [views.task_summary(r) for r in rows], "total": total}
 
 

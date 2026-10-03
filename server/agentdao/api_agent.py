@@ -108,11 +108,18 @@ def claim(request: Request, body=Body(default={}), conn=Depends(get_conn)):
     max_minutes = body.get("max_minutes")
     if max_minutes is not None and (not isinstance(max_minutes, int) or max_minutes <= 0):
         raise ApiError(422, "invalid_max_minutes", "max_minutes must be a positive integer")
+    pin = body.get("skill_sha256")
+    if pin is not None:  # agent pins the join.md it read; refuse to lease under changed rules
+        current = config.skill_sha256(request.app.state.settings)
+        if not isinstance(pin, str) or pin.strip().lower() != current:
+            raise ApiError(409, "skill_changed", "join.md changed since you read it: re-read /join.md (and the task-type "
+                           "file you use), then claim again with the new skill_sha256.",
+                           current_version=config.SKILL_VERSION, current_sha256=current)
     got = lifecycle.claim_task(conn, c, family, body.get("model"), types, max_minutes,
                                allow_same_ip=request.app.state.settings.same_ip_verify_allowed,
                                require_github=request.app.state.settings.github_required_for_verify)
-    if not got:
-        return Response(status_code=204)
+    if isinstance(got, str):  # nothing leasable: keep the bare 204, say why in a header
+        return Response(status_code=204, headers={"X-No-Task-Reason": got})
     lease, task = got
     base = request.app.state.settings.public_url
     return {

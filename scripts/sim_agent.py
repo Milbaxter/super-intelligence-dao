@@ -141,6 +141,7 @@ class ApiError(Exception):
 class Api:
     def __init__(self, base_url: str, key: str | None = None, who: str = "sim"):
         self.base, self.key, self.who = base_url.rstrip("/"), key, who
+        self.last_headers: dict = {}
 
     def raw(self, method: str, url: str, body=None, auth: bool = True, retries: int = 3):
         data = json.dumps(body).encode() if body is not None else None
@@ -152,10 +153,10 @@ class Api:
         req = urllib.request.Request(url, data=data, method=method, headers=headers)
         try:
             with urllib.request.urlopen(req, timeout=30) as r:
-                raw = r.read()
+                raw, self.last_headers = r.read(), dict(r.headers)
                 return r.status, raw
         except urllib.error.HTTPError as exc:
-            raw = exc.read()
+            raw, self.last_headers = exc.read(), dict(exc.headers)
             if exc.code == 429 and retries > 0:
                 log(self.who, "429 from server, backing off 5s")
                 time.sleep(5)
@@ -289,10 +290,11 @@ def blind_extract(inp: dict, mode: str) -> dict:
 
 # --------------------------------------------------------------------------------------------- agent
 class SimAgent:
-    def __init__(self, base: str, handle: str, family: str, who: str):
+    def __init__(self, base: str, handle: str, family: str, who: str, skill_sha256: str | None = None):
         self.api = Api(base, who=who)
         self.handle, self.family, self.who = handle, family, who
         self.model = f"sim-{family}-1"
+        self.skill_sha256 = skill_sha256  # pinned per claim (409 skill_changed if join.md changed meanwhile)
 
     def register(self, invite: str | None, key: str | None) -> None:
         if key:
@@ -319,8 +321,12 @@ class SimAgent:
         raise SystemExit(f"{self.who}: could not register")
 
     def claim(self, types: list[str]):
-        status, r = self.api.call("POST", "/tasks/claim", {"model_family": self.family, "model": self.model,
-                                                           "task_types": types, "max_minutes": 60})
+        body = {"model_family": self.family, "model": self.model, "task_types": types, "max_minutes": 60}
+        if self.skill_sha256:
+            body["skill_sha256"] = self.skill_sha256
+        status, r = self.api.call("POST", "/tasks/claim", body)
+        if status == 204:
+            log(self.who, f"204 X-No-Task-Reason: {self.api.last_headers.get('X-No-Task-Reason') or '(none)'}")
         return None if status == 204 or not r else r
 
     def heartbeat(self, lease_id: str) -> None:
@@ -344,7 +350,8 @@ def check_instructions(api: Api, type_: str, seen: set, who: str) -> None:
         log(who, f"WARN instructions for {type_} → HTTP {status}")
 
 
-def check_skill_version(api: Api) -> None:
+def check_skill_version(api: Api) -> str | None:
+    """Log whether /skill-version matches join.md; returns the sha256 the sim agents pin their claims to."""
     for path in ("/skill-version", "/api/v1/skill-version"):
         status, raw = api.raw("GET", api.base + path, auth=False)
         if status == 200:
@@ -352,8 +359,9 @@ def check_skill_version(api: Api) -> None:
             _, jm = api.raw("GET", api.base + "/join.md", auth=False)
             ok = hashlib.sha256(jm).hexdigest() == sv.get("sha256")
             log("sim", f"skill-version {sv.get('version')} sha256 {'matches' if ok else 'DOES NOT MATCH'} join.md ({path})")
-            return
+            return sv.get("sha256")
     log("sim", "WARN no /skill-version endpoint")
+    return None
 
 
 def run_one(agent: SimAgent, lease_task: dict, fx: str, mode: str, seen_types: set):
@@ -417,7 +425,7 @@ def main() -> int:
     except (ApiError, urllib.error.URLError) as exc:
         print(f"backend not reachable at {a.base_url}: {exc}", file=sys.stderr)
         return 2
-    check_skill_version(public)
+    skill_sha = check_skill_version(public)
 
     steward = Api(a.base_url, key=a.steward_key, who="steward") if a.steward_key else None
 
@@ -436,7 +444,7 @@ def main() -> int:
     if not a.no_verifier and not a.verifier_invite and not a.verifier_api_key:
         a.verifier_invite = mint("verifier")
 
-    ext = SimAgent(a.base_url, a.handle, a.model_family, "extractor")
+    ext = SimAgent(a.base_url, a.handle, a.model_family, "extractor", skill_sha)
     ext.register(a.invite, a.api_key)
 
     # ---- extractor
@@ -494,7 +502,7 @@ def main() -> int:
     failures: list[str] = []
     if not a.no_verifier and spawned:
         vfam = a.verifier_model_family or next(f for f in FAMILIES if f != a.model_family)
-        ver = SimAgent(a.base_url, a.verifier_handle, vfam, "verifier")
+        ver = SimAgent(a.base_url, a.verifier_handle, vfam, "verifier", skill_sha)
         ver.register(a.verifier_invite, a.verifier_api_key)
         tiebreaks = verify_pass(ver, set(spawned))
         mid = claim_states()
@@ -511,7 +519,7 @@ def main() -> int:
                 failures.append("the first disagreement spawned no tie-breaker task")
         if tiebreaks:
             v2fam = a.verifier2_model_family or next(f for f in FAMILIES if f not in (a.model_family, vfam))
-            ver2 = SimAgent(a.base_url, a.verifier2_handle, v2fam, "verifier2")
+            ver2 = SimAgent(a.base_url, a.verifier2_handle, v2fam, "verifier2", skill_sha)
             if not a.verifier2_invite and not a.verifier2_api_key:
                 a.verifier2_invite = mint("verifier2")
             ver2.register(a.verifier2_invite, a.verifier2_api_key)

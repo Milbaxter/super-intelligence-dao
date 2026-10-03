@@ -219,7 +219,9 @@ _QUOTE_MAP = {
     "‘": "'", "’": "'", "‚": "'", "‛": "'", "′": "'",
     "“": '"', "”": '"', "„": '"', "‟": '"', "″": '"',
     "‐": "-", "‑": "-", "‒": "-", "–": "-", "—": "-", "―": "-", "−": "-",
-    " ": " ", " ": " ", " ": " ", "​": "",
+    "\xa0": " ", "\u2009": " ", "\u202f": " ",
+    # zero-width characters (ZWSP, ZWNJ, ZWJ, word joiner, BOM): dropped from page text and quotes alike
+    "\u200b": "", "\u200c": "", "\u200d": "", "\u2060": "", "\ufeff": "",
 }
 _QUOTE_TRANS = str.maketrans(_QUOTE_MAP)
 # Formatting characters dropped on BOTH sides so markdown/LaTeX/table rendering differences don't matter.
@@ -297,15 +299,19 @@ def value_in_text(value, text: str) -> bool:
     return bool(v) and v in normalize(text)
 
 
-_NUM_RE = re.compile(r"(?<![\w.])(\d+(?:\.(\d+))?)\s*(%?)")
+# A standalone number: digits touching a letter or preceded by '-' are part of an identifier ("GLM-5.3", "V4.1",
+# "gpt-4.1", "Qwen3-8B") and are skipped. The lookahead also stops backtracking into "72" of "72.4x".
+_NUM_RE = re.compile(r"(?<![\w.-])(\d+(?:\.(\d+))?)(?!\w|\.\d)\s*(%?)")
 
 
 def quote_ambiguity(quote: str, value) -> bool:
     """True when the quote holds ≥ AMBIGUOUS_QUOTE_MIN_NUMBERS numbers in the same format as `value`
-    (same decimal places and %-ness) — typically a flattened table row where the column is not evident."""
+    (same decimal places and %-ness), i.e. another candidate the claim could have meant ("85.9% and 87.7%",
+    a flattened table row): the column/row label must then be given in conditions.notes."""
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         return False
-    toks = [(float(m.group(1)), len(m.group(2) or ""), m.group(3)) for m in _NUM_RE.finditer(quote.replace(",", ""))]
+    text = quote.translate(_QUOTE_TRANS).replace(",", "")  # unicode dashes → '-' so "GLM‑5.3" is an identifier too
+    toks = [(float(m.group(1)), len(m.group(2) or ""), m.group(3)) for m in _NUM_RE.finditer(text)]
     v = float(value)
     mine = [t for t in toks if any(abs(t[0] - x) < 1e-9 for x in (v, v * 100, v / 100))]
     if not mine:

@@ -79,16 +79,6 @@ class RateLimiter:
             return True
 
 
-def _render_agent_file(settings: config.Settings, rel: str) -> str | None:
-    path = (settings.agent_dir / rel).resolve()
-    if not path.is_relative_to(settings.agent_dir.resolve()) or not path.is_file():
-        return None
-    return (path.read_text(encoding="utf-8")
-            .replace("{{BASE_URL}}", settings.public_url)
-            .replace("{{SKILL_VERSION}}", config.SKILL_VERSION)
-            .replace("{{SITE_NAME}}", config.SITE_NAME))
-
-
 def _not_built(what: str) -> HTMLResponse:
     what = html.escape(what)  # `what` contains the request path: never reflect it unescaped (XSS)
     return HTMLResponse(f"<!doctype html><title>Not found</title><p>{what} not found. "
@@ -197,9 +187,7 @@ def create_app(settings: config.Settings | None = None, fetcher: Fetcher | None 
     @app.get("/skill-version", include_in_schema=False)
     @app.get(API_PREFIX + "/skill-version", include_in_schema=False)
     def skill_version():
-        text = _render_agent_file(settings, "join.md")
-        sha = hashlib.sha256(text.encode()).hexdigest() if text is not None else None
-        return {"version": config.SKILL_VERSION, "sha256": sha}
+        return {"version": config.SKILL_VERSION, "sha256": config.skill_sha256(settings)}
 
     @app.get(API_PREFIX + "/{rest:path}", include_in_schema=False)
     def _api_404(rest: str):
@@ -208,7 +196,7 @@ def create_app(settings: config.Settings | None = None, fetcher: Fetcher | None 
     # ---- agent protocol files -------------------------------------------------
     @app.get("/join.md", include_in_schema=False)
     def join_md():
-        text = _render_agent_file(settings, "join.md")
+        text = config.render_agent_file(settings, "join.md")
         if text is None:
             return _not_built("agent/join.md")
         return Response(text, media_type="text/markdown; charset=utf-8")
@@ -217,7 +205,7 @@ def create_app(settings: config.Settings | None = None, fetcher: Fetcher | None 
     def task_type_md(task_type: str):
         if task_type not in config.TASK_TYPES:
             return _not_built(f"task type {task_type!r}")
-        text = _render_agent_file(settings, f"task-types/{task_type}.md")
+        text = config.render_agent_file(settings, f"task-types/{task_type}.md")
         if text is None:
             return _not_built(f"agent/task-types/{task_type}.md")
         return Response(text, media_type="text/markdown; charset=utf-8")

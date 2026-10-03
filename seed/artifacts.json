@@ -767,7 +767,7 @@
     "name": "AutoGen",
     "layer": "multi-agent",
     "kind": "framework",
-    "url": "https://microsoft.github.io/autogen/",
+    "url": "https://microsoft.github.io/autogen/stable/",
     "repo_url": "https://github.com/microsoft/autogen",
     "description": "Microsoft programming framework for multi-agent applications."
   },
