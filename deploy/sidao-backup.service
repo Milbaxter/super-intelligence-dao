@@ -1,0 +1,20 @@
+[Unit]
+Description=Super Intelligence DAO nightly SQLite backup
+After=super-intelligence-dao.service
+
+[Service]
+Type=oneshot
+User=sidao
+Group=sidao
+# Optional: AGENTDAO_DB, SIDAO_BACKUP_RSYNC_TARGET
+EnvironmentFile=-/etc/super-intelligence-dao.env
+ExecStart=/opt/super-intelligence-dao/backup.sh
+Nice=10
+IOSchedulingClass=idle
+UMask=0027
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+# Backups dir, plus sidao's ~/.ssh so the optional rsync can record the target's host key.
+ReadWritePaths=/var/lib/super-intelligence-dao -/opt/super-intelligence-dao/.ssh

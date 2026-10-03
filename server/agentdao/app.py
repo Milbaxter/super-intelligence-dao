@@ -140,6 +140,12 @@ def create_app(settings: config.Settings | None = None, fetcher: Fetcher | None 
     if settings.steward_key == config.DEV_STEWARD_KEY:
         logging.getLogger("agentdao").warning("SIDAO_STEWARD_KEY (alias AGENTDAO_STEWARD_KEY) is the public dev default %r; set a real key "
                                               "before exposing this server.", config.DEV_STEWARD_KEY)
+    if settings.ip_salt == config.DEFAULT_IP_SALT:
+        # The salt keys the HMAC in contributors.registered_ip_hash. A public salt makes those hashes brute-forceable
+        # (the IPv4 space is only 2^32), so anyone holding a DB copy or backup could recover registration IPs.
+        logging.getLogger("agentdao").warning("SIDAO_IP_SALT (alias AGENTDAO_IP_SALT) is the public default %r; stored IP hashes can be "
+                                              "brute-forced back to IPs. Set a random secret salt in production.",
+                                              config.DEFAULT_IP_SALT)
 
     @app.exception_handler(ApiError)
     async def _api_error(_req, exc: ApiError):

@@ -26,3 +26,6 @@ agentdao-work/
 .DS_Store
 .idea/
 .vscode/
+
+# agent worktrees
+.claude/worktrees/
