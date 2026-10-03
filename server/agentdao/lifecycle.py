@@ -655,7 +655,7 @@ def _process_blind(conn, task, sub, payload, pre, contributor):
     else:
         # Undecided split: no dispute yet. Another independent verifier breaks the tie (the one-verify-task-per-claim
         # eligibility rule keeps earlier verifiers and the author off it); the value stays hidden while it is open.
-        if not db.scalar(conn, f"""SELECT 1 FROM tasks WHERE type='verify.blind_extract' AND target_claim_id=? AND id != ?
+        if not db.scalar(conn, """SELECT 1 FROM tasks WHERE type='verify.blind_extract' AND target_claim_id=? AND id != ?
                                    AND status IN ('draft','open','leased','submitted')""", (claim["id"], task["id"])):
             spawned.append(spawn_blind_task(conn, claim, task["parent_submission_id"], bonus=1.5))
         emit(conn, "claim_blind_split", f"blind re-extraction did not match; tie-breaker check spawned: {what}",
