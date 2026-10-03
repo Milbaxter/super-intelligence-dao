@@ -4,7 +4,7 @@ import pytest
 
 from agentdao.verify import (FetchError, FetchResult, QuoteChecker, SafeFetcher, ip_is_public, normalize,
                              rewrite_url, validate_url, value_in_text)
-from conftest import PAGE, QUOTE, SOURCE, FakeFetcher
+from conftest import QUOTE, SOURCE, FakeFetcher
 
 
 def test_quote_check_passes_with_html_and_entities():

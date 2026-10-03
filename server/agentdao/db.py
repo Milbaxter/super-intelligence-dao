@@ -13,7 +13,7 @@ import sqlite3
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, Callable, Iterator
 
 SCHEMA_PATH = Path(__file__).with_name("schema.sql")
 _ID_ALPHABET = "abcdefghijkmnpqrstuvwxyz23456789"
@@ -54,6 +54,7 @@ def connect(path: str) -> sqlite3.Connection:
 
 
 def init_db(path: str) -> None:
+    """Create missing tables/indexes (schema.sql), then apply pending numbered migrations."""
     conn = connect(path)
     try:
         conn.execute("PRAGMA journal_mode = WAL")
@@ -63,33 +64,73 @@ def init_db(path: str) -> None:
         conn.close()
 
 
-# Columns added after the first release: (table, column, type). CREATE TABLE IF NOT EXISTS won't add them to old DBs.
-_ADDED_COLUMNS = [
-    ("contributors", "registered_ip_hash", "TEXT"),
-    ("leases", "released_at", "TEXT"),
-    ("leases", "release_reason", "TEXT"),
-    ("contributors", "person", "TEXT"),
-    ("contributors", "github_login", "TEXT"),
-    ("contributors", "github_id", "INTEGER"),
-    ("contributors", "github_created_at", "TEXT"),
-    ("contributors", "github_linked_at", "TEXT"),
-    ("contributors", "github_challenge", "TEXT"),
-    ("contributors", "github_challenge_at", "TEXT"),
-    ("invites", "person", "TEXT"),
-]
+# ----------------------------------------------------------------------------------------------------------------
+# Numbered migrations, tracked by `PRAGMA user_version` (0 = none applied; N = MIGRATIONS[:N] applied).
+#
+# schema.sql always describes the *current* full schema and runs first (CREATE ... IF NOT EXISTS), so a fresh DB
+# already has every column; migrations exist to bring *old* DBs up to date. Every migration must therefore also be
+# safe on a fresh DB (use `_add_column`, which skips columns that already exist).
+#
+# To add one:
+#   1. Update schema.sql to the new shape (for fresh DBs). Don't put indexes on brand-new columns there: on an old
+#      DB schema.sql runs before the column exists. Create such indexes in the migration instead.
+#   2. Write `def _m00N_short_name(conn)` below and APPEND it to MIGRATIONS. Append, never edit, reorder or remove
+#      a shipped migration: deployed DBs have already recorded it as applied and will never run it again.
+#   3. Use only `conn.execute(...)`, never `conn.executescript(...)` (it COMMITs, breaking the per-migration
+#      transaction). Each migration runs once, inside BEGIN IMMEDIATE, together with its user_version bump.
+# ----------------------------------------------------------------------------------------------------------------
 
 
-def _migrate(conn: sqlite3.Connection) -> None:
-    for table, col, typ in _ADDED_COLUMNS:
-        cols = {r[1] for r in conn.execute(f"PRAGMA table_info({table})")}
-        if col not in cols:
-            conn.execute(f"ALTER TABLE {table} ADD COLUMN {col} {typ}")
+def _add_column(conn: sqlite3.Connection, table: str, col: str, typ: str) -> None:
+    """ALTER TABLE ... ADD COLUMN unless the column already exists (fresh DBs get it from schema.sql)."""
+    if col not in {r[1] for r in conn.execute(f"PRAGMA table_info({table})")}:
+        conn.execute(f"ALTER TABLE {table} ADD COLUMN {col} {typ}")
+
+
+def _m001_post_release_columns(conn: sqlite3.Connection) -> None:
+    """Baseline = the pre-versioning `_migrate`: columns added after the first release, person backfill, GitHub index.
+    Production DBs that ran the old `_migrate` already have all of this at user_version 0, so it is idempotent."""
+    for table, col, typ in [
+        ("contributors", "registered_ip_hash", "TEXT"),
+        ("leases", "released_at", "TEXT"),
+        ("leases", "release_reason", "TEXT"),
+        ("contributors", "person", "TEXT"),
+        ("contributors", "github_login", "TEXT"),
+        ("contributors", "github_id", "INTEGER"),
+        ("contributors", "github_created_at", "TEXT"),
+        ("contributors", "github_linked_at", "TEXT"),
+        ("contributors", "github_challenge", "TEXT"),
+        ("contributors", "github_challenge_at", "TEXT"),
+        ("invites", "person", "TEXT"),
+    ]:
+        _add_column(conn, table, col, typ)
     # Pre-existing contributors/invites: each gets its own person id (= separate people, as before person labels).
     for table in ("contributors", "invites"):
         conn.execute(f"UPDATE {table} SET person = 'p_' || lower(hex(randomblob(6))) WHERE person IS NULL")
     # One GitHub account links to at most one contributor (ALTER TABLE can't add UNIQUE, so a partial index).
     conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS ux_contributors_github_id ON contributors(github_id) "
                  "WHERE github_id IS NOT NULL")
+
+
+# Append-only. MIGRATIONS[i] takes a DB from user_version i to i + 1.
+MIGRATIONS: list[Callable[[sqlite3.Connection], None]] = [
+    _m001_post_release_columns,
+]
+SCHEMA_VERSION = len(MIGRATIONS)
+
+
+def user_version(conn: sqlite3.Connection) -> int:
+    return conn.execute("PRAGMA user_version").fetchone()[0]
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    # A DB newer than this code (rollback deploy) is left alone: migrations are additive, so old code still runs.
+    for version in range(user_version(conn) + 1, SCHEMA_VERSION + 1):
+        with tx(conn):
+            if user_version(conn) >= version:  # another process applied it while we waited for the write lock
+                continue
+            MIGRATIONS[version - 1](conn)
+            conn.execute(f"PRAGMA user_version = {version}")
 
 
 def reset_db(path: str) -> None:
