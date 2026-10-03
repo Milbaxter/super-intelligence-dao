@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, Query, Request
 
-from . import config, db, views
+from . import config, council, db, views
 from .deps import get_conn
 from .errors import not_found
 
@@ -183,6 +183,7 @@ def tracks(conn=Depends(get_conn)):
     for t in db.all_(conn, "SELECT * FROM tracks ORDER BY sort, id"):
         c = lambda st: db.scalar(conn, f"SELECT COUNT(*) FROM tasks WHERE track_id=? AND status IN ({','.join('?' * len(st))})", (t["id"], *st))  # noqa: E731
         out.append({**{k: t[k] for k in ("id", "name", "workstream", "phase", "summary", "why", "verification", "weight")},
+                    "paused": t["weight"] == 0,
                     "counts": {"open": c(("open",)), "in_progress": c(IN_PROGRESS),
                                "awaiting_verification": c(AWAITING_VERIFICATION), "verified": c(("verified",))}})
     return out
@@ -231,3 +232,40 @@ def activity(limit: int = Query(50, ge=1, le=200), conn=Depends(get_conn)):
     return [{"ts": e["ts"], "kind": e["kind"], "actor": e["actor_handle"], "summary": e["summary"],
              "ref_type": e["ref_type"], "ref_id": e["ref_id"]}
             for e in db.all_(conn, "SELECT * FROM events ORDER BY id DESC LIMIT ?", (limit,))]
+
+
+# ------------------------------------------------------------------ the Council (docs/design/COUNCIL_API.md)
+
+
+@router.get("/council")
+def council_overview(conn=Depends(get_conn)):
+    return council.council_overview(conn)
+
+
+@router.get("/council/cycles")
+def council_cycles(conn=Depends(get_conn)):
+    return [council.cycle_summary(conn, c) for c in db.all_(conn, "SELECT * FROM council_cycles ORDER BY opened_at DESC, rowid DESC")]
+
+
+@router.get("/council/cycles/{cycle_id}")
+def council_cycle(cycle_id: str, conn=Depends(get_conn)):
+    cyc = council.get_cycle(conn, cycle_id)
+    if not cyc:
+        raise not_found("council cycle", cycle_id)
+    return council.cycle_json(conn, cyc)
+
+
+@router.get("/council/evidence")
+def council_evidence(conn=Depends(get_conn)):
+    return council.evidence_brief(conn)
+
+
+@router.get("/council/track-record")
+def council_track_record(conn=Depends(get_conn)):
+    return council.track_record(conn)
+
+
+@router.get("/council/rules")
+def council_rules(conn=Depends(get_conn)):
+    rules = [council.rule_json(r) for r in council._rules(conn, active_only=False)]
+    return {"active": [r for r in rules if r["active"]], "inactive": [r for r in rules if not r["active"]]}

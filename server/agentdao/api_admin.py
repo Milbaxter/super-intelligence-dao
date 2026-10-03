@@ -7,7 +7,7 @@ import secrets
 
 from fastapi import APIRouter, Body, Depends, Request
 
-from . import config, db, lifecycle, taskgen, views
+from . import config, council, db, lifecycle, taskgen, views
 from .db import jload, tx
 from .deps import get_conn, require_steward
 from .errors import ApiError, check_json, not_found
@@ -95,6 +95,8 @@ def create_task(body=Body(...), conn=Depends(get_conn)):
     b = _obj(body)
     if b.get("type") not in config.TASK_TYPES:
         raise ApiError(422, "invalid_type", f"type must be one of {config.TASK_TYPES}")
+    if b["type"] in config.STEER_TASK_TYPES:
+        raise ApiError(422, "invalid_type", "steer.* tasks are created by the council cycle (POST /admin/council/open)")
     if not isinstance(b.get("title"), str) or not b["title"].strip():
         raise ApiError(422, "invalid_title", "title required")
     allowed = b.get("allowed_model_families") or ["any"]
@@ -151,3 +153,40 @@ def recheck(claim_id: str, request: Request, conn=Depends(get_conn)):
     if not db.scalar(conn, "SELECT 1 FROM claims WHERE id=?", (claim_id,)):
         raise not_found("claim", claim_id)
     return lifecycle.recheck_claim(conn, request.app.state.checker, claim_id)
+
+
+# ------------------------------------------------------------------ the Council
+
+
+@router.post("/council/open", status_code=201)
+def council_open(body=Body(default={}), conn=Depends(get_conn)):
+    b = _obj(body or {})
+    cyc = council.open_cycle(conn, b.get("budget_slots"), b.get("propose_days"), b.get("critique_days"),
+                             b.get("vote_days"), str(b.get("note") or "") or None)
+    return council.cycle_json(conn, cyc)
+
+
+@router.post("/council/advance")
+def council_advance(conn=Depends(get_conn)):
+    return council.cycle_json(conn, council.advance(conn, force=True))
+
+
+@router.post("/council/items/{item_id}/withdraw")
+def council_withdraw(item_id: str, body=Body(...), conn=Depends(get_conn)):
+    item = council.withdraw(conn, item_id, _obj(body).get("reason"))
+    return {"id": item["id"], "status": item["status"], "reason": item["ratify_reason"]}
+
+
+@router.post("/council/items/{item_id}/ratify")
+def council_ratify(item_id: str, body=Body(...), conn=Depends(get_conn)):
+    b = _obj(body)
+    reason = b.get("reason")
+    if reason is not None and not isinstance(reason, str):
+        raise ApiError(422, "invalid_reason", "reason must be a string")
+    item = council.ratify(conn, item_id, b.get("decision"), reason)
+    return council.item_json(conn, item, council.get_cycle(conn, item["cycle_id"]))
+
+
+@router.post("/council/review")
+def council_review(conn=Depends(get_conn)):
+    return {"reviewed": council.review_due(conn)}

@@ -1,4 +1,4 @@
-"""`agentdao` console script: serve | seed | invite | generate."""
+"""`agentdao` console script: serve | seed | invite | generate | council."""
 
 from __future__ import annotations
 
@@ -31,6 +31,13 @@ def main(argv: list[str] | None = None) -> int:
     inv.add_argument("--person", default=None, help="operator label: all codes of this call belong to one human "
                      "(they can never verify each other). Default: each code is a separate person")
     sub.add_parser("generate", help="run the task generator")
+    cn = sub.add_parser("council", help="the council: open|advance|status|review")
+    cn.add_argument("action", choices=["open", "advance", "status", "review"])
+    cn.add_argument("--budget", type=int, default=None, help="task slots for this cycle (open)")
+    cn.add_argument("--propose-days", type=float, default=None)
+    cn.add_argument("--critique-days", type=float, default=None)
+    cn.add_argument("--vote-days", type=float, default=None)
+    cn.add_argument("--note", default=None)
     args = p.parse_args(argv)
     settings = config.Settings()
 
@@ -78,6 +85,24 @@ def main(argv: list[str] | None = None) -> int:
             for code in create_invites(conn, max(1, min(args.count, 1000)), args.note,
                                          (args.person or '').strip()[:100] or None):
                 print(code)
+        elif args.cmd == "council":
+            from . import council
+            from .errors import ApiError
+            try:
+                if args.action == "open":
+                    out = council.cycle_json(conn, council.open_cycle(conn, args.budget, args.propose_days,
+                                                                      args.critique_days, args.vote_days, args.note))
+                elif args.action == "advance":
+                    out = council.cycle_json(conn, council.advance(conn, force=True))
+                elif args.action == "review":
+                    out = {"reviewed": council.review_due(conn)}
+                else:
+                    council.sweep(conn)
+                    out = council.status_text(conn)
+            except ApiError as e:
+                print(json.dumps(e.body(), indent=2), file=sys.stderr)
+                return 1
+            print(json.dumps(out, indent=2, ensure_ascii=False))
         elif args.cmd == "generate":
             from . import taskgen
             created = taskgen.generate(conn)

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import random
+
 from . import config, db
 from .db import jload
 
@@ -95,8 +97,17 @@ def task_full(conn, row: dict, base_url: str) -> dict:
     """Public/agent task view. Never includes target_claim_id or anything derived from the claim value."""
     subs = db.all_(conn, """SELECT s.id, c.handle AS contributor, s.status, s.created_at FROM submissions s
                             JOIN contributors c ON c.id = s.contributor_id WHERE s.task_id=? ORDER BY s.created_at""", (row["id"],))
+    inputs = jload(row["inputs"], {})
+    if row["type"] in config.STEER_TASK_TYPES:
+        for s in subs:  # council work is anonymous until the tally (who proposed/critiqued/voted what)
+            s["contributor"] = None
+        if row["type"] == "steer.vote" and isinstance(inputs, dict) and isinstance(inputs.get("items"), list):
+            # Per-ballot random order (position bias): seeded by the task's current/last lease, stable across re-reads.
+            lease_id = db.scalar(conn, "SELECT id FROM leases WHERE task_id=? ORDER BY created_at DESC, rowid DESC LIMIT 1", (row["id"],))
+            if lease_id:
+                random.Random(lease_id).shuffle(inputs["items"])
     return {
-        **task_summary(row, conn), "spec_md": row["spec_md"] or "", "inputs": jload(row["inputs"], {}),
+        **task_summary(row, conn), "spec_md": row["spec_md"] or "", "inputs": inputs,
         "instructions_url": f"{base_url}/task-types/{row['type']}.md", "submissions": subs,
     }
 

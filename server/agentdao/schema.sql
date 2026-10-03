@@ -208,3 +208,92 @@ CREATE TABLE IF NOT EXISTS events (
     detail       TEXT
 );
 CREATE INDEX IF NOT EXISTS ix_events_ref ON events(ref_type, ref_id);
+
+-- ---------------------------------------------------------------- the Council (migration 2, docs/design/COUNCIL_SPEC.md)
+CREATE TABLE IF NOT EXISTS council_cycles (
+    id             TEXT PRIMARY KEY,
+    status         TEXT NOT NULL,       -- open|propose|critique|vote|ratify|closed
+    budget_slots   INTEGER NOT NULL,
+    opened_at      TEXT NOT NULL,
+    propose_until  TEXT NOT NULL,
+    critique_until TEXT NOT NULL,
+    vote_until     TEXT NOT NULL,
+    tallied_at     TEXT,
+    closed_at      TEXT,
+    opened_by      TEXT,
+    note           TEXT
+);
+
+CREATE TABLE IF NOT EXISTS council_items (
+    id                    TEXT PRIMARY KEY,
+    cycle_id              TEXT NOT NULL REFERENCES council_cycles(id),
+    submission_id         TEXT REFERENCES submissions(id),
+    author_contributor_id TEXT REFERENCES contributors(id),
+    author_person         TEXT,
+    kind                  TEXT NOT NULL,
+    title                 TEXT NOT NULL,
+    payload               TEXT NOT NULL DEFAULT '{}',
+    cost                  INTEGER NOT NULL,
+    status                TEXT NOT NULL,  -- sealed|balloted|overflow|withdrawn|funded|not_funded|awaiting_ratification|applied|vetoed|met|missed
+    tally                 TEXT,
+    forecast              REAL,
+    agg_forecast          REAL,
+    ratified_by           TEXT,
+    ratify_reason         TEXT,           -- steward's public reason (veto, approve or withdraw)
+    applied_at            TEXT,
+    review_due_at         TEXT,
+    measured_value        REAL,
+    reviewed_at           TEXT,
+    created_at            TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_council_items_cycle ON council_items(cycle_id);
+CREATE INDEX IF NOT EXISTS ix_council_items_status ON council_items(status, review_due_at);
+
+CREATE TABLE IF NOT EXISTS council_critiques (
+    id             TEXT PRIMARY KEY,
+    item_id        TEXT NOT NULL REFERENCES council_items(id),
+    submission_id  TEXT REFERENCES submissions(id),
+    contributor_id TEXT REFERENCES contributors(id),
+    person         TEXT,
+    model_family   TEXT,
+    payload        TEXT NOT NULL DEFAULT '{}',
+    created_at     TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_council_critiques_item ON council_critiques(item_id);
+
+CREATE TABLE IF NOT EXISTS council_ballots (
+    id             TEXT PRIMARY KEY,
+    cycle_id       TEXT NOT NULL REFERENCES council_cycles(id),
+    person         TEXT NOT NULL,
+    contributor_id TEXT REFERENCES contributors(id),
+    model_family   TEXT,
+    submission_id  TEXT REFERENCES submissions(id),
+    approve        TEXT NOT NULL DEFAULT '[]',
+    forecasts      TEXT NOT NULL DEFAULT '{}',
+    comment        TEXT,
+    created_at     TEXT NOT NULL,
+    replaced_by    TEXT
+);
+CREATE INDEX IF NOT EXISTS ix_council_ballots_cycle ON council_ballots(cycle_id, person);
+
+CREATE TABLE IF NOT EXISTS council_scores (
+    id         TEXT PRIMARY KEY,
+    item_id    TEXT NOT NULL REFERENCES council_items(id),
+    person     TEXT NOT NULL,
+    role       TEXT NOT NULL,             -- proposer|critic|voter
+    forecast   REAL NOT NULL,
+    outcome    INTEGER NOT NULL,
+    brier      REAL NOT NULL,
+    created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS applicability_rules (
+    id             TEXT PRIMARY KEY,
+    task_type      TEXT NOT NULL,
+    mode           TEXT NOT NULL,         -- include|exclude
+    artifact_kinds TEXT NOT NULL DEFAULT '[]',
+    created_by     TEXT,
+    reason         TEXT,
+    created_at     TEXT NOT NULL,
+    active         INTEGER NOT NULL DEFAULT 1
+);
