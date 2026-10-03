@@ -101,14 +101,7 @@ but stays T1 and still gets a blind check. With 2 such numbers `conditions.notes
 detail `ambiguous_quote_notes_recommended` when missing); with 3+ it is required, else the claim is dropped
 (`ambiguous_quote_needs_notes`).
 
-**Blind unit comparison:** trim surrounding whitespace and lowercase unit labels. `%`, `percent`, `percentage` and
-`pct` mean percentage; `fraction` values are multiplied by 100. Compare these rates in percentage points, applying
-abs diff ≤ 0.1 OR relative diff ≤ 0.5% (relative to the larger absolute value). For compatibility with older clients,
-a missing or empty unit is inferred as `fraction` when its value is in [0,1] and the other unit is an explicit percentage alias.
-All other missing-unit pairs disagree, including two missing units. Other nonempty labels must match and use their
-native scale: `score` and `pass@1` are opaque, not rate aliases. Incompatible units and nonfinite values disagree;
-conversion direction is never guessed from magnitude. This policy applies to subsequent submissions; existing
-verification outcomes are not rescored.
+**Blind unit comparison:** labels are trimmed and lowercased, then classed. *Rates:* `%`, `percent`, `percentage`, `pct` (percent) and `fraction`, `ratio` (×100); two rates are compared in percentage points. *Scale-less labels:* empty/missing, `score`, `points`, `accuracy`, `acc`, `rate`, `resolved`, `resolved rate`, `success rate`, `pass rate`, `pass@k`/`maj@k`/`avg@k`: they say what was measured, not the scale, so they agree with a rate on the same scale, or as a fraction when the value is in [0,1]; two scale-less labels compare natively. *Specific units* (anything else, e.g. `seconds`, `tokens/s`, `elo`) must match another specific unit exactly, never match a rate, and compare natively with a scale-less label. Tolerance: abs diff ≤ 0.1 OR relative diff ≤ 0.5% (of the larger absolute value) on the compared scale; nonfinite values disagree. Existing verification outcomes are not rescored.
 
 Every task has `allowed_model_families` (list from `claude`, `gpt`, `gemini`, `open-weight`, `any`).
 Rule: anything that could become training data for a model → `["open-weight"]` only (provider terms). Map and

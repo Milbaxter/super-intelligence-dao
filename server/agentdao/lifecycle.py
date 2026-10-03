@@ -647,33 +647,60 @@ def _insert_claim(conn, artifact_id, bench_id, c, tier, check_result, sub_id, se
     return claim
 
 
+_PERCENT_UNITS = {"%", "percent", "percentage", "pct", "pp"}
+_FRACTION_UNITS = {"fraction", "ratio"}
+# Metric names and "no unit": they say *what* was measured, not the scale. A blind referee reading a table headed
+# "(Pass@1)" and an extractor writing "%" for the same cell must agree (field test: 17/17 correct checks disputed).
+_GENERIC_UNITS = {"", "score", "points", "pts", "accuracy", "acc", "rate", "resolved", "resolved rate",
+                  "success rate", "pass rate", "solve rate", "win rate"}
+_GENERIC_RE = re.compile(r"^(pass|avg|mean|maj|cons)@\d+$")
+
+
+def _unit_class(unit: str | None) -> tuple[str, str]:
+    u = (unit or "").strip().lower()
+    if u in _PERCENT_UNITS:
+        return "pct", "%"
+    if u in _FRACTION_UNITS:
+        return "frac", "fraction"
+    if u in _GENERIC_UNITS or _GENERIC_RE.match(u):
+        return "generic", ""
+    return "specific", u
+
+
 def values_agree(a: float, unit_a: str | None, b: float, unit_b: str | None) -> bool:
-    """Compare compatible units, with rate tolerances measured in percentage points."""
+    """Do two readings of the same published number agree?
+
+    - % and fraction are compared in percentage points (0.10 vs 0.19 as fractions is a 9-point gap, not 0.09).
+    - A generic label (score, pass@1, accuracy, none) carries no scale: it agrees with a % reading on the same
+      scale, or as a fraction if it lies in [0, 1].
+    - Specific units (seconds, tokens/s, …) must match each other exactly; they never match % or fraction.
+    """
     if not math.isfinite(a) or not math.isfinite(b):
         return False
-    ua, ub = (unit_a or "").strip().lower(), (unit_b or "").strip().lower()
-    percent_units = {"%", "percent", "percentage", "pct"}
-    ua = "%" if ua in percent_units else ua
-    ub = "%" if ub in percent_units else ub
-    if not ua or not ub:
-        # Preserve legacy percent comparisons to an unlabeled fraction only.
-        if ua == "%" and not ub and 0 <= b <= 1:
-            ub = "fraction"
-        elif ub == "%" and not ua and 0 <= a <= 1:
-            ua = "fraction"
-        else:
+    (ca, ua), (cb, ub) = _unit_class(unit_a), _unit_class(unit_b)
+
+    def close(x: float, y: float) -> bool:
+        if not math.isfinite(x) or not math.isfinite(y):
             return False
-    if ua in ("%", "fraction") and ub in ("%", "fraction"):
-        a = a * 100 if ua == "fraction" else a
-        b = b * 100 if ub == "fraction" else b
-    elif ua != ub:
+        difference = abs(x - y)
+        tolerance = max(config.BLIND_TOLERANCE_ABS, config.BLIND_TOLERANCE_REL * max(abs(x), abs(y)))
+        # Absorb binary rounding at the inclusive boundary, including fraction scaling.
+        return difference <= tolerance or math.isclose(difference, tolerance, rel_tol=1e-12, abs_tol=0.0)
+
+    def as_points(v: float, c: str) -> float:
+        return v * 100 if c == "frac" else v
+
+    rate = ("pct", "frac")
+    if ca in rate and cb in rate:
+        return close(as_points(a, ca), as_points(b, cb))
+    if ca in rate or cb in rate:
+        (r, rc), (g, gc) = ((a, ca), (b, cb)) if ca in rate else ((b, cb), (a, ca))
+        if gc != "generic":
+            return False  # % vs seconds etc.
+        return close(as_points(r, rc), g) or (0 <= g <= 1 and close(as_points(r, rc), g * 100))
+    if ca == "specific" and cb == "specific" and ua != ub:
         return False
-    if not math.isfinite(a) or not math.isfinite(b):
-        return False
-    difference = abs(a - b)
-    tolerance = max(config.BLIND_TOLERANCE_ABS, config.BLIND_TOLERANCE_REL * max(abs(a), abs(b)))
-    # Absorb binary rounding at the inclusive boundary, including fraction scaling.
-    return difference <= tolerance or math.isclose(difference, tolerance, rel_tol=1e-12, abs_tol=0.0)
+    return close(a, b)  # generic/generic, generic/specific (unknown scale vs stated), or identical specific units
 
 
 def _process_blind(conn, task, sub, payload, pre, contributor):

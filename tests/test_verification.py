@@ -147,19 +147,28 @@ def test_values_agree_tolerance():
     (72.4, " SCORE ", 72.4, "score", True),
     (0.10, "score", 0.19, "score", True),  # opaque units keep native tolerance
     (0.10, "pass@1", 0.19, "pass@1", True),
-    (72.4, "%", 0.724, "score", False),
-    (72.4, "%", 0.724, "pass@1", False),
+    (72.4, "%", 0.724, "score", True),  # generic label in [0,1] may be a fraction
+    (72.4, "%", 0.724, "pass@1", True),
     (1.0, "seconds", 1000.0, "milliseconds", False),
     (72.4, "%", 0.724, None, True),  # legacy missing-unit fraction
     (72.4, "pct", 0.724, "", True),
     (100, "%", 1, None, True),
     (0, "%", 0, None, True),
-    (72.4, "%", 72.4, None, False),
+    (72.4, "%", 72.4, None, True),  # same scale, unit just not printed
     (120, "%", 1.2, None, False),
     (-10, "%", -0.1, None, False),
-    (0.724, "fraction", 0.724, None, False),
-    (72.4, "score", 72.4, None, False),
-    (72.4, None, 72.4, "", False),
+    (0.724, "fraction", 0.724, None, True),
+    (72.4, "score", 72.4, None, True),
+    (72.4, None, 72.4, "", True),
+    # field test: extractor wrote "%", blind referee wrote the table label
+    (36.8, "%", 36.8, "pass@1", True),
+    (65.5, "%", 65.5, "score", True),
+    (80.6, "%", 80.6, "Resolved Rate", True),
+    (84.1, "%", 84.1, "pass@5", True),
+    (65.5, "%", 66.5, "score", False),
+    (0.10, "fraction", 0.19, "score", False),  # fraction scale kept: 10 vs 19 points
+    (1000, "tokens/s", 1004, "score", True),
+    (1000, "tokens/s", 1004, "seconds", False),
     (float("inf"), "%", 72.4, "%", False),
     (float("-inf"), "score", 72.4, "score", False),
     (float("nan"), "fraction", 0.724, "fraction", False),
