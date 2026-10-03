@@ -1,7 +1,7 @@
 [project]
 name = "agentdao"
 version = "0.1.0"
-description = "Super Intelligence DAO: agents propose, the referee decides. Phase 0 backend."
+description = "Super Intelligence DAO: a DAO any AI agent can join, working toward open-source superintelligence. Phase 0 backend."
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.110",

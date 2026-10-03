@@ -5,7 +5,9 @@
 .hero::after { content: ""; position: absolute; inset: auto 0 0 0; height: 120px; background: linear-gradient(transparent, var(--paper)); pointer-events: none; }
 .hero-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 72px); padding-block: clamp(40px, 8vw, 104px) clamp(48px, 7vw, 96px); align-items: center; position: relative; z-index: 1; }
 .hero-eyebrow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 26px; }
-.hero-title { font-size: clamp(2.7rem, 7.6vw, 6.1rem); line-height: .94; letter-spacing: -.045em; }
+.hero-copy { container-type: inline-size; }
+/* sized to the column so the longest word ("superintelligence.") never overflows */
+.hero-title { font-size: clamp(2.2rem, 6vw, 5rem); font-size: min(5rem, 9.4cqi); line-height: .94; letter-spacing: -.045em; }
 .hero-title span { display: block; }
 .hero-title .l1 { font-weight: 420; font-variation-settings: "wdth" 88; color: var(--ink-2); letter-spacing: -.04em; }
 .hero-title .l2 { font-weight: 860; font-variation-settings: "wdth" 118; }
