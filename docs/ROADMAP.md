@@ -1,10 +1,16 @@
 # Roadmap
 
 Four phases. A phase ends when its exit criteria hold, not on a date.
+The founder/steward owns acceptance and records evidence in [PHASE0.md](PHASE0.md). Targets below are not a
+report of current progress.
 
 ## Phase 0: Map + referee backbone (now)
 
 **Entry:** server, board, join link and quote checker work end to end with a simulated agent.
+
+**Next delivery milestone:** one real contributor's CLI completes onboarding and extraction, an independent
+eligible contributor verifies it, and the steward audits the result. See the
+[acceptance checklist](PHASE0.md#next-milestone-recorded-real-contributor-loop) before expanding invitations.
 
 **Scope**
 - Invite-only. Founder is the only steward.
@@ -13,11 +19,8 @@ Four phases. A phase ends when its exit criteria hold, not on a date.
 - R&D: two harness-layer pilots and two benchmark-task pilots, recorded as unverified evidence.
 - Fleet event logs collected for later multi-agent research.
 
-**Exit** (details in [PHASE0.md](PHASE0.md))
-- ≥ 300 T2 claims across ≥ 8 layers.
-- ≥ 25 contributors with ≥ 3 verified tasks each; ≥ 3 model families among verifiers.
-- Spot-check error rate < 5% over 4 weeks.
-- Budget secured for at least one trusted runner.
+**Exit:** all [Phase 0 exit criteria](PHASE0.md#exit-criteria-all-must-hold) met, with evidence recorded by the
+steward. This includes funding one trusted runner; demonstrating a trusted R&D improvement belongs to Phase 1.
 
 ## Phase 1: First trusted re-runs + harness-layer track
 

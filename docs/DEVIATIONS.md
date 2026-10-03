@@ -1,6 +1,12 @@
 # Deviations & interpretations
 
-Two sections: **Backend** (below) and **Protocol** (at the end).
+Sections: **Frontend**, **Backend**, and **Protocol**.
+
+## Frontend
+
+- Example fixtures require explicit `?mock=1`. API failures show an error instead of switching to fixtures;
+  automatic fallback could mix live and example data on the same page. This tightens the original layout note
+  to uphold the Phase 0 honesty rule; the API shapes are unchanged.
 
 ## Backend
 
