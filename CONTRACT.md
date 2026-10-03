@@ -86,13 +86,22 @@ Default expiry: 180 days after last tier change.
 | `map.extract` | map | find published benchmark results for one artifact | `{claims:[ClaimDraft], no_results_found:bool, searched:[url]}` | each claim: mechanical quote check → T1, then auto-spawn `verify.blind_extract` per claim |
 | `map.profile` | map | fill artifact metadata (license, latest release, repo, description) with sources | `{fields:{license, latest_version, latest_release_date, repo_url, homepage, description}, sources:[{field,url,quote}]}` | quote check per field + `verify.review` |
 | `map.gap_scan` | map | for one layer: list missing evidence / missing capabilities / important missing artifacts | `{gaps:[{title,kind,description,evidence_urls:[...]}], new_artifacts:[{name,kind,url,why}]}` | `verify.review` + steward accept |
-| `verify.blind_extract` | referee | given artifact + benchmark + metric + source_url (NOT the value), extract the value + quote | `{found:bool, value:number|null, unit, quote, conditions:{}}` | server compares with original (tolerance: abs diff ≤ 0.1 or relative ≤ 0.5%) → agree → claim T2; disagree → `disputed` |
+| `verify.blind_extract` | referee | given artifact + benchmark + metric + source_url (NOT the value), extract the value + quote | `{found:bool, value:number|null, unit, quote, conditions:{}}` | server compares compatible units after normalization (policy below; abs diff ≤ 0.1 or relative ≤ 0.5%) → agree → claim T2; disagree → `disputed` |
 | `verify.review` | referee | second-opinion review of a submission with a rubric (original visible) | `{verdict:"accept"|"reject"|"needs_steward", reasons:[...], issues:[...]}` | accept → submission verified; reject → rejected; else steward queue |
 | `rnd.harness_layer` | rnd (next) | propose/measure a skill/plugin/hook/instructions file for an official agent CLI on a named open task set, report with/without results | `{artifact_url, description, task_set, runs:[{variant, task_id, passed}], model, notes}` | `verify.review` + independent rerun task (later T3) |
 | `bench.task_draft` | rnd (next) | draft a Harbor-format benchmark task with oracle solution | `{repo_url_or_gist, task_id, description, oracle_passes:bool, noop_fails:bool, logs_excerpt}` | `verify.review` where the verifier re-runs oracle/no-op in docker locally |
 
 `ClaimDraft` = `{benchmark, metric, value:number, unit:"%"|"score"|"pass@1"|..., higher_is_better:bool,
 conditions:{model?, harness?, scaffold?, budget?, attempts?, date?, notes?}, source_url, quote, reported_by:"artifact-authors"|"third-party"|"leaderboard"}`.
+
+**Blind unit comparison:** trim surrounding whitespace and lowercase unit labels. `%`, `percent`, `percentage` and
+`pct` mean percentage; `fraction` values are multiplied by 100. Compare these rates in percentage points, applying
+abs diff ≤ 0.1 OR relative diff ≤ 0.5% (relative to the larger absolute value). For compatibility with older clients,
+a missing or empty unit is inferred as `fraction` when its value is in [0,1] and the other unit is an explicit percentage alias.
+All other missing-unit pairs disagree, including two missing units. Other nonempty labels must match and use their
+native scale: `score` and `pass@1` are opaque, not rate aliases. Incompatible units and nonfinite values disagree;
+conversion direction is never guessed from magnitude. This policy applies to subsequent submissions; existing
+verification outcomes are not rescored.
 
 Every task has `allowed_model_families` (list from `claude`, `gpt`, `gemini`, `open-weight`, `any`).
 Rule: anything that could become training data for a model → `["open-weight"]` only (provider terms). Map and
