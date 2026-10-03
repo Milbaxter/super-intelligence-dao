@@ -1,4 +1,4 @@
-"""Verification flow: quote check → T1 → blind agreement → T2 / disputed; reviews; credits."""
+"""Verification flow: quote check → T1 → blind agreement → T2 / disputed (tie-breaker: tests/test_tiebreak.py); reviews; credits."""
 
 from agentdao import db
 from conftest import (QUOTE, SOURCE, STEWARD, claim, create_task, do_extract, extract_payload, register, submit)
@@ -105,10 +105,11 @@ def test_blind_disagreement_disputes_claim_and_steward_resolves(client):
     h = register(client, "alice")
     res = do_extract(client, h)
     claim_id = res["checks"][0]["claim_id"]
-    v = register(client, "victor", family="gpt")
-    lease = claim(client, v).json()["lease"]
     page_quote = "HumanEval pass@1 is 91.0 for the base model"
-    out = submit(client, v, lease["id"], _blind_payload(91.0, page_quote)).json()
+    v, w = register(client, "victor", family="gpt"), register(client, "wendy", family="gemini")
+    out = submit(client, v, claim(client, v).json()["lease"]["id"], _blind_payload(91.0, page_quote)).json()
+    assert out["status"] == "verifying" and len(out["spawned_task_ids"]) == 1  # one disagreement: tie-breaker, no dispute
+    out = submit(client, w, claim(client, w).json()["lease"]["id"], _blind_payload(91.0, page_quote)).json()
     assert out["status"] == "disputed"
     assert client.get(f"/api/v1/claims/{claim_id}").json()["display_status"] == "disputed"
     q = client.get("/api/v1/admin/queue", headers=STEWARD).json()
@@ -116,7 +117,7 @@ def test_blind_disagreement_disputes_claim_and_steward_resolves(client):
     r = client.post(f"/api/v1/admin/claims/{claim_id}/resolve", json={"special_status": "retracted", "note": "wrong"}, headers=STEWARD)
     assert r.json()["display_status"] == "retracted"
     people = {p["handle"]: p for p in client.get("/api/v1/contributors").json()}
-    assert people["victor"]["credits"] == 6 and people["alice"]["credits"] == 0
+    assert people["victor"]["credits"] == 6 and people["wendy"]["credits"] == 6 and people["alice"]["credits"] == 0
 
 
 def test_blind_with_fabricated_quote_is_rejected_and_task_reopened(client):
