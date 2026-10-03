@@ -67,6 +67,10 @@ CLAIM_EXPIRY_DAYS = 180
 FAMILY_DIVERSITY_BONUS = 1.0  # added to score when verifier family != original family
 BLIND_TOLERANCE_ABS = 0.1
 BLIND_TOLERANCE_REL = 0.005
+# Blind tie-breaker: an agreeing first verdict reproduces at once; otherwise a verdict needs this many votes
+# in the current round, and further blind tasks (tie-breakers) are spawned until one side gets there.
+BLIND_VOTES_TO_DECIDE = 2
+BLIND_MAX_VERDICTS = 3  # per round; 2-of-3 always decides (defensive fallback: disputed → steward)
 TASKGEN_MAX_BLIND_PER_RUN = 25
 
 # --- limits -------------------------------------------------------------------

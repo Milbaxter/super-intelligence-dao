@@ -3,7 +3,9 @@
 Flow summary (CONTRACT §3):
   map.extract  → quote check per claim → claim T1 (pass) / T0 (source unreadable) / dropped (hard fail)
                  → one verify.blind_extract per T1 claim
-  blind_extract → compare with original (tolerance) → agree: claim T2 + credits; disagree: claim disputed
+  blind_extract → compare with original (tolerance) → first verdict agree: claim T2 + credits; otherwise a
+                 tie-breaker blind task is spawned until a verdict has 2 votes (max 3 per round):
+                 2 agree → T2 (credits to the agree side), 2 disagree → claim disputed (steward)
                  → when all blind tasks of an extract submission settle, the submission is finalized
   map.profile / map.gap_scan / rnd.* / bench.* / extract(no results) → verify.review
   verify.review → accept/reject finalizes the reviewed submission; needs_steward → steward queue
@@ -623,27 +625,77 @@ def _process_blind(conn, task, sub, payload, pre, contributor):
     })
     checks.append({"name": "blind_agreement", "passed": agree,
                    "detail": "matches the original within tolerance" if agree else "does not match the original"})
-    if agree:
+    # This verdict joins the claim's current round; the round is decided by blind_round_decision().
+    _set_sub(conn, sub["id"], "verifying", task["id"])
+    votes = _round_votes(conn, claim["id"])
+    decision = blind_round_decision([v["verdict"] for v in votes])
+    spawned: list[str] = []
+    what = f"{claim['artifact_id']} on {claim['benchmark_id']}"
+    if decision == "reproduced":
         fields = {"tier_changed_at": db.now_ts(), "expires_at": db.ts_in(days=config.CLAIM_EXPIRY_DAYS)}
         if config.TIER_RANK[claim["tier"]] < config.TIER_RANK["reproduced"]:
             fields["tier"] = "reproduced"
         db.update(conn, "claims", claim["id"], fields)
-        _set_sub(conn, sub["id"], "verified", task["id"])
-        emit(conn, "claim_reproduced", f"claim reproduced blindly: {claim['artifact_id']} on {claim['benchmark_id']}",
-             contributor["handle"], "claim", claim["id"], detail)
+        emit(conn, "claim_reproduced", f"claim reproduced blindly: {what}", contributor["handle"], "claim", claim["id"],
+             {**detail, "round_verdicts": [v["verdict"] for v in votes]})
         orig = db.scalar(conn, "SELECT contributor_id FROM submissions WHERE id=?", (claim["submission_id"],)) if claim["submission_id"] else None
         credit(conn, orig, "claim_reproduced", "claim", claim["id"])
-        credit(conn, contributor["id"], "verify_agreed", "submission", sub["id"])
-        status = "verified"
-    else:
+        _settle_votes(conn, votes, winner="agree", credit_winners=True)
+    elif decision == "disputed":
         db.update(conn, "claims", claim["id"], {"special_status": "disputed"})
-        _set_sub(conn, sub["id"], "disputed", task["id"])
-        emit(conn, "claim_disputed", f"blind re-extraction disagreed: {claim['artifact_id']} on {claim['benchmark_id']}",
+        for v in votes:  # stays open for the steward; _settle_dispute finalizes these submissions
+            _set_sub(conn, v["sub_id"], "disputed", v["task_id"])
+        emit(conn, "claim_disputed", f"blind re-extractions disagreed: {what}", contributor["handle"], "claim", claim["id"],
+             {**detail, "round_verdicts": [v["verdict"] for v in votes]})
+    else:
+        # Undecided split: no dispute yet. Another independent verifier breaks the tie (the one-verify-task-per-claim
+        # eligibility rule keeps earlier verifiers and the author off it); the value stays hidden while it is open.
+        if not db.scalar(conn, f"""SELECT 1 FROM tasks WHERE type='verify.blind_extract' AND target_claim_id=? AND id != ?
+                                   AND status IN ('draft','open','leased','submitted')""", (claim["id"], task["id"])):
+            spawned.append(spawn_blind_task(conn, claim, task["parent_submission_id"], bonus=1.5))
+        emit(conn, "claim_blind_split", f"blind re-extraction did not match; tie-breaker check spawned: {what}",
              contributor["handle"], "claim", claim["id"], detail)
-        status = "disputed"
+        checks.append({"name": "tiebreak", "passed": True,
+                       "detail": "verdict recorded; another independent blind check will decide"})
     if claim["submission_id"]:
         maybe_finalize_extract(conn, claim["submission_id"])
-    return status, checks, []
+    status = db.scalar(conn, "SELECT status FROM submissions WHERE id=?", (sub["id"],))
+    return status, checks, spawned
+
+
+def blind_round_decision(verdicts: list[str]) -> str | None:
+    """'reproduced' | 'disputed' | None (undecided → tie-breaker) for one round of blind verdicts, in order.
+
+    An agreeing first verdict reproduces at once; after any disagreement a side needs BLIND_VOTES_TO_DECIDE votes.
+    A round never exceeds BLIND_MAX_VERDICTS; if it somehow still has no winner, it goes to the steward as disputed.
+    """
+    n_agree = verdicts.count("agree")
+    n_disagree = len(verdicts) - n_agree
+    if n_agree and not n_disagree:
+        return "reproduced"
+    if n_agree >= config.BLIND_VOTES_TO_DECIDE:
+        return "reproduced"
+    if n_disagree >= config.BLIND_VOTES_TO_DECIDE or len(verdicts) >= config.BLIND_MAX_VERDICTS:
+        return "disputed"
+    return None
+
+
+def _round_votes(conn, claim_id: str, sub_status: str = "verifying") -> list[dict]:
+    """Blind verdicts of the claim's current round. A verdict's verifier submission stays 'verifying' until its round
+    is decided, so verdicts from earlier rounds (e.g. before a stale re-check) never count again."""
+    return db.all_(conn, """SELECT v.verdict, s.id AS sub_id, s.task_id, s.contributor_id FROM verifications v
+                            JOIN submissions s ON s.id = v.verifier_submission_id
+                            WHERE v.claim_id=? AND v.verdict IN ('agree','disagree') AND s.status=?
+                            ORDER BY v.created_at, v.rowid""", (claim_id, sub_status))
+
+
+def _settle_votes(conn, votes: list[dict], winner: str, credit_winners: bool) -> None:
+    """Final statuses for a decided round: the winning side verified (+verify_agreed if asked), the other rejected."""
+    for v in votes:
+        won = v["verdict"] == winner
+        _set_sub(conn, v["sub_id"], "verified" if won else "rejected", v["task_id"])
+        if won and credit_winners:
+            credit(conn, v["contributor_id"], "verify_agreed", "submission", v["sub_id"])
 
 
 def maybe_finalize_extract(conn, submission_id: str) -> None:
@@ -786,6 +838,7 @@ def steward_resolve_claim(conn, claim_id: str, tier: str | None, special_status:
                 _settle_dispute(conn, claim, extractor_wins=new is None)
         if not fields:
             raise ApiError(422, "nothing_to_do", "provide tier and/or special_status")
+        _settle_open_round(conn, claim, fields.get("special_status", claim["special_status"]))
         db.update(conn, "claims", claim_id, fields)
         conn.execute("UPDATE tasks SET status='closed', updated_at=? WHERE target_claim_id=? AND status='disputed'", (db.now_ts(), claim_id))
         emit(conn, "steward_claim_resolved", f"steward resolved claim: {', '.join(f'{k}={v}' for k, v in fields.items() if k in ('tier', 'special_status'))}",
@@ -803,6 +856,39 @@ def _settle_dispute(conn, claim: dict, extractor_wins: bool) -> None:
         for v in db.all_(conn, "SELECT verifier_submission_id FROM verifications WHERE claim_id=? AND verdict='disagree'", (claim["id"],)):
             who = db.scalar(conn, "SELECT contributor_id FROM submissions WHERE id=?", (v["verifier_submission_id"],))
             credit(conn, who, "dispute_resolved", "claim", claim["id"])
+    # Finalize the disputed round's verifier submissions; a vindicated agree-minority earns verify_agreed.
+    _settle_votes(conn, _round_votes(conn, claim["id"], "disputed"), winner="agree" if extractor_wins else "disagree",
+                  credit_winners=extractor_wins)
+
+
+def _settle_open_round(conn, claim: dict, new_special_status: str | None) -> None:
+    """Steward resolved a claim mid-tie-break: close its pending blind tasks and settle the round's verdicts
+    by the steward's outcome (claim kept → agree side wins, disputed/retracted → disagree side wins)."""
+    votes = _round_votes(conn, claim["id"])
+    if not votes:
+        return
+    for t in db.all_(conn, """SELECT id FROM tasks WHERE type='verify.blind_extract' AND target_claim_id=?
+                              AND status IN ('draft','open','leased','submitted','needs_steward')""", (claim["id"],)):
+        conn.execute("UPDATE leases SET status='released', released_at=? WHERE task_id=? AND status='active'", (db.now_ts(), t["id"]))
+        set_task_status(conn, t["id"], "closed")
+    if new_special_status == "disputed":
+        for v in votes:  # settled later by _settle_dispute, like any disputed round
+            _set_sub(conn, v["sub_id"], "disputed", v["task_id"])
+    else:
+        kept = new_special_status is None
+        _settle_votes(conn, votes, winner="agree" if kept else "disagree", credit_winners=kept)
+
+
+def _abandon_round_if_orphaned(conn, claim_id: str | None) -> None:
+    """A round whose last pending blind task was taken off the board can't decide: hand its verdicts to the steward."""
+    if not claim_id or db.scalar(conn, """SELECT 1 FROM tasks WHERE type='verify.blind_extract' AND target_claim_id=?
+                                          AND status IN ('draft','open','leased','submitted','needs_steward')""", (claim_id,)):
+        return
+    for v in _round_votes(conn, claim_id):
+        _set_sub(conn, v["sub_id"], "needs_steward", v["task_id"])
+    sub_id = db.scalar(conn, "SELECT submission_id FROM claims WHERE id=?", (claim_id,))
+    if sub_id:
+        maybe_finalize_extract(conn, sub_id)
 
 
 def steward_resolve_gap(conn, gap_id: str, status: str, note: str) -> dict:
@@ -840,6 +926,8 @@ def steward_set_task_status(conn, task_id: str, status: str) -> None:
         if status != "leased":
             conn.execute("UPDATE leases SET status='released' WHERE task_id=? AND status='active'", (task_id,))
         set_task_status(conn, task_id, status)
+        if task["type"] == "verify.blind_extract" and status not in ("draft", "open", "leased"):
+            _abandon_round_if_orphaned(conn, task["target_claim_id"])
         emit(conn, "steward_task_status", f"steward set task → {status}: {task['title'][:100]}", "steward", "task", task_id)
 
 
