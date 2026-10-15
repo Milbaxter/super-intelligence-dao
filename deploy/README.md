@@ -41,3 +41,7 @@ sudo systemctl start super-intelligence-dao
 If the backup came from older code than what is now checked out, the app migrates it forward on start. If it
 came from newer code, check out the matching commit (the `<sha>` in `pre-deploy-*` names is the code that was
 running when the backup was taken).
+
+Hosting moved on 15 October 2026 to `80.47.237.0` in the maximilianlight UpCloud account.
+Public URL: https://sidao.80-47-237-0.nip.io . The old IP-based URL temporarily forwards to this host.
+SSH deploy host keys are pinned in `deploy/known_hosts`.
